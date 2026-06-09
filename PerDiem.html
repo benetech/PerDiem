@@ -334,6 +334,7 @@
       </table>
       <div id="mie-used-section" style="margin-top:1.5rem;">
         <h3>M&amp;IE Values Used</h3>
+        <p id="mie-location" style="margin:0.25rem 0 0;"></p>
         <p id="mie-last-updated" style="margin:0.25rem 0 0.75rem;"></p>
         <div id="rates-reprise"></div>
       </div>
@@ -1999,7 +2000,7 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.23';
+    const APP_VERSION = 'Version 1.0.26';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     // INTL_RATES, INTL_COUNTRIES, INTL_RATES_UPDATED are inlined above
@@ -2307,6 +2308,7 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
       document.querySelector('#rates-table tbody').innerHTML = '';
       buildMealGrid();
       ratesHeading.focus();
+      ratesHeading.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
       if (country !== 'US') {
         const match = (INTL_RATES[country] || []).find(r => r.city === city);
@@ -2609,8 +2611,17 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
       document.getElementById('person-info').innerHTML =
         `<p><strong>Name:</strong> ${name}</p><p><strong>Conference:</strong> ${conference}</p><p><strong>Project Code:</strong> ${projectCode}</p>`;
 
+      // Populate location line
+      const isUS       = document.getElementById('country').value === 'US';
+      const locCountry = document.getElementById('country').options[document.getElementById('country').selectedIndex].text;
+      const locCity    = cityEl.options[cityEl.selectedIndex]?.text || '';
+      const locState   = isUS ? (stateEl.options[stateEl.selectedIndex]?.text || '') : '';
+      const locParts   = isUS
+        ? [locCountry, locState, locCity].filter(Boolean)
+        : [locCountry, locCity].filter(Boolean);
+      document.getElementById('mie-location').textContent = `Location: ${locParts.join(' › ')}`;
+
       // Populate Last Updated line
-      const isUS      = document.getElementById('country').value === 'US';
       const lastUpdEl = document.getElementById('mie-last-updated');
       if (isUS) {
         lastUpdEl.innerHTML = 'Last Updated: Real-time via GSA Per Diem API';
@@ -2888,6 +2899,9 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
 </script>
 </body>
 </html>
+
+
+
 
 
 
