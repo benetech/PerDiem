@@ -1999,7 +1999,7 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.22';
+    const APP_VERSION = 'Version 1.0.23';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     // INTL_RATES, INTL_COUNTRIES, INTL_RATES_UPDATED are inlined above
@@ -2829,16 +2829,50 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
     });
 
     // ── City search (US only) ──────────────────────────────────────────────────
-    document.getElementById('city-search-btn').addEventListener('click', () => {
-      const city  = document.getElementById('city-search').value.trim();
+    document.getElementById('city-search-btn').addEventListener('click', async () => {
+      const searchInput = document.getElementById('city-search');
+      const typed = searchInput.value.trim();
+      if (!typed) return;
+
       const state = stateEl.value;
       const year  = document.getElementById('start-date').value
                     ? new Date(document.getElementById('start-date').value).getFullYear()
                     : new Date().getFullYear();
-      const url = `https://www.gsa.gov/travel/plan-book/per-diem-rates/per-diem-rates-results` +
-                  `?action=perdiems_report&fiscal_year=${year}` +
-                  `&state=${encodeURIComponent(state)}&city=${encodeURIComponent(city)}&zip=`;
-      window.open(url, '_blank', 'noopener,noreferrer');
+
+      const btn = document.getElementById('city-search-btn');
+      btn.disabled = true;
+      btn.textContent = 'Searching…';
+      showError('');
+
+      try {
+        // GSA API requires hyphens replaced with spaces, periods removed
+        const apiCity = typed.replace(/[-–—]/g, ' ').replace(/\./g, '').replace(/\s+/g, ' ').trim();
+        const res = await fetch(
+          `https://api.gsa.gov/travel/perdiem/v2/rates/city/${encodeURIComponent(apiCity)}/state/${encodeURIComponent(state)}/year/${year}?api_key=JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd`
+        );
+
+        if (!res.ok) throw new Error('not_found');
+        const data = await res.json();
+        const rates = data.rates?.[0]?.rate;
+        if (!rates || rates.length === 0) throw new Error('not_found');
+
+        // Find the canonical GSA city name in our dropdown
+        const gsaCity = rates[0].city;
+        const match = [...cityEl.options].find(o => o.value === gsaCity);
+
+        if (!match) throw new Error('not_found');
+
+        // Select it and trigger submit
+        cityEl.value = gsaCity;
+        cityEl.dispatchEvent(new Event('change'));
+        document.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+
+      } catch (err) {
+        showError(`City "${typed}" not found in ${state}. Try a nearby city or county name from the dropdown.`);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Search GSA';
+      }
     });
 
     // Show city search row only for US after a state is selected
@@ -2854,6 +2888,7 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
 </script>
 </body>
 </html>
+
 
 
 
