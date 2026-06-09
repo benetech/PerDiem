@@ -1986,7 +1986,7 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.19';
+    const APP_VERSION = 'Version 1.0.20';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     // INTL_RATES, INTL_COUNTRIES, INTL_RATES_UPDATED are inlined above
@@ -2125,14 +2125,19 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
     function applyCityData(data) {
       stateRatesCache = data;
       document.querySelector('button[type="submit"]').disabled = false;
-      const cities = [...new Set(
-        (data.rates || []).flatMap(r => (r.rate || []).map(x => x.city))
-      )].filter(Boolean).sort();
+
+      // Build a map of city → county for display purposes
+      const cityCountyMap = {};
+      (data.rates || []).flatMap(r => r.rate || []).forEach(r => {
+        if (r.city && !cityCountyMap[r.city]) cityCountyMap[r.city] = r.county || '';
+      });
+
+      const cities = Object.keys(cityCountyMap).sort();
       cityEl.innerHTML = '<option value="">-- Select a city --</option>';
       for (const city of cities) {
         const opt = document.createElement('option');
         opt.value = city;
-        opt.textContent = city;
+        opt.textContent = cityCountyMap[city] ? `${city} (${cityCountyMap[city]})` : city;
         cityEl.appendChild(opt);
       }
       cityEl.disabled = false;
@@ -2817,6 +2822,7 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
 </script>
 </body>
 </html>
+
 
 
 
