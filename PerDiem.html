@@ -240,6 +240,19 @@
       </select>
       <span class="field-error" id="err-city" role="alert"></span>
     </div>
+    <div id="city-search-row" style="display:none; margin-bottom:1rem;">
+      <label for="city-search" style="font-size:0.875rem; font-weight:400;">
+        Can't find your city? Search the GSA website:
+      </label>
+      <div style="display:flex; gap:0.5rem; align-items:center;">
+        <input type="text" id="city-search" name="city-search"
+               placeholder="e.g. Anaheim"
+               style="margin-bottom:0; font-size:0.875rem;">
+        <button type="button" id="city-search-btn" style="font-size:0.875rem; padding:0.35rem 0.75rem; white-space:nowrap;">
+          Search GSA
+        </button>
+      </div>
+    </div>
     <p style="margin:0 0 0.5rem; font-size:0.875rem;">
       <a id="rates-website-link"
          href="https://www.gsa.gov/travel/plan-book/per-diem-rates"
@@ -1986,7 +1999,7 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.20';
+    const APP_VERSION = 'Version 1.0.22';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     // INTL_RATES, INTL_COUNTRIES, INTL_RATES_UPDATED are inlined above
@@ -2815,6 +2828,25 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
       }
     });
 
+    // ── City search (US only) ──────────────────────────────────────────────────
+    document.getElementById('city-search-btn').addEventListener('click', () => {
+      const city  = document.getElementById('city-search').value.trim();
+      const state = stateEl.value;
+      const year  = document.getElementById('start-date').value
+                    ? new Date(document.getElementById('start-date').value).getFullYear()
+                    : new Date().getFullYear();
+      const url = `https://www.gsa.gov/travel/plan-book/per-diem-rates/per-diem-rates-results` +
+                  `?action=perdiems_report&fiscal_year=${year}` +
+                  `&state=${encodeURIComponent(state)}&city=${encodeURIComponent(city)}&zip=`;
+      window.open(url, '_blank', 'noopener,noreferrer');
+    });
+
+    // Show city search row only for US after a state is selected
+    stateEl.addEventListener('change', () => {
+      const searchRow = document.getElementById('city-search-row');
+      searchRow.style.display = stateEl.value && countryEl.value === 'US' ? '' : 'none';
+    });
+
     // ── Initialize state dropdown and rates link for default country (US) ────
     updateRatesLink(countryEl.value);
     populateStates(countryEl.value);
@@ -2822,6 +2854,8 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
 </script>
 </body>
 </html>
+
+
 
 
 
