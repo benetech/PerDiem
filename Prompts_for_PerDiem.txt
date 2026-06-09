@@ -1,4 +1,4 @@
-Prompt History for Benetech Food Per Diem Calculator (PerDiem.html)
+﻿Prompt History for Benetech Food Per Diem Calculator (PerDiem.html)
 Created by Charles LaPierre
 Recreated from session history. All prompts prior to v1.0.2 predate the auto-logging hook
 and do not have accurate version numbers. From v1.0.2 onward, versions are auto-tracked.
@@ -303,6 +303,7 @@ Prompt: can we also use auto complete for Conference and Project codes?
 
 [v1.0.14]
 Prompt: browsers autocomplete is all that is needed here
+Change: Removed localStorage autocomplete approach; reverted to browser-native autocomplete (autocomplete=name attribute)
 ---
 
 [v1.0.15]
@@ -331,6 +332,7 @@ Prompt: Lets go with Export Summary as Image. Status should say Summary Saved to
 
 [v1.0.21]
 Prompt: make sure the version # is a variable — single source confirmed
+Change: Confirmed APP_VERSION is already a single JS constant used in both the H1 area and the Reimbursement Summary
 ---
 
 [v1.0.22]
@@ -351,4 +353,65 @@ Prompt: I noticed the version number isn't always going up by one, went from .23
 
 [v1.0.26]
 Prompt: From now on for every new project keep track of every prompt update along with version # in Prompt_for_<project Name>.txt. Recreate all prompts for this project and save in root directory.
+---
+[Version 1.0.27] [2026-06-09 10:43:59]
+Prompt: why don't I see a PR with all these fixes?
+---
+
+[Version 1.0.28] [2026-06-09 10:47:42]
+Prompt: now if you don't use USA since state will be removed it won't be required right?
+---
+
+[Version 1.0.29] [2026-06-09 10:54:27]
+Prompt: sure might as well
+---
+
+[v1.0.27]
+Prompt: I noticed comments in the code talking about external dependencies which no longer exist.
+Change: Updated HTML comment block — all dependencies (html2canvas, international rates) are inlined, no CDN references
+---
+
+[v1.0.27]
+Prompt: can you add just above the submit button small text PerDiem Rates Website which links to either the USA rates page or the International webpage for countries not USA
+Change: Add PerDiem Rates Website link above Submit button — switches between GSA and State Dept URLs based on country selection
+---
+
+[v1.0.28]
+Prompt: So for California the city Los Angeles comes up but not the corresponding counties, can you include them
+Change: Show associated counties in US city dropdown (e.g. Los Angeles (Los Angeles / Orange))
+---
+
+[v1.0.28]
+Prompt: Right but I don't want you to bring up their website I want you to execute the search find that it should be Los Angeles and populate that and hit the Submit button if you find a match. If there is no match bring up an error message saying City not found
+Change: City search queries GSA API directly, auto-selects matching city and triggers Submit, shows error if not found
+---
+
+[v1.0.28]
+Prompt: Make sure you move the page down so you see the new data have the Updated City is at the top of the page. Also in the M&IE Values Used include the Country, State, City used.
+Change: Scroll to results on submit + add Location line to M&IE Values Used section
+---
+
+[v1.0.29]
+Prompt: please scan the PerDiem file and check to see if it currently meets all WCAG 2.2 AA requirements
+Change: WCAG 2.2 AA audit performed — three genuine issues identified
+---
+
+[v1.0.29]
+Prompt: yes (Fix WCAG issues)
+Change: Fix WCAG 2.2 AA issues — autocomplete=name on name field, required attribute on state select, improved city search label
+---
+
+[v1.0.29]
+Prompt: now if you don't use USA since state will be removed it won't be required right?
+Change: Make state required attribute dynamic — true for US, false for all other countries
+---
+
+[v1.0.29]
+Prompt: sure might as well (fix stale banner border contrast)
+Change: Fix stale banner border contrast in light mode — changed #d4a017 (2.1:1) to #9a6700 (4.4:1) to meet WCAG 1.4.11
+---
+
+[v1.0.29]
+Prompt: so if I answer a question from you which leads to a version update, please make sure that question gets added to the prompt.txt file since "Sure let's do that" doesn't tell me what the real question being answered was
+Change: Updated backup_version.ps1 to include git commit message as Change context in every prompt log entry
 ---
