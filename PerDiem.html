@@ -2001,7 +2001,7 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.27';
+    const APP_VERSION = 'Version 1.0.28';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     // INTL_RATES, INTL_COUNTRIES, INTL_RATES_UPDATED are inlined above
@@ -2108,6 +2108,7 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
         stateRow.style.display = '';
         cityRow.style.display  = '';
         stateEl.disabled = false;
+        stateEl.required = true;
         for (const [code, name] of US_STATES) {
           const opt = document.createElement('option');
           opt.value = code;
@@ -2116,6 +2117,7 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
         }
       } else {
         stateRow.style.display = 'none';
+        stateEl.required = false;
         cityRow.style.display  = '';
         const cities = INTL_RATES[country] || [];
         cityEl.innerHTML = '<option value="">-- Select a city --</option>';
@@ -2900,6 +2902,7 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
 </script>
 </body>
 </html>
+
 
 
 
