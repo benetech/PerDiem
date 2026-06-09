@@ -1,0 +1,354 @@
+Prompt History for Benetech Food Per Diem Calculator (PerDiem.html)
+Created by Charles LaPierre
+Recreated from session history. All prompts prior to v1.0.2 predate the auto-logging hook
+and do not have accurate version numbers. From v1.0.2 onward, versions are auto-tracked.
+Current version as of recreation: 1.0.26
+===================================================================================
+
+[Pre-hook]
+Prompt: Create a file called test.html with a Hello World heading
+---
+
+[Pre-hook]
+Prompt: Add a form to test.html with a start date field and end date field, both labeled for screen readers
+---
+
+[Pre-hook]
+Prompt: Add a country dropdown to the form defaulting to USA
+---
+
+[Pre-hook]
+Prompt: Add a results table below the existing form with columns: Type, Total Daily Rate, Breakfast, Lunch, Dinner, Misc
+---
+
+[Pre-hook]
+Prompt: Add JavaScript to fetch data from an external government API and populate the table. Please use https://www.gsa.gov/travel/plan-book/per-diem-rates for US location per-diem rates or if the location is outside the usa go to https://allowances.state.gov/web920/per_diem.asp
+---
+
+[Pre-hook]
+Prompt: the state file should be first then the city, and not an edit field but dropdown based on country picked. Then city populated based on state picked. Also in dark theme the color contrast fails wcag
+---
+
+[Pre-hook]
+Prompt: getting error 404 for any city with multiple options, single cities seem to work
+---
+
+[Pre-hook]
+Prompt: The rates are wrong. When I go to the GSA website and pick Denver I get specific numbers. Those should be the numbers picked and Total Daily Rate is really the M&IE total so change that in the header
+---
+
+[Pre-hook]
+Prompt: the first and last day rate is incorrect, should be 75% of Standard rate
+---
+
+[Pre-hook]
+Prompt: rename this file to PerDiem.html with the heading of "Food PerDiem Rates". Also make sure the end date doesn't start before the begin date, if possible grey out the dates not available.
+---
+
+[Pre-hook]
+Prompt: when I pick a different country, state and city not available
+---
+
+[Pre-hook]
+Prompt: when I pick a country other than USA, the City field should still be visible and populated based on the cities listed in the Post Name column from the State Dept per diem page when you select the same country the user selected.
+---
+
+[Pre-hook]
+Prompt: can you always allow for Claude to use PowerShell
+---
+
+[Pre-hook]
+Prompt: The GSA API rate limit was reached. I don't think having the Retry button is needed? Also it's been over an hour and still has this error
+---
+
+[Pre-hook]
+Prompt: retry button needs to go away if I change to a different country or state. After the Grand total please duplicate the first table showing the Standard / Travel day pricing
+---
+
+[Pre-hook]
+Prompt: Also the warning GSA API limit needs to go away along with the retry button
+---
+
+[Pre-hook]
+Prompt: submit button looks like it can be pressed. Also after I switch to a different country and pick a City the Submit button doesn't work.
+---
+
+[Pre-hook]
+Prompt: that works but why can't I get any cities to populate for USA now?
+---
+
+[Pre-hook]
+Prompt: move the M&IE total to the last column in both of those tables. Add a Name Field at the top. Add a Conference Field at the top. All fields are required. Add a label explaining required fields are marked with a red *.
+---
+
+[Pre-hook]
+Prompt: add an error note saying "Field must be filled in" if it isn't when the submit button is entered
+---
+
+[Pre-hook]
+Prompt: error note should appear directly under field and screen reader should be told what the error is and then brought to the first error
+---
+
+[Pre-hook]
+Prompt: M&IE total rate should be in last column in Reimbursement Summary. Name/conference should appear after the Reimbursement Summary H2. Daily Meal Grid should be an H2 as well.
+---
+
+[Pre-hook]
+Prompt: I also don't want the M&IE total column in the main reimbursement summary table, only in the final small table with full/travel day amounts
+---
+
+[Pre-hook]
+Prompt: final table headers are incorrect — Type / M&IE Total / Breakfast / Lunch / Dinner / Misc column order wrong
+---
+
+[Pre-hook]
+Prompt: Add a new section below the existing form that dynamically generates a per-day meal grid when the user has entered valid start and end dates. Columns: Date, Day Type, Breakfast Provided, Lunch Provided, Dinner Provided. Each row is one day. First day = Arrival (Travel Day), last = Departure (Travel Day), all others = Full Day. Each meal column contains a checkbox. Add Select All checkbox in each meal column header.
+---
+
+[Pre-hook]
+Prompt: move the Calculate button under the table of Meal Grid and when you click calculate have the Reimbursement Summary appear under that calculate button.
+---
+
+[Pre-hook]
+Prompt: when I hit submit now nothing happens the tables don't reappear
+---
+
+[Pre-hook]
+Prompt: Add a Calculate button below the meal grid. When clicked it reads the existing results table and meal grid checkboxes, and generates a new summary table with columns: Date, Day Type, Breakfast, Lunch, Dinner, Misc, Daily Total. Checked meals show $0.00 (Provided). Add a grand total row.
+---
+
+[Pre-hook]
+Prompt: Change first & last Day to be Travel Days 75%, and the color contrast of the submit button fails color contrast
+---
+
+[Pre-hook]
+Prompt: the states aren't populating right away anymore for USA
+---
+
+[Pre-hook]
+Prompt: got a could not load cities API 429 error when I selected Colorado now
+---
+
+[Pre-hook]
+Prompt: Change the labels "Start Date" to "Begin Travel Date:" and "End Date" to "Return Travel Date:"
+---
+
+[Pre-hook]
+Prompt: when I go into a new row or column it seems to repeat extra information. Departure (Travel Day) goes on 2 lines, want it on one line
+---
+
+[Pre-hook]
+Prompt: I still hear Select all Breakfast Provided when navigating table cells — should only hear column/row headers
+---
+
+[Pre-hook]
+Prompt: use the code from meal-grid.html instead as this works (fieldset/legend for Select All checkboxes)
+---
+
+[Pre-hook]
+Prompt: include the nice outline border for the grouping. Also when I move down a row I hear extra information that repeats info.
+---
+
+[Pre-hook]
+Prompt: We don't need "Provided" at the end of checkbox labels. When entering new column should hear just column name, not duplicated text
+---
+
+[Pre-hook]
+Prompt: after you select the initial information and hit Submit the screen reader isn't told there is new data. Add new H2 "Per Diem Overview" and focus should move to that.
+---
+
+[Pre-hook]
+Prompt: when I moved to the new check all box I heard all three announced when going to the first checkbox — shouldn't say all of them
+---
+
+[Pre-hook]
+Prompt: use the code from meal-grid.html instead as this works (to fix screen reader announcing all checkboxes)
+---
+
+[Pre-hook]
+Prompt: so there seems to be an issue for the number of other countries offered — only see 10 countries total, the State Dept page shows 50 or more
+---
+
+[Pre-hook]
+Prompt: the actual MEI rates are retrieved based on the date of travel though correct?
+---
+
+[Pre-hook]
+Prompt: Right so if today's date is in a new year or is after July 1st we should force a refresh and keep today's date as last time it was refreshed. Then at the end after the reimbursement summary have an H3 with MEI Values Used followed by Last Updated: Date followed by the current table of values.
+---
+
+[Pre-hook]
+Prompt: no lets roll back to the old way — CORS blocked browser refresh, must be done via Claude
+---
+
+[Pre-hook]
+Prompt: from now on when you are finished will all calculations please display ************ Done
+---
+
+[Pre-hook]
+Prompt: in the comments of the code have the creator of this tool be "Charles LaPierre"
+---
+
+[Pre-hook]
+Prompt: Add a Conference Field. Add Project Code edit field (mandatory). Include in summary data.
+---
+
+[Pre-hook]
+Prompt: make sure the version # is a variable since it will be displayed in a couple of places so it only needs to be updated once
+---
+
+[Pre-hook]
+Prompt: hide the rates table and Daily Meal Grid etc. until the Submit button is pressed
+---
+
+[Pre-hook]
+Prompt: Don't bring up the next steps until after they save the image
+---
+
+[Pre-hook]
+Prompt: after the Manually create expense it brings up a dialog box where you choose Meals & IE Per Diem so that will be filled in on the next screen. Payment type defaults to Cash. They also need Business Purpose.
+---
+
+[Pre-hook]
+Prompt: Also include a version # right after the H1. Version 1.0 (date). Only when I say will you update the version # and use the current date.
+---
+
+[Pre-hook]
+Prompt: Lets add a Horizontal line, H2 - Next Steps, Log into Concur button, instructions for expense report
+---
+
+[Pre-hook]
+Prompt: to create each expense you must click Add Expense then Manually create expense. The Expense type is Meals & IE per Diem.
+---
+
+[Pre-hook]
+Prompt: I want to have at least 2 backups of the files being modified in a backups folder. The version # can be 1.0 but add another value that auto increments always when changes are made. So for now lets have 1.0.1 and continue from there. Backups should include the version # in the names.
+---
+
+[Pre-hook]
+Prompt: I changed my mind lets keep the last 10 backups instead of just 2
+---
+
+[Pre-hook]
+Prompt: want that warning to show up right under the Country field if a different country other than USA is picked
+---
+
+[Pre-hook]
+Prompt: ok lets remove the test code (staleness check restore)
+---
+
+[Pre-hook]
+Prompt: lets put a box around M&IE Values Used and its data table in the summary
+---
+
+[Pre-hook]
+Prompt: Check to make sure the end date from being sooner than the start if added manually
+---
+
+[Pre-hook]
+Prompt: also some of the dates go on two lines we need them to be on one line, make that column larger
+---
+
+[Pre-hook]
+Prompt: Lets bold the Daily Total values and only the Grand Total final value not all of values
+---
+
+[v1.0.2]
+Prompt: from now on when you are finished will all calculations please display ************ Done (backup hook first confirmed working)
+---
+
+[v1.0.3]
+Prompt: Make the H1 20% larger
+---
+
+[v1.0.4]
+Prompt: what about the labels? Yes lets match them to 1.125rem
+---
+
+[v1.0.5]
+Prompt: International rates warning — include the Claude prompt for this file. Also include warning in summary under Last Updated.
+---
+
+[v1.0.6]
+Prompt: ok lets remove the test code (remove forced staleness flag)
+---
+
+[v1.0.7]
+Prompt: lets put a box around M&IE Values Used and its data table in the summary
+---
+
+[v1.0.8]
+Prompt: Check to make sure the end date cannot be sooner than the start date if added manually
+---
+
+[v1.0.9]
+Prompt: departure (Travel Day) goes on 2 lines I want it on one line
+---
+
+[v1.0.10]
+Prompt: also some of the dates go on two lines we need them to be on one line make that column larger
+---
+
+[v1.0.11]
+Prompt: Lets bold the Daily Total values and only the Grand Total final value not all of values as those aren't important
+---
+
+[v1.0.12]
+Prompt: I changed my mind lets keep the last 10 backups instead of just 2
+---
+
+[v1.0.13]
+Prompt: can we also use auto complete for Conference and Project codes?
+---
+
+[v1.0.14]
+Prompt: browsers autocomplete is all that is needed here
+---
+
+[v1.0.15]
+Prompt: also some of the dates go on two lines (re-attempt with correct CSS)
+---
+
+[v1.0.16]
+Prompt: can we get some whitespace around this, it's right to the edge, lets add 1/2 inch at least (export image padding)
+---
+
+[v1.0.17]
+Prompt: Lets change the file name to PerDiem_<Conference Name>_<Start Date> for saved image
+---
+
+[v1.0.18]
+Prompt: can we remove the button and generating image from the output file
+---
+
+[v1.0.19]
+Prompt: could it instead ask where to save the file and bring up a file dialog box instead
+---
+
+[v1.0.20]
+Prompt: Lets go with Export Summary as Image. Status should say Summary Saved to file location.
+---
+
+[v1.0.21]
+Prompt: make sure the version # is a variable — single source confirmed
+---
+
+[v1.0.22]
+Prompt: can we also use auto complete for Conference and Project codes?
+---
+
+[v1.0.23]
+Prompt: so there seems to be an issue for the number of other countries — expanded to 228 from State Dept
+---
+
+[v1.0.24]
+Prompt: no lets roll back to the old way for international rates — CORS blocked on-demand fetch
+---
+
+[v1.0.25]
+Prompt: I noticed the version number isn't always going up by one, went from .23 to .26 — fixed rate-limit to once per 60 seconds
+---
+
+[v1.0.26]
+Prompt: From now on for every new project keep track of every prompt update along with version # in Prompt_for_<project Name>.txt. Recreate all prompts for this project and save in root directory.
+---
