@@ -240,6 +240,11 @@
       </select>
       <span class="field-error" id="err-city" role="alert"></span>
     </div>
+    <p style="margin:0 0 0.5rem; font-size:0.875rem;">
+      <a id="rates-website-link"
+         href="https://www.gsa.gov/travel/plan-book/per-diem-rates"
+         target="_blank" rel="noopener noreferrer">PerDiem Rates Website</a>
+    </p>
     <button type="submit">Submit</button>
   </form>
   <p id="error-msg" role="alert"></p>
@@ -1981,7 +1986,7 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.16';
+    const APP_VERSION = 'Version 1.0.19';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     // INTL_RATES, INTL_COUNTRIES, INTL_RATES_UPDATED are inlined above
@@ -2203,8 +2208,18 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
       showError('');
     }
 
+    function updateRatesLink(country) {
+      const link = document.getElementById('rates-website-link');
+      if (country === 'US') {
+        link.href = 'https://www.gsa.gov/travel/plan-book/per-diem-rates';
+      } else {
+        link.href = 'https://allowances.state.gov/web920/per_diem.asp';
+      }
+    }
+
     countryEl.addEventListener('change', () => {
       resetResults();
+      updateRatesLink(countryEl.value);
       populateStates(countryEl.value);
     });
     stateEl.addEventListener('change', () => {
@@ -2795,12 +2810,16 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
       }
     });
 
-    // ── Initialize state dropdown for default country (US) ─────────────────
+    // ── Initialize state dropdown and rates link for default country (US) ────
+    updateRatesLink(countryEl.value);
     populateStates(countryEl.value);
 
 </script>
 </body>
 </html>
+
+
+
 
 
 
