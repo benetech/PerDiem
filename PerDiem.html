@@ -248,10 +248,16 @@
       <div style="display:flex; gap:0.5rem; align-items:center;">
         <input type="text" id="city-search" name="city-search"
                placeholder="e.g. Anaheim or 90210"
-               style="margin-bottom:0; font-size:0.875rem;">
+               style="margin-bottom:0; font-size:0.875rem;"
+               onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('city-search-btn').click();}">
         <button type="button" id="city-search-btn" style="font-size:0.875rem; padding:0.35rem 0.75rem; white-space:nowrap;">
           Search GSA
         </button>
+      </div>
+      <div id="city-search-confirm" style="display:none; margin-top:0.5rem; font-size:0.875rem; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+        <span id="city-search-confirm-msg" style="font-size:1rem;"></span>
+        <button type="button" id="city-search-confirm-yes" style="font-size:0.875rem; padding:0.25rem 0.6rem;">Yes, use this</button>
+        <button type="button" id="city-search-confirm-no"  style="font-size:0.875rem; padding:0.25rem 0.6rem;">No, cancel</button>
       </div>
     </div>
     <p style="margin:0 0 0.5rem; font-size:0.875rem;">
@@ -2001,7 +2007,7 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.32';
+    const APP_VERSION = 'Version 1.0.41';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2241,17 +2247,25 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
       }
     }
 
+    function clearCityConfirm() {
+      document.getElementById('city-search-confirm').style.display = 'none';
+      document.getElementById('city-search').value = '';
+    }
+
     countryEl.addEventListener('change', () => {
+      clearCityConfirm();
       resetResults();
       updateRatesLink(countryEl.value);
       populateStates(countryEl.value);
     });
     stateEl.addEventListener('change', () => {
+      clearCityConfirm();
       clearRetryBtn();
       resetResults();
       if (stateEl.value) populateCities(stateEl.value);
     });
     cityEl.addEventListener('change', () => {
+      clearCityConfirm();
       resetResults();
     });
 
@@ -2900,10 +2914,32 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
         const match = [...cityEl.options].find(o => o.value === gsaCity);
         if (!match) throw new Error('not_found');
 
-        // Select it and trigger submit
-        cityEl.value = gsaCity;
-        cityEl.dispatchEvent(new Event('change'));
-        document.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        // If the API returned the first real city in the dropdown it likely just defaulted —
+        // ask the user to confirm before submitting.
+        const firstCity = [...cityEl.options].find(o => o.value)?.value;
+        const isDefault = gsaCity === firstCity;
+
+        if (!isDefault) {
+          cityEl.value = gsaCity;
+          cityEl.dispatchEvent(new Event('change'));
+          document.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        } else {
+          const confirmDiv = document.getElementById('city-search-confirm');
+          document.getElementById('city-search-confirm-msg').textContent =
+            `GSA matched "${typed}" to: ${gsaCity}. Is this correct?`;
+          confirmDiv.style.display = 'flex';
+
+          document.getElementById('city-search-confirm-yes').onclick = () => {
+            confirmDiv.style.display = 'none';
+            cityEl.value = gsaCity;
+            cityEl.dispatchEvent(new Event('change'));
+            document.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+          };
+          document.getElementById('city-search-confirm-no').onclick = () => {
+            confirmDiv.style.display = 'none';
+            document.getElementById('city-search').focus();
+          };
+        }
 
       } catch (err) {
         const isZip = /^\d{5}$/.test(typed);
