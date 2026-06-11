@@ -248,7 +248,8 @@
       <div style="display:flex; gap:0.5rem; align-items:center;">
         <input type="text" id="city-search" name="city-search"
                placeholder="e.g. Anaheim or 90210"
-               style="margin-bottom:0; font-size:0.875rem;">
+               style="margin-bottom:0; font-size:0.875rem;"
+               onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('city-search-btn').click();}">
         <button type="button" id="city-search-btn" style="font-size:0.875rem; padding:0.35rem 0.75rem; white-space:nowrap;">
           Search GSA
         </button>
@@ -2006,7 +2007,7 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.40';
+    const APP_VERSION = 'Version 1.0.41';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
