@@ -2006,7 +2006,7 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.35';
+    const APP_VERSION = 'Version 1.0.36';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2869,20 +2869,6 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
         const isZip = /^\d{5}$/.test(typed);
         let gsaCity, gsaState;
 
-        // Before calling the API, check if the typed text matches any city already in the dropdown.
-        // If it does, use it directly — no API call needed and no false positives.
-        if (!isZip) {
-          const norm = s => s.toLowerCase().replace(/[^a-z0-9]/g, '');
-          const typedNorm = norm(typed);
-          const directMatch = [...cityEl.options].find(o => norm(o.value).includes(typedNorm));
-          if (directMatch) {
-            cityEl.value = directMatch.value;
-            cityEl.dispatchEvent(new Event('change'));
-            document.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-            return;
-          }
-        }
-
         if (isZip) {
           // ZIP code lookup — no state required
           const res = await fetch(
@@ -2919,18 +2905,16 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
         const match = [...cityEl.options].find(o => o.value === gsaCity);
         if (!match) throw new Error('not_found');
 
-        // If the returned city doesn't obviously match what the user typed, ask for confirmation
-        const normalize = s => s.toLowerCase().replace(/[^a-z0-9]/g, '');
-        const typedNorm  = normalize(typed);
-        const returnNorm = normalize(gsaCity);
-        const obvious    = returnNorm.includes(typedNorm) || typedNorm.includes(returnNorm);
+        // If the API returned the first real city in the dropdown it likely just defaulted —
+        // ask the user to confirm before submitting.
+        const firstCity = [...cityEl.options].find(o => o.value)?.value;
+        const isDefault = gsaCity === firstCity;
 
-        if (obvious) {
+        if (!isDefault) {
           cityEl.value = gsaCity;
           cityEl.dispatchEvent(new Event('change'));
           document.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
         } else {
-          // Show confirmation — GSA mapped to a county/region name
           const confirmDiv = document.getElementById('city-search-confirm');
           document.getElementById('city-search-confirm-msg').textContent =
             `GSA matched "${typed}" to: ${gsaCity}. Is this correct?`;
