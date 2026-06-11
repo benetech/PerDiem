@@ -253,6 +253,11 @@
           Search GSA
         </button>
       </div>
+      <div id="city-search-confirm" style="display:none; margin-top:0.5rem; font-size:0.875rem; display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+        <span id="city-search-confirm-msg" style="color:var(--text-muted);"></span>
+        <button type="button" id="city-search-confirm-yes" style="font-size:0.875rem; padding:0.25rem 0.6rem;">Yes, use this</button>
+        <button type="button" id="city-search-confirm-no"  style="font-size:0.875rem; padding:0.25rem 0.6rem;">No, cancel</button>
+      </div>
     </div>
     <p style="margin:0 0 0.5rem; font-size:0.875rem;">
       <a id="rates-website-link"
@@ -2001,7 +2006,7 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.33';
+    const APP_VERSION = 'Version 1.0.34';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2885,14 +2890,6 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
           const data = await res.json();
           const rates = data.rates?.[0]?.rate;
           if (!rates || rates.length === 0) throw new Error('not_found');
-          // GSA sometimes returns a fuzzy/first result instead of a real match.
-          // Verify the returned city name contains the typed text (case-insensitive).
-          const normalize = s => s.toLowerCase().replace(/[^a-z0-9]/g, '');
-          const typedNorm = normalize(apiCity);
-          const returnedNorm = normalize(rates[0].city);
-          if (!returnedNorm.includes(typedNorm) && !typedNorm.includes(returnedNorm)) {
-            throw new Error('not_found');
-          }
           gsaCity  = rates[0].city;
           gsaState = state;
         }
@@ -2908,10 +2905,33 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
         const match = [...cityEl.options].find(o => o.value === gsaCity);
         if (!match) throw new Error('not_found');
 
-        // Select it and trigger submit
-        cityEl.value = gsaCity;
-        cityEl.dispatchEvent(new Event('change'));
-        document.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        // If the returned city doesn't obviously match what the user typed, ask for confirmation
+        const normalize = s => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const typedNorm  = normalize(typed);
+        const returnNorm = normalize(gsaCity);
+        const obvious    = returnNorm.includes(typedNorm) || typedNorm.includes(returnNorm);
+
+        if (obvious) {
+          cityEl.value = gsaCity;
+          cityEl.dispatchEvent(new Event('change'));
+          document.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        } else {
+          // Show confirmation — GSA mapped to a county/region name
+          const confirmDiv = document.getElementById('city-search-confirm');
+          document.getElementById('city-search-confirm-msg').textContent =
+            `GSA matched "${typed}" to: ${gsaCity}. Is this correct?`;
+          confirmDiv.style.display = 'flex';
+
+          document.getElementById('city-search-confirm-yes').onclick = () => {
+            confirmDiv.style.display = 'none';
+            cityEl.value = gsaCity;
+            cityEl.dispatchEvent(new Event('change'));
+            document.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+          };
+          document.getElementById('city-search-confirm-no').onclick = () => {
+            confirmDiv.style.display = 'none';
+          };
+        }
 
       } catch (err) {
         const isZip = /^\d{5}$/.test(typed);
