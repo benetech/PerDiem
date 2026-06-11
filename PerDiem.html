@@ -2001,7 +2001,7 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.30';
+    const APP_VERSION = 'Version 1.0.31';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     // INTL_RATES, INTL_COUNTRIES, INTL_RATES_UPDATED are inlined above
@@ -2914,10 +2914,11 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
       }
     });
 
-    // Show city search row only for US after a state is selected
+    // Show city search row only for US after a state is selected; clear search field on state change
     stateEl.addEventListener('change', () => {
       const searchRow = document.getElementById('city-search-row');
       searchRow.style.display = stateEl.value && countryEl.value === 'US' ? '' : 'none';
+      document.getElementById('city-search').value = '';
     });
 
     // ── Initialize state dropdown and rates link for default country (US) ────
@@ -2927,6 +2928,7 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
 </script>
 </body>
 </html>
+
 
 
 
