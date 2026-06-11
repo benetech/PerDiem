@@ -2001,7 +2001,7 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.32';
+    const APP_VERSION = 'Version 1.0.33';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2885,6 +2885,14 @@ var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", 
           const data = await res.json();
           const rates = data.rates?.[0]?.rate;
           if (!rates || rates.length === 0) throw new Error('not_found');
+          // GSA sometimes returns a fuzzy/first result instead of a real match.
+          // Verify the returned city name contains the typed text (case-insensitive).
+          const normalize = s => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+          const typedNorm = normalize(apiCity);
+          const returnedNorm = normalize(rates[0].city);
+          if (!returnedNorm.includes(typedNorm) && !typedNorm.includes(returnedNorm)) {
+            throw new Error('not_found');
+          }
           gsaCity  = rates[0].city;
           gsaState = state;
         }
