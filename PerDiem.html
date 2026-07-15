@@ -2191,7 +2191,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.43';
+    const APP_VERSION = 'Version 1.0.44';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2270,7 +2270,9 @@ var INTL_COUNTRIES = [
     }
 
     // Compute staleness once so populateStates and the check both use the same logic
-    const _staleUpdated = new Date(INTL_RATES_UPDATED);
+    // Parse date parts directly to avoid UTC-vs-local timezone shifting
+    const [_uy, _um, _ud] = INTL_RATES_UPDATED.split('-').map(Number);
+    const _staleUpdated = new Date(_uy, _um - 1, _ud);
     const _today        = new Date();
     const _intlIsStale  = _today.getFullYear() > _staleUpdated.getFullYear() ||
       (_today >= new Date(_today.getFullYear(), 6, 1) && _staleUpdated < new Date(_today.getFullYear(), 6, 1));
