@@ -429,27 +429,27 @@
 </script>
   <script>
 // International rates data
-var INTL_RATES_UPDATED = '2026-06-05';
+var INTL_RATES_UPDATED = '2026-07-01';
 
 var INTL_RATES = {
   "AFGHANISTAN": [
-    { city: "Kabul", mie: 78 },
-    { city: "Other", mie: 15 }
+    { city: "Other", mie: 15 },
+    { city: "Kabul", mie: 78 }
   ],
   "ALBANIA": [
     { city: "Other", mie: 81 },
     { city: "Tirana", mie: 122 }
   ],
   "ALGERIA": [
-    { city: "Algiers", mie: 118 },
-    { city: "Other", mie: 109 }
+    { city: "Other", mie: 109 },
+    { city: "Algiers", mie: 118 }
   ],
   "ANDORRA": [
     { city: "Andorra", mie: 128 }
   ],
   "ANGOLA": [
-    { city: "Luanda", mie: 199 },
-    { city: "Other", mie: 199 }
+    { city: "Other", mie: 199 },
+    { city: "Luanda", mie: 199 }
   ],
   "ANGUILLA": [
     { city: "The Valley", mie: 130 }
@@ -458,29 +458,30 @@ var INTL_RATES = {
     { city: "Antarctica Region Posts", mie: 1 }
   ],
   "ANTIGUA AND BARBUDA": [
-    { city: "Antigua and Barbuda", mie: 138 },
-    { city: "Antigua and Barbuda", mie: 125 },
     { city: "Other", mie: 18 },
-    { city: "Other", mie: 19 }
+    { city: "Other", mie: 19 },
+    { city: "Antigua and Barbuda", mie: 138 },
+    { city: "Antigua and Barbuda", mie: 125 }
   ],
   "ARGENTINA": [
+    { city: "Other", mie: 120 },
     { city: "Bariloche", mie: 132 },
     { city: "Buenos Aires", mie: 126 },
-    { city: "Mendoza", mie: 119 },
-    { city: "Other", mie: 120 }
+    { city: "Mendoza", mie: 119 }
   ],
   "ARMENIA": [
     { city: "Other", mie: 93 },
     { city: "Yerevan", mie: 93 }
   ],
-  "Aruba": [
-    { city: "Oranjestad", mie: 160 },
-    { city: "Other", mie: 160 }
+  "ARUBA": [
+    { city: "Other", mie: 160 },
+    { city: "Oranjestad", mie: 160 }
   ],
   "ASCENSION ISLAND": [
     { city: "Ascension Island", mie: 29 }
   ],
   "AUSTRALIA": [
+    { city: "Other", mie: 130 },
     { city: "Adelaide", mie: 114 },
     { city: "Bendigo", mie: 123 },
     { city: "Brisbane", mie: 133 },
@@ -492,41 +493,40 @@ var INTL_RATES = {
     { city: "Fremantle", mie: 106 },
     { city: "Hobart", mie: 131 },
     { city: "Melbourne", mie: 112 },
-    { city: "Other", mie: 130 },
     { city: "Perth", mie: 135 },
     { city: "Richmond, NSW", mie: 106 },
     { city: "Sydney", mie: 147 }
   ],
   "AUSTRIA": [
+    { city: "Other", mie: 130 },
     { city: "Graz", mie: 123 },
     { city: "Innsbruck", mie: 130 },
     { city: "Linz", mie: 152 },
-    { city: "Other", mie: 130 },
     { city: "Salzburg", mie: 118 },
     { city: "Vienna", mie: 146 }
   ],
   "AZERBAIJAN": [
+    { city: "Other", mie: 81 },
     { city: "Baku", mie: 145 },
     { city: "Ganja", mie: 90 },
-    { city: "Other", mie: 81 },
     { city: "Qabala", mie: 84 }
   ],
-  "Bahamas, The": [
+  "BAHAMAS, THE": [
+    { city: "Other", mie: 132 },
     { city: "Andros Island", mie: 107 },
     { city: "Eleuthera Island", mie: 143 },
     { city: "Eleuthera Island", mie: 150 },
     { city: "Grand Bahama Island", mie: 126 },
-    { city: "Nassau", mie: 181 },
-    { city: "Other", mie: 132 }
+    { city: "Nassau", mie: 181 }
   ],
   "BAHRAIN": [
     { city: "Bahrain", mie: 126 },
     { city: "MANAMA", mie: 126 }
   ],
   "BANGLADESH": [
+    { city: "Other", mie: 135 },
     { city: "Chittagong", mie: 118 },
     { city: "Dhaka", mie: 132 },
-    { city: "Other", mie: 135 },
     { city: "Sylhet", mie: 123 }
   ],
   "BARBADOS": [
@@ -534,10 +534,11 @@ var INTL_RATES = {
     { city: "Barbados", mie: 178 }
   ],
   "BELARUS": [
-    { city: "Minsk", mie: 120 },
-    { city: "Other", mie: 120 }
+    { city: "Other", mie: 120 },
+    { city: "Minsk", mie: 120 }
   ],
   "BELGIUM": [
+    { city: "Other", mie: 135 },
     { city: "Antwerp", mie: 171 },
     { city: "Bruges", mie: 157 },
     { city: "Brussels", mie: 178 },
@@ -546,23 +547,22 @@ var INTL_RATES = {
     { city: "Kleine Brogel", mie: 82 },
     { city: "Liege", mie: 78 },
     { city: "Mons", mie: 120 },
-    { city: "Other", mie: 135 },
     { city: "SHAPE/Chievres", mie: 120 },
     { city: "Zaventem", mie: 178 }
   ],
   "BELIZE": [
+    { city: "Other", mie: 101 },
     { city: "Belize City", mie: 139 },
     { city: "Belmopan", mie: 91 },
     { city: "Caye Caulker", mie: 115 },
     { city: "Hopkins", mie: 133 },
-    { city: "Other", mie: 101 },
     { city: "Placencia", mie: 144 },
     { city: "San Ignacio Town", mie: 112 },
     { city: "San Pedro", mie: 127 }
   ],
   "BENIN": [
-    { city: "Cotonou", mie: 114 },
-    { city: "Other", mie: 60 }
+    { city: "Other", mie: 60 },
+    { city: "Cotonou", mie: 114 }
   ],
   "BERMUDA": [
     { city: "Bermuda", mie: 242 },
@@ -572,39 +572,39 @@ var INTL_RATES = {
     { city: "Bhutan", mie: 112 }
   ],
   "BOLIVIA": [
+    { city: "Other", mie: 64 },
     { city: "Cochabamba", mie: 76 },
     { city: "La Paz", mie: 94 },
-    { city: "Other", mie: 64 },
     { city: "Potosi", mie: 70 },
     { city: "Santa Cruz", mie: 91 },
     { city: "Tarija", mie: 81 }
   ],
-  "Bonaire, Sint Eustatius, and Saba": [
+  "BONAIRE, SINT EUSTATIUS, AND SABA": [
     { city: "Bonaire", mie: 126 },
     { city: "Saba", mie: 129 },
     { city: "Sint Eustatius", mie: 110 }
   ],
-  "Bosnia and Herzegovina": [
+  "BOSNIA AND HERZEGOVINA": [
     { city: "Other", mie: 113 },
     { city: "Sarajevo", mie: 113 }
   ],
   "BOTSWANA": [
+    { city: "Other", mie: 64 },
     { city: "Francistown", mie: 75 },
     { city: "Gaborone", mie: 72 },
     { city: "Kasane", mie: 91 },
     { city: "Maun", mie: 71 },
-    { city: "Other", mie: 64 },
     { city: "Selebi Phikwe", mie: 64 },
     { city: "Serowe", mie: 71 }
   ],
   "BRAZIL": [
+    { city: "Other", mie: 116 },
     { city: "Belem", mie: 117 },
     { city: "Belo Horizonte", mie: 109 },
     { city: "Brasilia", mie: 129 },
     { city: "Fortaleza", mie: 123 },
     { city: "Manaus", mie: 144 },
     { city: "Natal", mie: 109 },
-    { city: "Other", mie: 116 },
     { city: "Porto Alegre", mie: 111 },
     { city: "Recife, Pernambuco", mie: 112 },
     { city: "Rio de Janeiro", mie: 129 },
@@ -612,35 +612,35 @@ var INTL_RATES = {
     { city: "Sao Paulo", mie: 140 }
   ],
   "BRUNEI": [
+    { city: "Other", mie: 48 },
     { city: "Bandar Seri Begawan", mie: 93 },
-    { city: "Jerudong", mie: 106 },
-    { city: "Other", mie: 48 }
+    { city: "Jerudong", mie: 106 }
   ],
   "BULGARIA": [
-    { city: "Bourgas", mie: 159 },
     { city: "Other", mie: 192 },
+    { city: "Bourgas", mie: 159 },
     { city: "Plovdiv", mie: 99 },
     { city: "Sofia", mie: 207 },
     { city: "Varna", mie: 187 }
   ],
   "BURKINA FASO": [
-    { city: "Bobo Dioulasso", mie: 65 },
     { city: "Other", mie: 65 },
+    { city: "Bobo Dioulasso", mie: 65 },
     { city: "Ouagadougou", mie: 106 }
   ],
   "BURMA": [
-    { city: "Naypyitaw", mie: 106 },
     { city: "Other", mie: 93 },
+    { city: "Naypyitaw", mie: 106 },
     { city: "Rangoon", mie: 107 }
   ],
   "BURUNDI": [
-    { city: "Bujumbura", mie: 88 },
-    { city: "Other", mie: 88 }
+    { city: "Other", mie: 88 },
+    { city: "Bujumbura", mie: 88 }
   ],
   "CABO VERDE": [
+    { city: "Other", mie: 79 },
     { city: "Boa Vista Island", mie: 63 },
     { city: "Fogo", mie: 76 },
-    { city: "Other", mie: 79 },
     { city: "Praia", mie: 108 },
     { city: "Sal Island", mie: 136 },
     { city: "Sao Tiago Island", mie: 91 },
@@ -653,12 +653,13 @@ var INTL_RATES = {
     { city: "Sihanoukville", mie: 108 }
   ],
   "CAMEROON": [
+    { city: "Other", mie: 63 },
     { city: "Douala", mie: 125 },
     { city: "Limbe", mie: 73 },
-    { city: "Other", mie: 63 },
     { city: "Yaounde", mie: 126 }
   ],
   "CANADA": [
+    { city: "Other", mie: 120 },
     { city: "Calgary", mie: 169 },
     { city: "Dartmouth", mie: 146 },
     { city: "Edmonton", mie: 133 },
@@ -673,7 +674,6 @@ var INTL_RATES = {
     { city: "Montreal", mie: 154 },
     { city: "Nanoose Bay", mie: 90 },
     { city: "Niagara Falls, Ontario", mie: 129 },
-    { city: "Other", mie: 120 },
     { city: "Ottawa", mie: 128 },
     { city: "Prince Edward Island", mie: 136 },
     { city: "Prince Edward Island", mie: 121 },
@@ -698,12 +698,12 @@ var INTL_RATES = {
     { city: "Cayman Islands", mie: 147 }
   ],
   "CENTRAL AFRICAN REPUBLIC": [
-    { city: "Bangui", mie: 91 },
-    { city: "Other", mie: 91 }
+    { city: "Other", mie: 91 },
+    { city: "Bangui", mie: 91 }
   ],
   "CHAD": [
-    { city: "Ndjamena", mie: 115 },
-    { city: "Other", mie: 100 }
+    { city: "Other", mie: 100 },
+    { city: "Ndjamena", mie: 115 }
   ],
   "CHAGOS ARCHIPELAGO": [
     { city: "Diego Garcia", mie: 80 }
@@ -713,13 +713,14 @@ var INTL_RATES = {
     { city: "Santiago", mie: 113 }
   ],
   "CHINA": [
+    { city: "Other", mie: 102 },
     { city: "Beijing", mie: 142 },
     { city: "Changchun", mie: 100 },
     { city: "Chengdu", mie: 126 },
     { city: "Chongqing", mie: 133 },
     { city: "Dalian", mie: 108 },
     { city: "Fuzhou", mie: 117 },
-    { city: "Guangzhou", mie: 152 },
+    { city: "Guangzhou", mie: 157 },
     { city: "Guilin", mie: 92 },
     { city: "Haikou", mie: 117 },
     { city: "Hangzhou", mie: 124 },
@@ -727,10 +728,9 @@ var INTL_RATES = {
     { city: "Jinan", mie: 117 },
     { city: "Lhasa", mie: 111 },
     { city: "Lijiang", mie: 133 },
-    { city: "Nanjing", mie: 102 },
+    { city: "Nanjing", mie: 106 },
     { city: "Nanning", mie: 127 },
     { city: "Ningbo", mie: 92 },
-    { city: "Other", mie: 102 },
     { city: "Qingdao", mie: 108 },
     { city: "Sanya", mie: 136 },
     { city: "Shanghai", mie: 171 },
@@ -749,24 +749,24 @@ var INTL_RATES = {
     { city: "Cocos Islands", mie: 117 }
   ],
   "COLOMBIA": [
-    { city: "Barranquilla", mie: 120 },
-    { city: "Bogota", mie: 171 },
-    { city: "Bucaramanga", mie: 141 },
-    { city: "Buenaventura", mie: 97 },
-    { city: "Cali", mie: 132 },
-    { city: "Cartagena", mie: 168 },
-    { city: "Cucuta", mie: 105 },
-    { city: "Medellin", mie: 144 },
-    { city: "Other", mie: 88 },
-    { city: "Pasto", mie: 88 },
+    { city: "Other", mie: 94 },
+    { city: "Barranquilla", mie: 126 },
+    { city: "Bogota", mie: 180 },
+    { city: "Bucaramanga", mie: 151 },
+    { city: "Buenaventura", mie: 104 },
+    { city: "Cali", mie: 138 },
+    { city: "Cartagena", mie: 176 },
+    { city: "Cucuta", mie: 111 },
+    { city: "Medellin", mie: 153 },
+    { city: "Pasto", mie: 95 },
     { city: "San Andres", mie: 71 },
-    { city: "San Jose del Guaviare", mie: 88 },
-    { city: "Santa Marta", mie: 131 },
-    { city: "Tumaco", mie: 88 }
+    { city: "San Jose del Guaviare", mie: 94 },
+    { city: "Santa Marta", mie: 140 },
+    { city: "Tumaco", mie: 95 }
   ],
   "COMOROS": [
-    { city: "Moroni", mie: 83 },
-    { city: "Other", mie: 91 }
+    { city: "Other", mie: 91 },
+    { city: "Moroni", mie: 83 }
   ],
   "COOK ISLANDS": [
     { city: "Other", mie: 102 },
@@ -777,47 +777,47 @@ var INTL_RATES = {
     { city: "San Jose", mie: 153 }
   ],
   "COTE D'IVOIRE": [
-    { city: "Abidjan", mie: 117 },
     { city: "Other", mie: 76 },
+    { city: "Abidjan", mie: 117 },
     { city: "Yamoussoukro", mie: 76 }
   ],
   "CROATIA": [
+    { city: "Other", mie: 103 },
     { city: "Cavtat", mie: 144 },
     { city: "Cavtat", mie: 130 },
     { city: "Dubrovnik", mie: 144 },
     { city: "Dubrovnik", mie: 130 },
-    { city: "Other", mie: 103 },
     { city: "Split", mie: 134 },
     { city: "Split", mie: 121 },
     { city: "Zagreb", mie: 103 }
   ],
   "CUBA": [
+    { city: "Other", mie: 49 },
     { city: "Camaguey", mie: 64 },
     { city: "Guantanamo Bay", mie: 52 },
     { city: "Havana", mie: 118 },
     { city: "Holguin", mie: 49 },
     { city: "Matanzas", mie: 47 },
-    { city: "Other", mie: 49 },
     { city: "Santiago", mie: 60 },
     { city: "Trinidad", mie: 63 }
   ],
-  "Curacao": [
+  "CURACAO": [
     { city: "Curacao", mie: 143 }
   ],
   "CYPRUS": [
+    { city: "Other", mie: 118 },
+    { city: "Other", mie: 115 },
     { city: "Akrotiri", mie: 179 },
     { city: "Akrotiri", mie: 159 },
     { city: "Limassol", mie: 179 },
     { city: "Limassol", mie: 159 },
     { city: "Nicosia", mie: 121 },
-    { city: "Other", mie: 118 },
-    { city: "Other", mie: 115 },
     { city: "Paphos", mie: 136 },
     { city: "Paphos", mie: 116 }
   ],
-  "Czechia": [
-    { city: "Brno", mie: 84 },
+  "CZECHIA": [
     { city: "Other", mie: 82 },
+    { city: "Brno", mie: 84 },
     { city: "Prague", mie: 111 }
   ],
   "DEM. PEOPLE'S REPUBLIC OF KOREA": [
@@ -825,22 +825,22 @@ var INTL_RATES = {
     { city: "Pyongyang", mie: 69 }
   ],
   "DEMOCRATIC REPUBLIC OF THE CONGO": [
+    { city: "Other", mie: 107 },
     { city: "Bukavu", mie: 122 },
     { city: "Goma", mie: 107 },
     { city: "Kinshasa", mie: 152 },
-    { city: "Lubumbashi", mie: 147 },
-    { city: "Other", mie: 107 }
+    { city: "Lubumbashi", mie: 147 }
   ],
   "DENMARK": [
+    { city: "Other", mie: 112 },
     { city: "Aalborg", mie: 117 },
     { city: "Copenhagen", mie: 141 },
     { city: "Lyngby", mie: 141 },
-    { city: "Odense", mie: 123 },
-    { city: "Other", mie: 112 }
+    { city: "Odense", mie: 123 }
   ],
   "DJIBOUTI": [
-    { city: "Djibouti City", mie: 110 },
-    { city: "Other", mie: 98 }
+    { city: "Other", mie: 98 },
+    { city: "Djibouti City", mie: 110 }
   ],
   "DOMINICA": [
     { city: "Dominica", mie: 135 }
@@ -851,37 +851,37 @@ var INTL_RATES = {
     { city: "Sosua", mie: 63 }
   ],
   "ECUADOR": [
+    { city: "Other", mie: 97 },
     { city: "Cuenca", mie: 97 },
     { city: "Galapagos Islands", mie: 158 },
     { city: "Guayaquil", mie: 139 },
     { city: "Manta", mie: 89 },
-    { city: "Other", mie: 97 },
     { city: "Quito", mie: 105 }
   ],
   "EGYPT": [
+    { city: "Other", mie: 111 },
     { city: "Alexandria", mie: 97 },
-    { city: "Aswan", mie: 96 },
     { city: "Aswan", mie: 101 },
-    { city: "Cairo", mie: 108 },
-    { city: "Luxor", mie: 88 },
-    { city: "Other", mie: 108 },
-    { city: "Sharm el Sheikh", mie: 110 },
-    { city: "Sharm el Sheikh", mie: 119 }
+    { city: "Aswan", mie: 106 },
+    { city: "Cairo", mie: 114 },
+    { city: "Luxor", mie: 93 },
+    { city: "Sharm el Sheikh", mie: 114 },
+    { city: "Sharm el Sheikh", mie: 123 }
   ],
   "EL SALVADOR": [
     { city: "Other", mie: 57 },
     { city: "San Salvador", mie: 91 }
   ],
   "EQUATORIAL GUINEA": [
+    { city: "Other", mie: 110 },
     { city: "Bata", mie: 95 },
-    { city: "Malabo", mie: 110 },
-    { city: "Other", mie: 110 }
+    { city: "Malabo", mie: 110 }
   ],
   "ERITREA": [
+    { city: "Other", mie: 85 },
     { city: "Asmara", mie: 75 },
     { city: "Keren", mie: 85 },
-    { city: "Massawa", mie: 83 },
-    { city: "Other", mie: 85 }
+    { city: "Massawa", mie: 83 }
   ],
   "ESTONIA": [
     { city: "Other", mie: 134 },
@@ -889,32 +889,33 @@ var INTL_RATES = {
     { city: "Tallinn", mie: 139 }
   ],
   "ESWATINI": [
-    { city: "Mbabane", mie: 60 },
-    { city: "Other", mie: 22 }
+    { city: "Other", mie: 22 },
+    { city: "Mbabane", mie: 60 }
   ],
   "ETHIOPIA": [
-    { city: "Addis Ababa", mie: 134 },
-    { city: "Other", mie: 61 }
+    { city: "Other", mie: 61 },
+    { city: "Addis Ababa", mie: 134 }
   ],
-  "Falkland Islands (Islas Malvinas)": [
+  "FALKLAND ISLANDS (ISLAS MALVINAS)": [
     { city: "Falkland Islands", mie: 75 }
   ],
   "FAROE ISLANDS": [
     { city: "Faroe Islands", mie: 99 }
   ],
   "FIJI": [
+    { city: "Other", mie: 122 },
     { city: "Korolevu", mie: 74 },
     { city: "Nadi", mie: 133 },
     { city: "Natadola", mie: 157 },
-    { city: "Other", mie: 122 },
     { city: "Sigatoka", mie: 78 },
     { city: "Suva", mie: 122 }
   ],
   "FINLAND": [
-    { city: "Helsinki", mie: 144 },
-    { city: "Other", mie: 124 }
+    { city: "Other", mie: 124 },
+    { city: "Helsinki", mie: 144 }
   ],
   "FRANCE": [
+    { city: "Other", mie: 132 },
     { city: "Bordeaux", mie: 135 },
     { city: "Cannes", mie: 167 },
     { city: "Cannes", mie: 152 },
@@ -923,7 +924,6 @@ var INTL_RATES = {
     { city: "Marseille", mie: 154 },
     { city: "Montpellier", mie: 166 },
     { city: "Nice", mie: 141 },
-    { city: "Other", mie: 132 },
     { city: "Paris", mie: 173 },
     { city: "Strasbourg", mie: 164 },
     { city: "Toulouse", mie: 131 }
@@ -935,23 +935,24 @@ var INTL_RATES = {
     { city: "French Polynesia", mie: 155 }
   ],
   "GABON": [
-    { city: "Libreville", mie: 141 },
-    { city: "Other", mie: 133 }
+    { city: "Other", mie: 133 },
+    { city: "Libreville", mie: 141 }
   ],
-  "Gambia, The": [
-    { city: "Banjul", mie: 62 },
-    { city: "Other", mie: 32 }
+  "GAMBIA, THE": [
+    { city: "Other", mie: 32 },
+    { city: "Banjul", mie: 62 }
   ],
   "GEORGIA": [
+    { city: "Other", mie: 63 },
     { city: "Ajara Region", mie: 95 },
     { city: "Borjomi", mie: 71 },
     { city: "Gudauri", mie: 71 },
     { city: "Gudauri", mie: 77 },
     { city: "Kutaisi", mie: 93 },
-    { city: "Other", mie: 63 },
     { city: "Tbilisi", mie: 102 }
   ],
   "GERMANY": [
+    { city: "Other", mie: 140 },
     { city: "Berlin", mie: 145 },
     { city: "Boeblingen", mie: 147 },
     { city: "Bonames", mie: 135 },
@@ -982,7 +983,6 @@ var INTL_RATES = {
     { city: "Nellingen", mie: 147 },
     { city: "Oberammergau", mie: 140 },
     { city: "Offenbach", mie: 135 },
-    { city: "Other", mie: 140 },
     { city: "Roedelheim", mie: 135 },
     { city: "Sindelfingen", mie: 147 },
     { city: "Stuttgart", mie: 147 },
@@ -991,23 +991,23 @@ var INTL_RATES = {
     { city: "Wiesbaden", mie: 132 }
   ],
   "GHANA": [
-    { city: "Accra", mie: 123 },
-    { city: "Other", mie: 56 }
+    { city: "Other", mie: 56 },
+    { city: "Accra", mie: 123 }
   ],
   "GIBRALTAR": [
     { city: "Gibraltar", mie: 119 }
   ],
   "GREECE": [
+    { city: "Other", mie: 127 },
     { city: "Athens", mie: 144 },
     { city: "Athens", mie: 133 },
-    { city: "Iraklion (Crete)", mie: 127 },
-    { city: "Other", mie: 127 }
+    { city: "Iraklion (Crete)", mie: 127 }
   ],
   "GREENLAND": [
+    { city: "Other", mie: 110 },
     { city: "Ilulissat", mie: 125 },
     { city: "Kangerlussuaq", mie: 113 },
     { city: "Nuuk", mie: 142 },
-    { city: "Other", mie: 110 },
     { city: "Thule", mie: 68 }
   ],
   "GRENADA": [
@@ -1018,26 +1018,26 @@ var INTL_RATES = {
     { city: "Saint Martin (French Part)", mie: 100 }
   ],
   "GUATEMALA": [
-    { city: "Guatemala City", mie: 96 },
-    { city: "Other", mie: 99 }
+    { city: "Other", mie: 99 },
+    { city: "Guatemala City", mie: 96 }
   ],
   "GUINEA": [
-    { city: "Conakry", mie: 94 },
-    { city: "Other", mie: 53 }
+    { city: "Other", mie: 53 },
+    { city: "Conakry", mie: 94 }
   ],
   "GUINEA-BISSAU": [
-    { city: "Bissau", mie: 84 },
-    { city: "Other", mie: 44 }
+    { city: "Other", mie: 44 },
+    { city: "Bissau", mie: 84 }
   ],
   "GUYANA": [
-    { city: "Georgetown", mie: 141 },
-    { city: "Other", mie: 141 }
+    { city: "Other", mie: 141 },
+    { city: "Georgetown", mie: 141 }
   ],
   "HAITI": [
+    { city: "Other", mie: 40 },
     { city: "Cap Haitien", mie: 91 },
     { city: "Jacmel", mie: 75 },
     { city: "Montrouis", mie: 106 },
-    { city: "Other", mie: 40 },
     { city: "Petionville", mie: 111 },
     { city: "Port-au-Prince", mie: 98 }
   ],
@@ -1045,30 +1045,31 @@ var INTL_RATES = {
     { city: "Holy See", mie: 179 }
   ],
   "HONDURAS": [
+    { city: "Other", mie: 80 },
     { city: "Bay Islands", mie: 99 },
     { city: "La Ceiba", mie: 85 },
-    { city: "Other", mie: 80 },
     { city: "San Pedro Sula", mie: 98 },
-    { city: "Tegucigalpa", mie: 87 },
+    { city: "Tegucigalpa", mie: 85 },
     { city: "Tela", mie: 86 }
   ],
   "HONG KONG": [
     { city: "Hong Kong", mie: 180 }
   ],
   "HUNGARY": [
-    { city: "Budapest", mie: 95 },
     { city: "Other", mie: 80 },
+    { city: "Budapest", mie: 95 },
     { city: "Papa", mie: 80 }
   ],
   "ICELAND": [
+    { city: "Other", mie: 179 },
     { city: "Akureyri", mie: 170 },
     { city: "Akureyri", mie: 165 },
     { city: "Egilsstadir", mie: 179 },
-    { city: "Other", mie: 179 },
     { city: "Reykjavik", mie: 236 },
     { city: "Reykjavik", mie: 211 }
   ],
   "INDIA": [
+    { city: "Other", mie: 92 },
     { city: "Agra", mie: 81 },
     { city: "Bengaluru", mie: 135 },
     { city: "Chennai", mie: 120 },
@@ -1078,48 +1079,48 @@ var INTL_RATES = {
     { city: "Mumbai", mie: 116 },
     { city: "Mumbai", mie: 110 },
     { city: "New Delhi", mie: 113 },
-    { city: "Other", mie: 92 },
     { city: "Pune", mie: 101 },
     { city: "Trivandrum", mie: 56 }
   ],
   "INDONESIA": [
+    { city: "Other", mie: 47 },
     { city: "Bali", mie: 111 },
     { city: "Bandung", mie: 107 },
     { city: "Denpasar", mie: 111 },
-    { city: "Jakarta", mie: 98 },
-    { city: "Jayapura", mie: 64 },
-    { city: "Medan", mie: 71 },
-    { city: "Other", mie: 49 },
-    { city: "Surabaya", mie: 95 },
-    { city: "Timika, Irian Jaya", mie: 85 }
+    { city: "Jakarta", mie: 95 },
+    { city: "Jayapura", mie: 61 },
+    { city: "Medan", mie: 67 },
+    { city: "Surabaya", mie: 91 },
+    { city: "Timika, Irian Jaya", mie: 80 }
   ],
   "IRAN": [
     { city: "Other", mie: 58 },
     { city: "Tehran", mie: 58 }
   ],
   "IRAQ": [
+    { city: "Other", mie: 82 },
     { city: "Baghdad", mie: 11 },
-    { city: "Erbil", mie: 65 },
-    { city: "Other", mie: 82 }
+    { city: "Erbil", mie: 65 }
   ],
   "IRELAND": [
+    { city: "Other", mie: 122 },
     { city: "Cork", mie: 132 },
     { city: "Dublin", mie: 155 },
-    { city: "Galway", mie: 124 },
-    { city: "Other", mie: 122 }
+    { city: "Galway", mie: 124 }
   ],
   "ISRAEL": [
+    { city: "Other", mie: 194 },
     { city: "Eilat", mie: 150 },
     { city: "En Boqeq", mie: 172 },
     { city: "Haifa", mie: 132 },
     { city: "Herzliya-Pituach", mie: 213 },
     { city: "Jerusalem", mie: 202 },
-    { city: "Other", mie: 194 },
     { city: "Sedom", mie: 172 },
     { city: "Tel Aviv", mie: 224 },
     { city: "Tiberias", mie: 194 }
   ],
   "ITALY": [
+    { city: "Other", mie: 135 },
     { city: "Aviano", mie: 89 },
     { city: "Bari", mie: 141 },
     { city: "Bologna", mie: 129 },
@@ -1137,7 +1138,6 @@ var INTL_RATES = {
     { city: "Milan", mie: 191 },
     { city: "Modena", mie: 95 },
     { city: "Naples", mie: 169 },
-    { city: "Other", mie: 135 },
     { city: "Palermo", mie: 152 },
     { city: "Pisa", mie: 96 },
     { city: "Ravenna", mie: 108 },
@@ -1154,10 +1154,11 @@ var INTL_RATES = {
     { city: "Vicenza", mie: 127 }
   ],
   "JAMAICA": [
-    { city: "Kingston", mie: 99 },
-    { city: "Other", mie: 99 }
+    { city: "Other", mie: 99 },
+    { city: "Kingston", mie: 99 }
   ],
   "JAPAN": [
+    { city: "Other", mie: 104 },
     { city: "Akashi", mie: 197 },
     { city: "Amagasaki", mie: 197 },
     { city: "Ashiya", mie: 110 },
@@ -1180,7 +1181,6 @@ var INTL_RATES = {
     { city: "Okinawa Prefecture", mie: 120 },
     { city: "Okinawa Prefecture", mie: 105 },
     { city: "Osaka-Kobe", mie: 197 },
-    { city: "Other", mie: 104 },
     { city: "Sapporo", mie: 138 },
     { city: "Sapporo", mie: 114 },
     { city: "Sendai", mie: 91 },
@@ -1189,19 +1189,20 @@ var INTL_RATES = {
     { city: "Yokohama", mie: 121 }
   ],
   "JORDAN": [
+    { city: "Other", mie: 128 },
     { city: "Amman", mie: 102 },
     { city: "Aqaba", mie: 128 },
     { city: "Dead Sea/Jordan Valley", mie: 143 },
-    { city: "Other", mie: 128 },
     { city: "Petra", mie: 129 }
   ],
   "KAZAKHSTAN": [
+    { city: "Other", mie: 98 },
     { city: "Aktau", mie: 93 },
     { city: "Almaty", mie: 129 },
-    { city: "Astana", mie: 117 },
-    { city: "Other", mie: 98 }
+    { city: "Astana", mie: 117 }
   ],
   "KENYA": [
+    { city: "Other", mie: 77 },
     { city: "Lamu", mie: 87 },
     { city: "Malindi", mie: 69 },
     { city: "Mara Area Region", mie: 30 },
@@ -1209,55 +1210,54 @@ var INTL_RATES = {
     { city: "Mt. Kenya Area", mie: 106 },
     { city: "Nairobi", mie: 77 },
     { city: "Nanyuki", mie: 64 },
-    { city: "Other", mie: 77 },
     { city: "Watamu", mie: 90 }
   ],
   "KIRIBATI": [
+    { city: "Other", mie: 42 },
     { city: "Christmas Island", mie: 64 },
-    { city: "Kiribati", mie: 71 },
-    { city: "Other", mie: 42 }
+    { city: "Kiribati", mie: 71 }
   ],
-  "Korea, South": [
-    { city: "Busan", mie: 117 },
-    { city: "Changwon", mie: 55 },
-    { city: "Cheju", mie: 87 },
-    { city: "Chinju", mie: 53 },
-    { city: "Chongju", mie: 42 },
-    { city: "Chonju", mie: 57 },
-    { city: "Chung Ju", mie: 46 },
-    { city: "Gyeongju", mie: 114 },
-    { city: "Gyeongju", mie: 98 },
-    { city: "Incheon", mie: 113 },
-    { city: "Kimhae", mie: 54 },
-    { city: "Kumi", mie: 61 },
-    { city: "Kwangju", mie: 109 },
-    { city: "Masan", mie: 60 },
-    { city: "Other", mie: 40 },
-    { city: "Pyeongtaek", mie: 49 },
-    { city: "Pyongchang", mie: 70 },
-    { city: "Seoul", mie: 122 },
-    { city: "Sokcho", mie: 68 },
-    { city: "Taegu", mie: 103 },
-    { city: "Taejon", mie: 61 },
-    { city: "Uijongbu", mie: 40 },
-    { city: "Ulsan", mie: 79 }
+  "KOREA, SOUTH": [
+    { city: "Other", mie: 39 },
+    { city: "Busan", mie: 113 },
+    { city: "Changwon", mie: 53 },
+    { city: "Cheju", mie: 85 },
+    { city: "Chinju", mie: 52 },
+    { city: "Chongju", mie: 41 },
+    { city: "Chonju", mie: 56 },
+    { city: "Chung Ju", mie: 45 },
+    { city: "Gyeongju", mie: 109 },
+    { city: "Gyeongju", mie: 94 },
+    { city: "Incheon", mie: 109 },
+    { city: "Kimhae", mie: 51 },
+    { city: "Kumi", mie: 59 },
+    { city: "Kwangju", mie: 104 },
+    { city: "Masan", mie: 58 },
+    { city: "Pyeongtaek", mie: 47 },
+    { city: "Pyongchang", mie: 68 },
+    { city: "Seoul", mie: 119 },
+    { city: "Sokcho", mie: 66 },
+    { city: "Taegu", mie: 99 },
+    { city: "Taejon", mie: 58 },
+    { city: "Uijongbu", mie: 39 },
+    { city: "Ulsan", mie: 76 }
   ],
   "KOSOVO": [
     { city: "Other", mie: 46 },
     { city: "Pristina", mie: 64 }
   ],
   "KUWAIT": [
-    { city: "Kuwait City", mie: 143 },
-    { city: "Other", mie: 143 }
+    { city: "Other", mie: 143 },
+    { city: "Kuwait City", mie: 143 }
   ],
   "KYRGYZSTAN": [
+    { city: "Other", mie: 67 },
     { city: "Bishkek", mie: 114 },
-    { city: "Issyk-Kul Region", mie: 79 },
-    { city: "Other", mie: 67 }
+    { city: "Issyk-Kul Region", mie: 79 }
   ],
   "LAOS": [
-    { city: "Luang Prabang", mie: 112 },
     { city: "Other", mie: 80 },
+    { city: "Luang Prabang", mie: 112 },
     { city: "Vientiane", mie: 110 }
   ],
   "LATVIA": [
@@ -1265,26 +1265,26 @@ var INTL_RATES = {
     { city: "Riga", mie: 132 }
   ],
   "LEBANON": [
-    { city: "Beirut", mie: 53 },
-    { city: "Other", mie: 53 }
+    { city: "Other", mie: 53 },
+    { city: "Beirut", mie: 53 }
   ],
   "LESOTHO": [
-    { city: "Maseru", mie: 70 },
-    { city: "Other", mie: 86 }
+    { city: "Other", mie: 86 },
+    { city: "Maseru", mie: 70 }
   ],
   "LIBERIA": [
-    { city: "Monrovia", mie: 110 },
-    { city: "Other", mie: 46 }
+    { city: "Other", mie: 46 },
+    { city: "Monrovia", mie: 110 }
   ],
   "LIBYA": [
+    { city: "Other", mie: 70 },
     { city: "Benghazi", mie: 70 },
     { city: "Misurata", mie: 70 },
-    { city: "Other", mie: 70 },
     { city: "Sirte", mie: 70 },
     { city: "Tripoli", mie: 45 }
   ],
   "LIECHTENSTEIN": [
-    { city: "Liechtenstein", mie: 208 }
+    { city: "Liechtenstein", mie: 200 }
   ],
   "LITHUANIA": [
     { city: "Other", mie: 108 },
@@ -1299,58 +1299,59 @@ var INTL_RATES = {
     { city: "Macau", mie: 120 }
   ],
   "MADAGASCAR": [
+    { city: "Other", mie: 54 },
     { city: "Antananarivo", mie: 68 },
-    { city: "Nosy Be", mie: 68 },
-    { city: "Other", mie: 54 }
+    { city: "Nosy Be", mie: 68 }
   ],
   "MALAWI": [
+    { city: "Other", mie: 62 },
     { city: "Blantyre", mie: 104 },
     { city: "Lilongwe", mie: 69 },
-    { city: "Other", mie: 62 },
     { city: "Salima", mie: 73 }
   ],
   "MALAYSIA": [
-    { city: "Kota Kinabalu, Sabah", mie: 124 },
-    { city: "Kuala Lumpur", mie: 87 },
-    { city: "Kuantan", mie: 90 },
-    { city: "Langkawi", mie: 91 },
-    { city: "Melaka", mie: 87 },
-    { city: "Other", mie: 74 },
-    { city: "Penang", mie: 71 }
+    { city: "Other", mie: 71 },
+    { city: "Kota Kinabalu, Sabah", mie: 120 },
+    { city: "Kuala Lumpur", mie: 84 },
+    { city: "Kuantan", mie: 86 },
+    { city: "Langkawi", mie: 87 },
+    { city: "Melaka", mie: 84 },
+    { city: "Penang", mie: 68 }
   ],
   "MALDIVES": [
     { city: "Maldives", mie: 134 },
     { city: "Male", mie: 134 }
   ],
   "MALI": [
-    { city: "Bamako", mie: 131 },
-    { city: "Other", mie: 46 }
+    { city: "Other", mie: 46 },
+    { city: "Bamako", mie: 131 }
   ],
   "MALTA": [
     { city: "Malta", mie: 145 }
   ],
   "MARSHALL ISLANDS": [
+    { city: "Other", mie: 33 },
     { city: "Kwajalein Atoll", mie: 46 },
     { city: "Likiep Atoll", mie: 37 },
-    { city: "Majuro", mie: 80 },
-    { city: "Other", mie: 33 }
+    { city: "Majuro", mie: 80 }
   ],
   "MARTINIQUE": [
     { city: "Martinique", mie: 135 }
   ],
   "MAURITANIA": [
+    { city: "Other", mie: 35 },
     { city: "Kaedi", mie: 33 },
     { city: "Nouadhibou", mie: 56 },
-    { city: "Nouakchott", mie: 69 },
-    { city: "Other", mie: 35 }
+    { city: "Nouakchott", mie: 69 }
   ],
   "MAURITIUS": [
     { city: "Mauritius", mie: 135 }
   ],
-  "Mayotte": [
+  "MAYOTTE": [
     { city: "Mayotte Islands", mie: 71 }
   ],
   "MEXICO": [
+    { city: "Other", mie: 120 },
     { city: "Acapulco", mie: 153 },
     { city: "Campeche", mie: 80 },
     { city: "Cancun", mie: 135 },
@@ -1367,7 +1368,7 @@ var INTL_RATES = {
     { city: "Huatulco", mie: 113 },
     { city: "Ixtapa Zihuatanejo", mie: 127 },
     { city: "La Paz", mie: 93 },
-    { city: "Los Cabos (Cabo San Lucas and San Jose del Cabo)", mie: 112 },
+    { city: "Los Cabos (Cabo San Lucas and San Jose del Ca", mie: 112 },
     { city: "Manzanillo", mie: 114 },
     { city: "Manzanillo", mie: 120 },
     { city: "Matamoros", mie: 94 },
@@ -1380,7 +1381,6 @@ var INTL_RATES = {
     { city: "Nogales", mie: 96 },
     { city: "Nuevo Laredo", mie: 104 },
     { city: "Oaxaca", mie: 107 },
-    { city: "Other", mie: 120 },
     { city: "Playa del Carmen, Quintana Roo", mie: 98 },
     { city: "Puebla", mie: 112 },
     { city: "Puerto Penasco", mie: 121 },
@@ -1395,17 +1395,17 @@ var INTL_RATES = {
     { city: "Veracruz", mie: 103 },
     { city: "Zacatecas", mie: 94 }
   ],
-  "Micronesia, Federated States of": [
+  "MICRONESIA, FEDERATED STATES OF": [
+    { city: "Other", mie: 85 },
     { city: "Chuuk", mie: 85 },
     { city: "Kosrae", mie: 84 },
     { city: "Kosrae", mie: 89 },
-    { city: "Other", mie: 85 },
     { city: "Pohnpei", mie: 85 },
     { city: "Yap", mie: 91 }
   ],
   "MOLDOVA": [
-    { city: "Chisinau", mie: 91 },
-    { city: "Other", mie: 91 }
+    { city: "Other", mie: 91 },
+    { city: "Chisinau", mie: 91 }
   ],
   "MONACO": [
     { city: "Monaco", mie: 130 }
@@ -1422,25 +1422,25 @@ var INTL_RATES = {
     { city: "Montserrat", mie: 97 }
   ],
   "MOROCCO": [
+    { city: "Other", mie: 96 },
     { city: "Agadir", mie: 106 },
     { city: "Casablanca", mie: 141 },
     { city: "Fes", mie: 143 },
     { city: "Marrakech", mie: 153 },
-    { city: "Other", mie: 96 },
     { city: "Ouarzazate", mie: 144 },
     { city: "Rabat", mie: 162 },
     { city: "Tangier", mie: 176 },
     { city: "Taroudant", mie: 145 }
   ],
   "MOZAMBIQUE": [
-    { city: "Maputo", mie: 110 },
     { city: "Other", mie: 113 },
+    { city: "Maputo", mie: 110 },
     { city: "Pemba", mie: 113 }
   ],
   "NAMIBIA": [
+    { city: "Other", mie: 74 },
     { city: "Etosha", mie: 71 },
     { city: "Opuwo", mie: 76 },
-    { city: "Other", mie: 74 },
     { city: "Walvis Bay", mie: 80 },
     { city: "Windhoek", mie: 91 }
   ],
@@ -1448,18 +1448,18 @@ var INTL_RATES = {
     { city: "Nauru", mie: 83 }
   ],
   "NEPAL": [
-    { city: "Kathmandu", mie: 99 },
     { city: "Other", mie: 90 },
+    { city: "Kathmandu", mie: 99 },
     { city: "Pokhara", mie: 113 }
   ],
   "NETHERLANDS": [
+    { city: "Other", mie: 120 },
     { city: "Amsterdam", mie: 192 },
     { city: "Coevorden", mie: 121 },
     { city: "Eindhoven", mie: 141 },
     { city: "Lisse", mie: 130 },
     { city: "Maastricht", mie: 165 },
     { city: "Noordwijk", mie: 108 },
-    { city: "Other", mie: 120 },
     { city: "Papendrecht", mie: 157 },
     { city: "Rotterdam", mie: 157 },
     { city: "Schiphol", mie: 192 },
@@ -1470,50 +1470,50 @@ var INTL_RATES = {
     { city: "New Caledonia", mie: 97 }
   ],
   "NEW ZEALAND": [
+    { city: "Other", mie: 80 },
     { city: "Auckland", mie: 118 },
     { city: "Christchurch", mie: 123 },
     { city: "Dunedin", mie: 97 },
-    { city: "Other", mie: 80 },
     { city: "Queenstown", mie: 112 },
     { city: "Rotorua", mie: 99 },
     { city: "Wellington", mie: 136 }
   ],
   "NICARAGUA": [
+    { city: "Other", mie: 55 },
     { city: "Corn Island", mie: 65 },
     { city: "Managua", mie: 94 },
-    { city: "Other", mie: 55 },
     { city: "San Juan del Sur", mie: 70 }
   ],
   "NIGER": [
-    { city: "Niamey", mie: 84 },
-    { city: "Other", mie: 57 }
+    { city: "Other", mie: 57 },
+    { city: "Niamey", mie: 84 }
   ],
   "NIGERIA": [
+    { city: "Other", mie: 131 },
     { city: "Abuja", mie: 119 },
     { city: "Kaduna", mie: 113 },
     { city: "Lagos", mie: 145 },
-    { city: "Other", mie: 131 },
     { city: "Port Harcourt", mie: 131 }
   ],
   "NIUE": [
     { city: "Niue", mie: 68 }
   ],
   "NORTH MACEDONIA": [
-    { city: "Ohrid", mie: 90 },
     { city: "Other", mie: 90 },
+    { city: "Ohrid", mie: 90 },
     { city: "Skopje", mie: 97 }
   ],
   "NORWAY": [
-    { city: "Oslo", mie: 155 },
     { city: "Other", mie: 155 },
+    { city: "Oslo", mie: 155 },
     { city: "Stavanger", mie: 168 },
     { city: "Tromso", mie: 171 }
   ],
   "OMAN": [
-    { city: "Duqm", mie: 135 },
-    { city: "Muscat", mie: 160 },
     { city: "Other", mie: 170 },
     { city: "Other", mie: 165 },
+    { city: "Duqm", mie: 135 },
+    { city: "Muscat", mie: 160 },
     { city: "Salalah", mie: 170 },
     { city: "Salalah", mie: 165 }
   ],
@@ -1521,22 +1521,22 @@ var INTL_RATES = {
     { city: "Other Foreign Localities", mie: 43 }
   ],
   "PAKISTAN": [
-    { city: "Faisalabad", mie: 94 },
+    { city: "Other", mie: 82 },
+    { city: "Faisalabad", mie: 80 },
     { city: "Islamabad", mie: 80 },
     { city: "Karachi", mie: 102 },
     { city: "Lahore", mie: 71 },
-    { city: "Other", mie: 82 },
     { city: "Peshawar", mie: 74 },
     { city: "Quetta", mie: 82 }
   ],
   "PALAU": [
-    { city: "Koror", mie: 145 },
-    { city: "Other", mie: 145 }
+    { city: "Other", mie: 145 },
+    { city: "Koror", mie: 145 }
   ],
   "PANAMA": [
+    { city: "Other", mie: 58 },
     { city: "Colon", mie: 87 },
     { city: "David, Chiriqui", mie: 81 },
-    { city: "Other", mie: 58 },
     { city: "Panama City", mie: 99 }
   ],
   "PAPUA NEW GUINEA": [
@@ -1544,18 +1544,19 @@ var INTL_RATES = {
     { city: "Port Moresby", mie: 67 }
   ],
   "PARAGUAY": [
+    { city: "Other", mie: 60 },
     { city: "Asuncion", mie: 102 },
     { city: "Ciudad del Este", mie: 85 },
-    { city: "Other", mie: 60 },
     { city: "Pegro Juan", mie: 76 }
   ],
   "PERU": [
+    { city: "Other", mie: 95 },
     { city: "Cusco", mie: 118 },
     { city: "Lima", mie: 103 },
-    { city: "Other", mie: 95 },
     { city: "Paracas", mie: 112 }
   ],
   "PHILIPPINES": [
+    { city: "Other", mie: 63 },
     { city: "Baguio City", mie: 77 },
     { city: "Bohol", mie: 84 },
     { city: "Boracay", mie: 96 },
@@ -1565,20 +1566,20 @@ var INTL_RATES = {
     { city: "Davao City", mie: 67 },
     { city: "El Nido", mie: 81 },
     { city: "Mactan", mie: 77 },
-    { city: "Manila", mie: 87 },
-    { city: "Other", mie: 63 }
+    { city: "Manila", mie: 87 }
   ],
   "POLAND": [
+    { city: "Other", mie: 88 },
     { city: "Gdansk", mie: 95 },
     { city: "Katowice", mie: 130 },
     { city: "Krakow", mie: 131 },
-    { city: "Other", mie: 88 },
     { city: "Poznan", mie: 102 },
     { city: "Rzeszow", mie: 110 },
     { city: "Warsaw", mie: 107 },
     { city: "Wroclaw", mie: 146 }
   ],
   "PORTUGAL": [
+    { city: "Other", mie: 67 },
     { city: "Cascais", mie: 98 },
     { city: "Estoril", mie: 98 },
     { city: "Faial Island", mie: 74 },
@@ -1587,39 +1588,38 @@ var INTL_RATES = {
     { city: "Madeira Islands", mie: 63 },
     { city: "Oeiras", mie: 98 },
     { city: "Oporto", mie: 129 },
-    { city: "Other", mie: 67 },
     { city: "Ponta Delgada", mie: 63 },
     { city: "Ponta Delgada", mie: 59 },
     { city: "Sao Miguel Island", mie: 95 }
   ],
   "QATAR": [
-    { city: "Doha", mie: 165 },
-    { city: "Other", mie: 165 }
+    { city: "Other", mie: 165 },
+    { city: "Doha", mie: 165 }
   ],
   "REPUBLIC OF THE CONGO": [
-    { city: "Brazzaville", mie: 129 },
-    { city: "Other", mie: 129 }
+    { city: "Other", mie: 129 },
+    { city: "Brazzaville", mie: 129 }
   ],
   "REUNION": [
     { city: "Reunion", mie: 76 }
   ],
   "ROMANIA": [
-    { city: "Bucharest", mie: 127 },
-    { city: "Constanta-Mihail Kogalniceanu AB", mie: 90 },
-    { city: "Other", mie: 108 }
+    { city: "Other", mie: 106 },
+    { city: "Bucharest", mie: 123 },
+    { city: "Constanta-Mihail Kogalniceanu AB", mie: 87 }
   ],
   "RUSSIA": [
-    { city: "Moscow", mie: 154 },
     { city: "Other", mie: 112 },
+    { city: "Moscow", mie: 154 },
     { city: "Saint Petersburg", mie: 134 },
     { city: "Sochi", mie: 202 },
     { city: "Yuzhno-Sakhalinsk", mie: 120 }
   ],
   "RWANDA": [
+    { city: "Other", mie: 54 },
     { city: "Akagera", mie: 60 },
     { city: "Gisenyi", mie: 54 },
-    { city: "Kigali", mie: 74 },
-    { city: "Other", mie: 54 },
+    { city: "Kigali", mie: 102 },
     { city: "Ruhengeri", mie: 46 }
   ],
   "SAINT HELENA": [
@@ -1631,7 +1631,7 @@ var INTL_RATES = {
   "SAINT VINCENT AND THE GRENADINES": [
     { city: "Saint Vincent and the Grenadines", mie: 110 }
   ],
-  "Samoa": [
+  "SAMOA": [
     { city: "Samoa", mie: 148 }
   ],
   "SAN MARINO": [
@@ -1642,72 +1642,73 @@ var INTL_RATES = {
     { city: "Sao Tome", mie: 128 }
   ],
   "SAUDI ARABIA": [
+    { city: "Other", mie: 155 },
     { city: "Dhahran Area", mie: 134 },
     { city: "Jeddah", mie: 155 },
     { city: "Medina", mie: 93 },
     { city: "Medina", mie: 86 },
-    { city: "Other", mie: 155 },
     { city: "Riyadh", mie: 178 },
     { city: "Taif", mie: 89 },
     { city: "Taif", mie: 87 }
   ],
   "SENEGAL": [
+    { city: "Other", mie: 111 },
     { city: "Dakar", mie: 161 },
-    { city: "Mbour", mie: 106 },
-    { city: "Other", mie: 111 }
+    { city: "Mbour", mie: 106 }
   ],
   "SERBIA": [
+    { city: "Other", mie: 62 },
     { city: "Belgrade", mie: 100 },
-    { city: "Kopaonik", mie: 68 },
-    { city: "Other", mie: 62 }
+    { city: "Kopaonik", mie: 68 }
   ],
   "SEYCHELLES": [
     { city: "Seychelles", mie: 172 }
   ],
   "SIERRA LEONE": [
-    { city: "Freetown", mie: 101 },
-    { city: "Other", mie: 70 }
+    { city: "Other", mie: 70 },
+    { city: "Freetown", mie: 101 }
   ],
   "SINGAPORE": [
     { city: "Singapore", mie: 162 }
   ],
-  "Sint Maarten": [
+  "SINT MAARTEN": [
     { city: "Sint Maarten", mie: 169 }
   ],
-  "Slovakia": [
+  "SLOVAKIA": [
+    { city: "Other", mie: 89 },
     { city: "Bratislava", mie: 143 },
     { city: "Liptovsky Mikulas", mie: 100 },
-    { city: "Other", mie: 89 },
     { city: "Zilina", mie: 95 }
   ],
   "SLOVENIA": [
-    { city: "Ljubljana", mie: 149 },
     { city: "Other", mie: 149 },
+    { city: "Ljubljana", mie: 149 },
     { city: "Portoroz", mie: 86 }
   ],
   "SOLOMON ISLANDS": [
-    { city: "Honiara", mie: 125 },
-    { city: "Other", mie: 125 }
+    { city: "Other", mie: 125 },
+    { city: "Honiara", mie: 125 }
   ],
   "SOMALIA": [
-    { city: "Mogadishu", mie: 66 },
-    { city: "Other", mie: 57 }
+    { city: "Other", mie: 57 },
+    { city: "Mogadishu", mie: 66 }
   ],
   "SOUTH AFRICA": [
+    { city: "Other", mie: 59 },
     { city: "Bloemfontein", mie: 75 },
     { city: "Cape Town", mie: 92 },
     { city: "Durban", mie: 95 },
     { city: "Johannesburg", mie: 90 },
-    { city: "Other", mie: 59 },
     { city: "Pretoria", mie: 87 },
     { city: "Stellenbosch", mie: 80 },
     { city: "Sun City", mie: 54 }
   ],
   "SOUTH SUDAN": [
-    { city: "Juba", mie: 90 },
-    { city: "Other", mie: 90 }
+    { city: "Other", mie: 90 },
+    { city: "Juba", mie: 90 }
   ],
   "SPAIN": [
+    { city: "Other", mie: 146 },
     { city: "Almeria", mie: 109 },
     { city: "Balearic Islands", mie: 138 },
     { city: "Barcelona", mie: 134 },
@@ -1718,7 +1719,6 @@ var INTL_RATES = {
     { city: "Madrid", mie: 139 },
     { city: "Malaga", mie: 147 },
     { city: "Marbella", mie: 100 },
-    { city: "Other", mie: 146 },
     { city: "Oviedo", mie: 92 },
     { city: "San Sebastian", mie: 160 },
     { city: "Santa Cruz de Tenerife", mie: 91 },
@@ -1730,18 +1730,18 @@ var INTL_RATES = {
     { city: "Zaragoza", mie: 145 }
   ],
   "SRI LANKA": [
-    { city: "Colombo", mie: 67 },
+    { city: "Other", mie: 90 },
+    { city: "Colombo", mie: 65 },
     { city: "Galle", mie: 119 },
     { city: "Kandy", mie: 69 },
-    { city: "Other", mie: 90 },
     { city: "Trincomalee", mie: 76 }
   ],
   "ST LUCIA": [
     { city: "Saint Lucia", mie: 157 }
   ],
   "SUDAN": [
-    { city: "Khartoum", mie: 140 },
-    { city: "Other", mie: 109 }
+    { city: "Other", mie: 109 },
+    { city: "Khartoum", mie: 140 }
   ],
   "SURINAME": [
     { city: "Other", mie: 111 },
@@ -1752,71 +1752,71 @@ var INTL_RATES = {
     { city: "Stockholm", mie: 155 }
   ],
   "SWITZERLAND": [
-    { city: "Bad Ragaz", mie: 196 },
-    { city: "Basel", mie: 210 },
-    { city: "Bern", mie: 199 },
-    { city: "Davos", mie: 232 },
-    { city: "Geneva", mie: 214 },
-    { city: "Klosters", mie: 220 },
-    { city: "Lugano", mie: 210 },
-    { city: "Montreux", mie: 187 },
-    { city: "Other", mie: 195 },
-    { city: "Zurich", mie: 246 }
+    { city: "Other", mie: 188 },
+    { city: "Bad Ragaz", mie: 189 },
+    { city: "Basel", mie: 203 },
+    { city: "Bern", mie: 192 },
+    { city: "Davos", mie: 224 },
+    { city: "Geneva", mie: 206 },
+    { city: "Klosters", mie: 212 },
+    { city: "Lugano", mie: 202 },
+    { city: "Montreux", mie: 180 },
+    { city: "Zurich", mie: 236 }
   ],
   "SYRIA": [
-    { city: "Damascus", mie: 92 },
-    { city: "Other", mie: 92 }
+    { city: "Other", mie: 92 },
+    { city: "Damascus", mie: 92 }
   ],
   "TAIWAN": [
-    { city: "Kaohsiung", mie: 124 },
     { city: "Other", mie: 114 },
+    { city: "Kaohsiung", mie: 124 },
     { city: "Taichung", mie: 75 },
     { city: "Taipei", mie: 111 }
   ],
   "TAJIKISTAN": [
-    { city: "Dushanbe", mie: 89 },
+    { city: "Other", mie: 55 },
+    { city: "Dushanbe", mie: 91 },
     { city: "Khorog", mie: 80 },
-    { city: "Kulob", mie: 55 },
-    { city: "Other", mie: 55 }
+    { city: "Kulob", mie: 55 }
   ],
   "TANZANIA": [
+    { city: "Other", mie: 78 },
     { city: "Arusha", mie: 150 },
     { city: "Dar Es Salaam", mie: 137 },
     { city: "Dodoma", mie: 85 },
     { city: "Morogoro", mie: 60 },
-    { city: "Other", mie: 78 },
     { city: "Zanzibar", mie: 131 }
   ],
   "THAILAND": [
+    { city: "Other", mie: 63 },
     { city: "Bangkok", mie: 118 },
     { city: "Cha Am", mie: 115 },
-    { city: "Chiang Mai", mie: 88 },
+    { city: "Chiang Mai", mie: 86 },
     { city: "Chiang Rai", mie: 85 },
     { city: "Hat Yai", mie: 85 },
     { city: "Hua Hin", mie: 115 },
     { city: "Khao Lak", mie: 107 },
-    { city: "Krabi", mie: 106 },
+    { city: "Krabi", mie: 103 },
     { city: "Nong Khai", mie: 63 },
-    { city: "Other", mie: 63 },
     { city: "Pattaya City", mie: 105 },
     { city: "Phuket", mie: 109 },
     { city: "Samui Island", mie: 104 }
   ],
   "TIMOR-LESTE": [
-    { city: "Dili", mie: 90 },
-    { city: "Other", mie: 70 }
+    { city: "Other", mie: 70 },
+    { city: "Dili", mie: 90 }
   ],
   "TOGO": [
+    { city: "Other", mie: 60 },
     { city: "Lama Kara", mie: 70 },
-    { city: "Lome", mie: 92 },
-    { city: "Other", mie: 60 }
+    { city: "Lome", mie: 92 }
   ],
-  "Tokelau": [
+  "TOKELAU": [
     { city: "Tokelau Islands", mie: 18 }
   ],
   "TONGA": [
-    { city: "Nukualofa", mie: 97 },
-    { city: "Other", mie: 97 }
+    { city: "Other", mie: 97 },
+    { city: "Nukualofa", mie: 97 }
   ],
   "TRINIDAD AND TOBAGO": [
     { city: "Other", mie: 193 },
@@ -1824,28 +1824,28 @@ var INTL_RATES = {
     { city: "Tobago", mie: 109 }
   ],
   "TUNISIA": [
-    { city: "Hammamet", mie: 97 },
-    { city: "Jerba", mie: 91 },
-    { city: "Monastir", mie: 96 },
-    { city: "Other", mie: 97 },
-    { city: "Sousse", mie: 114 },
-    { city: "Tabarka", mie: 135 },
-    { city: "Tozeur", mie: 100 },
-    { city: "Tunis", mie: 121 }
+    { city: "Other", mie: 94 },
+    { city: "Hammamet", mie: 94 },
+    { city: "Jerba", mie: 89 },
+    { city: "Monastir", mie: 94 },
+    { city: "Sousse", mie: 110 },
+    { city: "Tabarka", mie: 131 },
+    { city: "Tozeur", mie: 98 },
+    { city: "Tunis", mie: 118 }
   ],
   "TURKEY": [
+    { city: "Other", mie: 98 },
     { city: "Adana-Incirlik", mie: 84 },
     { city: "Ankara", mie: 119 },
     { city: "Antalya", mie: 94 },
     { city: "Bursa", mie: 102 },
     { city: "Gaziantep", mie: 78 },
     { city: "Istanbul", mie: 173 },
-    { city: "Izmir-Cigli", mie: 101 },
-    { city: "Other", mie: 98 }
+    { city: "Izmir-Cigli", mie: 101 }
   ],
   "TURKMENISTAN": [
-    { city: "Ashgabat", mie: 110 },
-    { city: "Other", mie: 65 }
+    { city: "Other", mie: 65 },
+    { city: "Ashgabat", mie: 110 }
   ],
   "TURKS AND CAICOS ISLANDS": [
     { city: "Turks and Caicos Islands", mie: 165 },
@@ -1855,26 +1855,27 @@ var INTL_RATES = {
     { city: "Tuvalu", mie: 68 }
   ],
   "UGANDA": [
+    { city: "Other", mie: 57 },
     { city: "Entebbe", mie: 74 },
     { city: "Fort Portal", mie: 64 },
     { city: "Gulu", mie: 57 },
     { city: "Jinja", mie: 73 },
     { city: "Kampala", mie: 99 },
     { city: "Mbale", mie: 75 },
-    { city: "Mbarara", mie: 58 },
-    { city: "Other", mie: 57 }
+    { city: "Mbarara", mie: 58 }
   ],
   "UKRAINE": [
+    { city: "Other", mie: 97 },
     { city: "Kharkiv", mie: 95 },
-    { city: "Kyiv", mie: 74 },
-    { city: "Other", mie: 97 }
+    { city: "Kyiv", mie: 72 }
   ],
   "UNITED ARAB EMIRATES": [
+    { city: "Other", mie: 149 },
     { city: "Abu Dhabi", mie: 149 },
-    { city: "Dubai", mie: 173 },
-    { city: "Other", mie: 149 }
+    { city: "Dubai", mie: 173 }
   ],
   "UNITED KINGDOM": [
+    { city: "Other", mie: 108 },
     { city: "Belfast", mie: 110 },
     { city: "Birmingham", mie: 77 },
     { city: "Bristol", mie: 98 },
@@ -1896,14 +1897,13 @@ var INTL_RATES = {
     { city: "Loudwater", mie: 105 },
     { city: "Manchester", mie: 133 },
     { city: "Menwith Hill", mie: 120 },
-    { city: "Other", mie: 108 },
     { city: "Oxford", mie: 161 },
     { city: "Reading", mie: 130 }
   ],
   "URUGUAY": [
+    { city: "Other", mie: 126 },
     { city: "Colonia", mie: 127 },
     { city: "Montevideo", mie: 126 },
-    { city: "Other", mie: 126 },
     { city: "Punta del Este", mie: 155 },
     { city: "Punta del Este", mie: 161 }
   ],
@@ -1918,10 +1918,10 @@ var INTL_RATES = {
     { city: "Tanna Island", mie: 111 }
   ],
   "VENEZUELA": [
+    { city: "Other", mie: 206 },
     { city: "Barquisimeto", mie: 101 },
     { city: "Caracas", mie: 158 },
     { city: "Maracaibo", mie: 287 },
-    { city: "Other", mie: 206 },
     { city: "Porlamar", mie: 124 },
     { city: "Puerto La Cruz", mie: 206 },
     { city: "Puerto Ordaz", mie: 114 },
@@ -1930,12 +1930,12 @@ var INTL_RATES = {
     { city: "Valencia", mie: 256 }
   ],
   "VIETNAM": [
+    { city: "Other", mie: 111 },
+    { city: "Da Lat", mie: 103 },
     { city: "Da Nang", mie: 105 },
     { city: "Da Nang", mie: 111 },
-    { city: "Dalat", mie: 107 },
     { city: "Hanoi", mie: 126 },
-    { city: "Ho Chi Minh City", mie: 112 },
-    { city: "Other", mie: 111 },
+    { city: "Ho Chi Minh City", mie: 117 },
     { city: "Phu Quoc Island", mie: 83 }
   ],
   "VIRGIN ISLANDS, BRITISH": [
@@ -1946,30 +1946,259 @@ var INTL_RATES = {
     { city: "Wallis and Futuna", mie: 137 }
   ],
   "YEMEN": [
-    { city: "Aden", mie: 58 },
     { city: "Other", mie: 65 },
+    { city: "Aden", mie: 58 },
     { city: "Sanaa", mie: 95 }
   ],
   "ZAMBIA": [
+    { city: "Other", mie: 80 },
     { city: "Chipata", mie: 92 },
     { city: "Kitwe", mie: 122 },
     { city: "Livingstone", mie: 93 },
     { city: "Lusaka", mie: 135 },
     { city: "Mfuwe", mie: 101 },
     { city: "Ndola", mie: 114 },
-    { city: "Other", mie: 80 },
     { city: "Solwezi", mie: 72 }
   ],
   "ZIMBABWE": [
+    { city: "Other", mie: 85 },
     { city: "Bulawayo", mie: 121 },
     { city: "Harare", mie: 115 },
-    { city: "Other", mie: 85 },
     { city: "Victoria Falls", mie: 115 },
     { city: "Victoria Falls", mie: 108 }
   ]
 };
 
-var INTL_COUNTRIES = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", "ANGUILLA", "ANTARCTICA", "ANTIGUA AND BARBUDA", "ARGENTINA", "ARMENIA", "Aruba", "ASCENSION ISLAND", "AUSTRALIA", "AUSTRIA", "AZERBAIJAN", "Bahamas, The", "BAHRAIN", "BANGLADESH", "BARBADOS", "BELARUS", "BELGIUM", "BELIZE", "BENIN", "BERMUDA", "BHUTAN", "BOLIVIA", "Bonaire, Sint Eustatius, and Saba", "Bosnia and Herzegovina", "BOTSWANA", "BRAZIL", "BRUNEI", "BULGARIA", "BURKINA FASO", "BURMA", "BURUNDI", "CABO VERDE", "CAMBODIA", "CAMEROON", "CANADA", "CAYMAN ISLANDS", "CENTRAL AFRICAN REPUBLIC", "CHAD", "CHAGOS ARCHIPELAGO", "CHILE", "CHINA", "COCOS (KEELING) ISLANDS", "COLOMBIA", "COMOROS", "COOK ISLANDS", "COSTA RICA", "COTE D'IVOIRE", "CROATIA", "CUBA", "Curacao", "CYPRUS", "Czechia", "DEM. PEOPLE'S REPUBLIC OF KOREA", "DEMOCRATIC REPUBLIC OF THE CONGO", "DENMARK", "DJIBOUTI", "DOMINICA", "DOMINICAN REPUBLIC", "ECUADOR", "EGYPT", "EL SALVADOR", "EQUATORIAL GUINEA", "ERITREA", "ESTONIA", "ESWATINI", "ETHIOPIA", "Falkland Islands (Islas Malvinas)", "FAROE ISLANDS", "FIJI", "FINLAND", "FRANCE", "FRENCH GUIANA", "FRENCH POLYNESIA", "GABON", "Gambia, The", "GEORGIA", "GERMANY", "GHANA", "GIBRALTAR", "GREECE", "GREENLAND", "GRENADA", "GUADELOUPE", "GUATEMALA", "GUINEA", "GUINEA-BISSAU", "GUYANA", "HAITI", "HOLY SEE", "HONDURAS", "HONG KONG", "HUNGARY", "ICELAND", "INDIA", "INDONESIA", "IRAN", "IRAQ", "IRELAND", "ISRAEL", "ITALY", "JAMAICA", "JAPAN", "JORDAN", "KAZAKHSTAN", "KENYA", "KIRIBATI", "Korea, South", "KOSOVO", "KUWAIT", "KYRGYZSTAN", "LAOS", "LATVIA", "LEBANON", "LESOTHO", "LIBERIA", "LIBYA", "LIECHTENSTEIN", "LITHUANIA", "LUXEMBOURG", "MACAU", "MADAGASCAR", "MALAWI", "MALAYSIA", "MALDIVES", "MALI", "MALTA", "MARSHALL ISLANDS", "MARTINIQUE", "MAURITANIA", "MAURITIUS", "Mayotte", "MEXICO", "Micronesia, Federated States of", "MOLDOVA", "MONACO", "MONGOLIA", "MONTENEGRO", "MONTSERRAT", "MOROCCO", "MOZAMBIQUE", "NAMIBIA", "NAURU", "NEPAL", "NETHERLANDS", "NEW CALEDONIA", "NEW ZEALAND", "NICARAGUA", "NIGER", "NIGERIA", "NIUE", "NORTH MACEDONIA", "NORWAY", "OMAN", "OTHER FOREIGN LOCALITIES", "PAKISTAN", "PALAU", "PANAMA", "PAPUA NEW GUINEA", "PARAGUAY", "PERU", "PHILIPPINES", "POLAND", "PORTUGAL", "QATAR", "REPUBLIC OF THE CONGO", "REUNION", "ROMANIA", "RUSSIA", "RWANDA", "SAINT HELENA", "SAINT KITTS AND NEVIS", "SAINT VINCENT AND THE GRENADINES", "Samoa", "SAN MARINO", "SAO TOME AND PRINCIPE", "SAUDI ARABIA", "SENEGAL", "SERBIA", "SEYCHELLES", "SIERRA LEONE", "SINGAPORE", "Sint Maarten", "Slovakia", "SLOVENIA", "SOLOMON ISLANDS", "SOMALIA", "SOUTH AFRICA", "SOUTH SUDAN", "SPAIN", "SRI LANKA", "ST LUCIA", "SUDAN", "SURINAME", "SWEDEN", "SWITZERLAND", "SYRIA", "TAIWAN", "TAJIKISTAN", "TANZANIA", "THAILAND", "TIMOR-LESTE", "TOGO", "Tokelau", "TONGA", "TRINIDAD AND TOBAGO", "TUNISIA", "TURKEY", "TURKMENISTAN", "TURKS AND CAICOS ISLANDS", "TUVALU", "UGANDA", "UKRAINE", "UNITED ARAB EMIRATES", "UNITED KINGDOM", "URUGUAY", "UZBEKISTAN", "VANUATU", "VENEZUELA", "VIETNAM", "VIRGIN ISLANDS, BRITISH", "WALLIS AND FUTUNA", "YEMEN", "ZAMBIA", "ZIMBABWE"];
+var INTL_COUNTRIES = [
+  "AFGHANISTAN",
+  "ALBANIA",
+  "ALGERIA",
+  "ANDORRA",
+  "ANGOLA",
+  "ANGUILLA",
+  "ANTARCTICA",
+  "ANTIGUA AND BARBUDA",
+  "ARGENTINA",
+  "ARMENIA",
+  "ARUBA",
+  "ASCENSION ISLAND",
+  "AUSTRALIA",
+  "AUSTRIA",
+  "AZERBAIJAN",
+  "BAHAMAS, THE",
+  "BAHRAIN",
+  "BANGLADESH",
+  "BARBADOS",
+  "BELARUS",
+  "BELGIUM",
+  "BELIZE",
+  "BENIN",
+  "BERMUDA",
+  "BHUTAN",
+  "BOLIVIA",
+  "BONAIRE, SINT EUSTATIUS, AND SABA",
+  "BOSNIA AND HERZEGOVINA",
+  "BOTSWANA",
+  "BRAZIL",
+  "BRUNEI",
+  "BULGARIA",
+  "BURKINA FASO",
+  "BURMA",
+  "BURUNDI",
+  "CABO VERDE",
+  "CAMBODIA",
+  "CAMEROON",
+  "CANADA",
+  "CAYMAN ISLANDS",
+  "CENTRAL AFRICAN REPUBLIC",
+  "CHAD",
+  "CHAGOS ARCHIPELAGO",
+  "CHILE",
+  "CHINA",
+  "COCOS (KEELING) ISLANDS",
+  "COLOMBIA",
+  "COMOROS",
+  "COOK ISLANDS",
+  "COSTA RICA",
+  "COTE D'IVOIRE",
+  "CROATIA",
+  "CUBA",
+  "CURACAO",
+  "CYPRUS",
+  "CZECHIA",
+  "DEM. PEOPLE'S REPUBLIC OF KOREA",
+  "DEMOCRATIC REPUBLIC OF THE CONGO",
+  "DENMARK",
+  "DJIBOUTI",
+  "DOMINICA",
+  "DOMINICAN REPUBLIC",
+  "ECUADOR",
+  "EGYPT",
+  "EL SALVADOR",
+  "EQUATORIAL GUINEA",
+  "ERITREA",
+  "ESTONIA",
+  "ESWATINI",
+  "ETHIOPIA",
+  "FALKLAND ISLANDS (ISLAS MALVINAS)",
+  "FAROE ISLANDS",
+  "FIJI",
+  "FINLAND",
+  "FRANCE",
+  "FRENCH GUIANA",
+  "FRENCH POLYNESIA",
+  "GABON",
+  "GAMBIA, THE",
+  "GEORGIA",
+  "GERMANY",
+  "GHANA",
+  "GIBRALTAR",
+  "GREECE",
+  "GREENLAND",
+  "GRENADA",
+  "GUADELOUPE",
+  "GUATEMALA",
+  "GUINEA",
+  "GUINEA-BISSAU",
+  "GUYANA",
+  "HAITI",
+  "HOLY SEE",
+  "HONDURAS",
+  "HONG KONG",
+  "HUNGARY",
+  "ICELAND",
+  "INDIA",
+  "INDONESIA",
+  "IRAN",
+  "IRAQ",
+  "IRELAND",
+  "ISRAEL",
+  "ITALY",
+  "JAMAICA",
+  "JAPAN",
+  "JORDAN",
+  "KAZAKHSTAN",
+  "KENYA",
+  "KIRIBATI",
+  "KOREA, SOUTH",
+  "KOSOVO",
+  "KUWAIT",
+  "KYRGYZSTAN",
+  "LAOS",
+  "LATVIA",
+  "LEBANON",
+  "LESOTHO",
+  "LIBERIA",
+  "LIBYA",
+  "LIECHTENSTEIN",
+  "LITHUANIA",
+  "LUXEMBOURG",
+  "MACAU",
+  "MADAGASCAR",
+  "MALAWI",
+  "MALAYSIA",
+  "MALDIVES",
+  "MALI",
+  "MALTA",
+  "MARSHALL ISLANDS",
+  "MARTINIQUE",
+  "MAURITANIA",
+  "MAURITIUS",
+  "MAYOTTE",
+  "MEXICO",
+  "MICRONESIA, FEDERATED STATES OF",
+  "MOLDOVA",
+  "MONACO",
+  "MONGOLIA",
+  "MONTENEGRO",
+  "MONTSERRAT",
+  "MOROCCO",
+  "MOZAMBIQUE",
+  "NAMIBIA",
+  "NAURU",
+  "NEPAL",
+  "NETHERLANDS",
+  "NEW CALEDONIA",
+  "NEW ZEALAND",
+  "NICARAGUA",
+  "NIGER",
+  "NIGERIA",
+  "NIUE",
+  "NORTH MACEDONIA",
+  "NORWAY",
+  "OMAN",
+  "OTHER FOREIGN LOCALITIES",
+  "PAKISTAN",
+  "PALAU",
+  "PANAMA",
+  "PAPUA NEW GUINEA",
+  "PARAGUAY",
+  "PERU",
+  "PHILIPPINES",
+  "POLAND",
+  "PORTUGAL",
+  "QATAR",
+  "REPUBLIC OF THE CONGO",
+  "REUNION",
+  "ROMANIA",
+  "RUSSIA",
+  "RWANDA",
+  "SAINT HELENA",
+  "SAINT KITTS AND NEVIS",
+  "SAINT VINCENT AND THE GRENADINES",
+  "SAMOA",
+  "SAN MARINO",
+  "SAO TOME AND PRINCIPE",
+  "SAUDI ARABIA",
+  "SENEGAL",
+  "SERBIA",
+  "SEYCHELLES",
+  "SIERRA LEONE",
+  "SINGAPORE",
+  "SINT MAARTEN",
+  "SLOVAKIA",
+  "SLOVENIA",
+  "SOLOMON ISLANDS",
+  "SOMALIA",
+  "SOUTH AFRICA",
+  "SOUTH SUDAN",
+  "SPAIN",
+  "SRI LANKA",
+  "ST LUCIA",
+  "SUDAN",
+  "SURINAME",
+  "SWEDEN",
+  "SWITZERLAND",
+  "SYRIA",
+  "TAIWAN",
+  "TAJIKISTAN",
+  "TANZANIA",
+  "THAILAND",
+  "TIMOR-LESTE",
+  "TOGO",
+  "TOKELAU",
+  "TONGA",
+  "TRINIDAD AND TOBAGO",
+  "TUNISIA",
+  "TURKEY",
+  "TURKMENISTAN",
+  "TURKS AND CAICOS ISLANDS",
+  "TUVALU",
+  "UGANDA",
+  "UKRAINE",
+  "UNITED ARAB EMIRATES",
+  "UNITED KINGDOM",
+  "URUGUAY",
+  "UZBEKISTAN",
+  "VANUATU",
+  "VENEZUELA",
+  "VIETNAM",
+  "VIRGIN ISLANDS, BRITISH",
+  "WALLIS AND FUTUNA",
+  "YEMEN",
+  "ZAMBIA",
+  "ZIMBABWE"
+];
 
 // Application code
 /*
