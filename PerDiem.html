@@ -274,7 +274,7 @@
     <p style="margin:0 0 0.75rem; font-size:0.9rem;">
       International rates update monthly.
       <a id="intl-state-dept-link" href="https://allowances.state.gov/web920/per_diem.asp" target="_blank" rel="noopener">Check the State Dept website</a>
-      — on that page, find <strong id="intl-verify-country"></strong> and look up the M&amp;IE rate for your city, then confirm or correct the values below.
+      — on that page, select <strong id="intl-verify-country"></strong> and find the M&amp;IE rate for <strong id="intl-verify-city"></strong>, then confirm or correct the values below.
     </p>
     <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-end;">
       <div>
@@ -2226,7 +2226,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.48';
+    const APP_VERSION = 'Version 1.0.49';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2571,8 +2571,9 @@ var INTL_COUNTRIES = [
 
         // Show verify section pre-filled with embedded data
         const verifySection = document.getElementById('intl-verify-section');
-        // Use the country value (ALL CAPS key) so it matches the State Dept dropdown exactly
+        // Use ALL CAPS values so they match the State Dept page exactly
         document.getElementById('intl-verify-country').textContent = country;
+        document.getElementById('intl-verify-city').textContent = city.toUpperCase();
         const mieInput  = document.getElementById('intl-mie-override');
         const dateInput = document.getElementById('intl-effective-date');
         mieInput.value  = match.mie;
