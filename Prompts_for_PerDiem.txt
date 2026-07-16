@@ -539,3 +539,8 @@ I selected Perth but picked Sydney for example
 Change: Require State Dept row paste before Calculate; remove embedded data fallback
 ---
 
+[Version 1.0.53] [2026-07-16 10:20:50]
+Prompt: Finance may want either just the row selected or the entire table for that country, we should allow the suer to select either and then you can match the city they previously selected and in the photo section either the single row or whatever they have selected.
+Change: Hide meal grid and calc until verified State Dept row is pasted; warn on city mismatch
+---
+
