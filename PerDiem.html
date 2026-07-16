@@ -269,6 +269,27 @@
   </form>
   <p id="error-msg" role="alert"></p>
   <h2 id="rates-heading" tabindex="-1" hidden>Per Diem Overview</h2>
+  <div id="intl-verify-section" hidden style="margin:1rem 0 1.25rem; padding:1rem; border:1px solid var(--border); border-radius:6px;">
+    <h3 style="margin:0 0 0.5rem;">Verify Current International Rate</h3>
+    <p style="margin:0 0 0.75rem; font-size:0.9rem;">
+      International rates update monthly.
+      <a id="intl-state-dept-link" href="https://allowances.state.gov/web920/per_diem_action.asp" target="_blank" rel="noopener">Check the State Dept website</a>
+      for the current rate for <strong id="intl-verify-country"></strong>, then confirm or correct the values below.
+    </p>
+    <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-end;">
+      <div>
+        <label for="intl-mie-override" style="display:block; margin-bottom:0.25rem;">M&amp;IE Rate ($/day)</label>
+        <input type="number" id="intl-mie-override" min="1" max="999" step="1"
+               style="width:6rem; margin-bottom:0;" aria-describedby="intl-mie-hint">
+        <span id="intl-mie-hint" style="display:block; font-size:0.8rem; color:var(--text-muted); margin-top:0.2rem;">Pre-filled from embedded data</span>
+      </div>
+      <div>
+        <label for="intl-effective-date" style="display:block; margin-bottom:0.25rem;">Effective Date</label>
+        <input type="date" id="intl-effective-date" style="margin-bottom:0;">
+      </div>
+    </div>
+  </div>
+
   <table id="rates-table" hidden>
     <thead>
       <tr>
@@ -344,6 +365,20 @@
         <p id="mie-location" style="margin:0.25rem 0 0;"></p>
         <p id="mie-last-updated" style="margin:0.25rem 0 0.75rem;"></p>
         <div id="rates-reprise"></div>
+        <div id="intl-source-box" hidden style="margin-top:1rem; padding:0.75rem; border:1px solid var(--border); border-radius:6px; font-size:0.875rem;">
+          <table id="intl-source-table" style="width:100%; border-collapse:collapse; margin-bottom:0.5rem;">
+            <thead>
+              <tr>
+                <th scope="col" style="text-align:left; padding:0.25rem 0.5rem; border-bottom:1px solid var(--border);">Country</th>
+                <th scope="col" style="text-align:left; padding:0.25rem 0.5rem; border-bottom:1px solid var(--border);">City</th>
+                <th scope="col" style="text-align:left; padding:0.25rem 0.5rem; border-bottom:1px solid var(--border);">M&amp;IE Rate</th>
+                <th scope="col" style="text-align:left; padding:0.25rem 0.5rem; border-bottom:1px solid var(--border);">Effective Date</th>
+              </tr>
+            </thead>
+            <tbody id="intl-source-tbody"></tbody>
+          </table>
+          <p style="margin:0; color:var(--text-muted);">Source: <a href="https://allowances.state.gov/web920/per_diem_action.asp" target="_blank" rel="noopener">U.S. State Dept Foreign Per Diem Rates</a></p>
+        </div>
       </div>
       <div style="margin-top:1.5rem;">
         <button type="button" id="save-image-btn">Export Summary as Image</button>
@@ -2191,7 +2226,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.44';
+    const APP_VERSION = 'Version 1.0.46';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2412,6 +2447,8 @@ var INTL_COUNTRIES = [
       if (ratesHeading) ratesHeading.hidden = true;
       document.getElementById('rates-table').hidden = true;
       document.querySelector('#rates-table tbody').innerHTML = '';
+      // Hide international verify section
+      document.getElementById('intl-verify-section').hidden = true;
       // Hide meal grid, calc, and summary
       document.getElementById('meal-grid-section').hidden = true;
       document.getElementById('calc-section').hidden       = true;
@@ -2421,6 +2458,8 @@ var INTL_COUNTRIES = [
       document.getElementById('summary-tbody').innerHTML   = '';
       document.getElementById('summary-tfoot').innerHTML   = '';
       document.getElementById('rates-reprise').innerHTML   = '';
+      document.getElementById('intl-source-box').hidden    = true;
+      document.getElementById('intl-source-tbody').innerHTML = '';
       showError('');
     }
 
@@ -2521,9 +2560,31 @@ var INTL_COUNTRIES = [
           showError('No per diem rates found for that city.');
           return;
         }
-        const tbody = document.querySelector('#rates-table tbody');
-        tbody.appendChild(buildRow('Standard', match.mie));
-        tbody.appendChild(buildRow('Travel Days 75%', match.mie, 0.75));
+        // Populate rates table
+        function buildIntlRows(mie) {
+          const tbody = document.querySelector('#rates-table tbody');
+          tbody.innerHTML = '';
+          tbody.appendChild(buildRow('Standard', mie));
+          tbody.appendChild(buildRow('Travel Days 75%', mie, 0.75));
+        }
+        buildIntlRows(match.mie);
+
+        // Show verify section pre-filled with embedded data
+        const verifySection = document.getElementById('intl-verify-section');
+        const countryLabel  = document.getElementById('country').options[document.getElementById('country').selectedIndex].text;
+        document.getElementById('intl-verify-country').textContent = countryLabel;
+        const mieInput  = document.getElementById('intl-mie-override');
+        const dateInput = document.getElementById('intl-effective-date');
+        mieInput.value  = match.mie;
+        dateInput.value = INTL_RATES_UPDATED;
+        verifySection.hidden = false;
+
+        // Rebuild rates table live when user corrects the MIE rate
+        mieInput.oninput = () => {
+          const val = parseInt(mieInput.value, 10);
+          if (val > 0) buildIntlRows(val);
+        };
+
         return;
       }
 
@@ -2831,10 +2892,27 @@ var INTL_COUNTRIES = [
       if (isUS) {
         lastUpdEl.innerHTML = 'Last Updated: Real-time via GSA Per Diem API';
       } else {
-        lastUpdEl.innerHTML = `Last Updated: ${INTL_RATES_UPDATED} (State Dept Per Diem)` +
-          (_intlIsStale
-            ? `<br><span style="color:var(--error);">⚠ International rates were last updated on ${INTL_RATES_UPDATED} and may be out of date.</span>`
-            : '');
+        lastUpdEl.innerHTML = 'Last Updated: State Dept Per Diem (verified by user)';
+      }
+
+      // Populate international source box (included in PNG snapshot)
+      const intlSourceBox = document.getElementById('intl-source-box');
+      if (!isUS) {
+        const verifiedMie  = document.getElementById('intl-mie-override').value || '—';
+        const verifiedDate = document.getElementById('intl-effective-date').value;
+        const displayDate  = verifiedDate
+          ? new Date(...verifiedDate.split('-').map((v,i) => i===1 ? v-1 : +v)).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' })
+          : '—';
+        document.getElementById('intl-source-tbody').innerHTML =
+          `<tr>
+            <td style="padding:0.25rem 0.5rem;">${locCountry}</td>
+            <td style="padding:0.25rem 0.5rem;">${locCity}</td>
+            <td style="padding:0.25rem 0.5rem;">$${verifiedMie}/day</td>
+            <td style="padding:0.25rem 0.5rem;">${displayDate}</td>
+          </tr>`;
+        intlSourceBox.hidden = false;
+      } else {
+        intlSourceBox.hidden = true;
       }
 
       // Duplicate the rates table below the grand total
