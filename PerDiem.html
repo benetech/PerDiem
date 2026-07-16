@@ -2226,7 +2226,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.51';
+    const APP_VERSION = 'Version 1.0.52';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2593,11 +2593,18 @@ var INTL_COUNTRIES = [
         // Columns: Country | Post Name | Season Begin | Season End | Lodging | M&IE | Per Diem | Footnote | Effective Date
         pasteEl.oninput = () => {
           const raw  = pasteEl.value.trim();
-          if (!raw) { statusEl.textContent = ''; return; }
+          if (!raw) {
+            statusEl.textContent = '';
+            document.getElementById('meal-grid-section').hidden = true;
+            document.getElementById('calc-section').hidden = true;
+            return;
+          }
           const cols = raw.split(/\t|  +/).map(s => s.trim()).filter(Boolean);
           if (cols.length < 9) {
             statusEl.style.color = 'var(--error)';
             statusEl.textContent = `⚠ Expected 9 columns, got ${cols.length}. Make sure you copied the full row.`;
+            document.getElementById('meal-grid-section').hidden = true;
+            document.getElementById('calc-section').hidden = true;
             return;
           }
           const mie  = parseInt(cols[5], 10);
@@ -2605,22 +2612,36 @@ var INTL_COUNTRIES = [
           if (isNaN(mie) || mie <= 0) {
             statusEl.style.color = 'var(--error)';
             statusEl.textContent = '⚠ Could not read M&IE value from column 6. Check the pasted row.';
+            document.getElementById('meal-grid-section').hidden = true;
+            document.getElementById('calc-section').hidden = true;
             return;
           }
-          // Store full row and update hidden inputs + rates table
+          // Warn if pasted city doesn't match selected city (ignore case)
+          const pastedCity   = cols[1].trim().toLowerCase();
+          const selectedCity = city.toLowerCase();
+          const cityMismatch = !pastedCity.includes(selectedCity) && !selectedCity.includes(pastedCity);
+          if (cityMismatch) {
+            statusEl.style.color = 'var(--error)';
+            statusEl.textContent = `⚠ City mismatch: you selected "${city}" but the pasted row is for "${cols[1]}". Please paste the correct row.`;
+            document.getElementById('meal-grid-section').hidden = true;
+            document.getElementById('calc-section').hidden = true;
+            return;
+          }
+          // Valid — store full row, update hidden inputs, rebuild rates, show meal grid
           parsedRow = { country: cols[0], city: cols[1], seasonBegin: cols[2], seasonEnd: cols[3],
                         lodging: cols[4], mie: cols[5], perDiem: cols[6], footnote: cols[7], effectiveDate: date };
           verifySection._parsedRow = parsedRow;
           document.getElementById('intl-mie-override').value  = mie;
           document.getElementById('intl-effective-date').value = date;
           buildIntlRows(mie);
-          statusEl.style.color = 'var(--text)';
-          // Show calc button only once a valid row is pasted
+          document.getElementById('meal-grid-section').hidden = false;
           document.getElementById('calc-section').hidden = false;
+          statusEl.style.color = 'var(--text)';
           statusEl.textContent = `✓ Parsed — M&IE: $${mie}/day, Effective: ${date}`;
         };
 
-        // Hide calc button until row is pasted — Finance requires verified rates
+        // Hide meal grid and calc until row is pasted and validated
+        document.getElementById('meal-grid-section').hidden = true;
         document.getElementById('calc-section').hidden = true;
         verifySection.hidden = false;
 
