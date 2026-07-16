@@ -2226,7 +2226,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.50';
+    const APP_VERSION = 'Version 1.0.51';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2615,9 +2615,13 @@ var INTL_COUNTRIES = [
           document.getElementById('intl-effective-date').value = date;
           buildIntlRows(mie);
           statusEl.style.color = 'var(--text)';
+          // Show calc button only once a valid row is pasted
+          document.getElementById('calc-section').hidden = false;
           statusEl.textContent = `✓ Parsed — M&IE: $${mie}/day, Effective: ${date}`;
         };
 
+        // Hide calc button until row is pasted — Finance requires verified rates
+        document.getElementById('calc-section').hidden = true;
         verifySection.hidden = false;
 
         return;
@@ -2937,25 +2941,14 @@ var INTL_COUNTRIES = [
         const parsed = verifySection._parsedRow;
         const td = s => `<td style="padding:0.25rem 0.5rem; border-bottom:1px solid var(--border);">${s}</td>`;
 
-        if (parsed) {
-          // Full State Dept row — update table headers to match State Dept columns
-          document.querySelector('#intl-source-table thead tr').innerHTML =
-            ['Country Name','Post Name','Season Begin','Season End','Max Lodging Rate','M&amp;IE Rate','Max Per Diem Rate','Footnote','Effective Date']
-              .map(h => `<th scope="col" style="text-align:left;padding:0.25rem 0.5rem;border-bottom:1px solid var(--border);">${h}</th>`).join('');
-          document.getElementById('intl-source-tbody').innerHTML =
-            `<tr>${[parsed.country, parsed.city, parsed.seasonBegin, parsed.seasonEnd,
-                    '$'+parsed.lodging, '$'+parsed.mie, '$'+parsed.perDiem,
-                    parsed.footnote, parsed.effectiveDate].map(td).join('')}</tr>`;
-        } else {
-          // Fallback — no paste yet, show minimal info from embedded data
-          document.querySelector('#intl-source-table thead tr').innerHTML =
-            ['Country','City','M&amp;IE Rate','Effective Date (embedded)']
-              .map(h => `<th scope="col" style="text-align:left;padding:0.25rem 0.5rem;border-bottom:1px solid var(--border);">${h}</th>`).join('');
-          document.getElementById('intl-source-tbody').innerHTML =
-            `<tr>${[locCountry, locCity,
-                    '$'+(document.getElementById('intl-mie-override').value||'—')+'/day',
-                    INTL_RATES_UPDATED].map(td).join('')}</tr>`;
-        }
+        // Full State Dept row required — calc button is gated on valid paste
+        document.querySelector('#intl-source-table thead tr').innerHTML =
+          ['Country Name','Post Name','Season Begin','Season End','Max Lodging Rate','M&amp;IE Rate','Max Per Diem Rate','Footnote','Effective Date']
+            .map(h => `<th scope="col" style="text-align:left;padding:0.25rem 0.5rem;border-bottom:1px solid var(--border);">${h}</th>`).join('');
+        document.getElementById('intl-source-tbody').innerHTML =
+          `<tr>${[parsed.country, parsed.city, parsed.seasonBegin, parsed.seasonEnd,
+                  '$'+parsed.lodging, '$'+parsed.mie, '$'+parsed.perDiem,
+                  parsed.footnote, parsed.effectiveDate].map(td).join('')}</tr>`;
         intlSourceBox.hidden = false;
       } else {
         intlSourceBox.hidden = true;
