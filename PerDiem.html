@@ -2226,7 +2226,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.52';
+    const APP_VERSION = 'Version 1.0.54';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2589,8 +2589,19 @@ var INTL_COUNTRIES = [
         // Expose on element so calculateSummary can read it
         verifySection._parsedRow = null;
 
-        // Parse pasted State Dept row (tab- or multi-space-separated)
+        // Parse pasted State Dept data — accepts a single row or the full country table.
         // Columns: Country | Post Name | Season Begin | Season End | Lodging | M&IE | Per Diem | Footnote | Effective Date
+        function parseStateRow(line) {
+          const cols = line.split(/\t|  +/).map(s => s.trim()).filter(Boolean);
+          if (cols.length < 9) return null;
+          const mie = parseInt(cols[5], 10);
+          if (isNaN(mie) || mie <= 0) return null;
+          // Effective date must be a complete MM/DD/YYYY (10 chars)
+          if (!/^\d{2}\/\d{2}\/\d{4}$/.test(cols[8])) return null;
+          return { country: cols[0], city: cols[1], seasonBegin: cols[2], seasonEnd: cols[3],
+                   lodging: cols[4], mie: cols[5], perDiem: cols[6], footnote: cols[7], effectiveDate: cols[8] };
+        }
+
         pasteEl.oninput = () => {
           const raw  = pasteEl.value.trim();
           if (!raw) {
@@ -2599,45 +2610,61 @@ var INTL_COUNTRIES = [
             document.getElementById('calc-section').hidden = true;
             return;
           }
-          const cols = raw.split(/\t|  +/).map(s => s.trim()).filter(Boolean);
-          if (cols.length < 9) {
+
+          // Parse every non-empty line; collect valid rows
+          const allRows = raw.split(/\r?\n/).map(parseStateRow).filter(Boolean);
+          if (allRows.length === 0) {
             statusEl.style.color = 'var(--error)';
-            statusEl.textContent = `⚠ Expected 9 columns, got ${cols.length}. Make sure you copied the full row.`;
+            statusEl.textContent = '⚠ No valid rows found. Check that each row has 9 columns and a complete date (MM/DD/YYYY).';
             document.getElementById('meal-grid-section').hidden = true;
             document.getElementById('calc-section').hidden = true;
             return;
           }
-          const mie  = parseInt(cols[5], 10);
-          const date = cols[8];
-          if (isNaN(mie) || mie <= 0) {
+
+          // All rows must belong to the selected country (exact match, case-insensitive)
+          const selectedCountry = country.toUpperCase();
+          const wrongCountry = allRows.find(r => r.country.toUpperCase() !== selectedCountry);
+          if (wrongCountry) {
             statusEl.style.color = 'var(--error)';
-            statusEl.textContent = '⚠ Could not read M&IE value from column 6. Check the pasted row.';
+            statusEl.textContent = `⚠ Country mismatch: you selected "${country}" but the pasted data contains "${wrongCountry.country}". Please paste the correct country's table.`;
             document.getElementById('meal-grid-section').hidden = true;
             document.getElementById('calc-section').hidden = true;
             return;
           }
-          // Warn if pasted city doesn't match selected city (ignore case)
-          const pastedCity   = cols[1].trim().toLowerCase();
+
+          // Find the row whose city matches the selected city (case-insensitive partial)
           const selectedCity = city.toLowerCase();
-          const cityMismatch = !pastedCity.includes(selectedCity) && !selectedCity.includes(pastedCity);
-          if (cityMismatch) {
+          let matchedRow = allRows.find(r => {
+            const c = r.city.toLowerCase();
+            return c === selectedCity || c.includes(selectedCity) || selectedCity.includes(c);
+          });
+
+          if (!matchedRow && allRows.length === 1) {
+            // Single-row paste with no city match — warn but allow
+            matchedRow = allRows[0];
             statusEl.style.color = 'var(--error)';
-            statusEl.textContent = `⚠ City mismatch: you selected "${city}" but the pasted row is for "${cols[1]}". Please paste the correct row.`;
+            statusEl.textContent = `⚠ City mismatch: you selected "${city}" but the pasted row is for "${allRows[0].city}". Verify this is correct before calculating.`;
+          } else if (!matchedRow) {
+            statusEl.style.color = 'var(--error)';
+            statusEl.textContent = `⚠ No row found for "${city}" in the pasted table. Make sure the correct country table is pasted.`;
             document.getElementById('meal-grid-section').hidden = true;
             document.getElementById('calc-section').hidden = true;
             return;
+          } else {
+            const rowCount = allRows.length;
+            statusEl.style.color = 'var(--text)';
+            statusEl.textContent = `✓ Parsed ${rowCount} row${rowCount > 1 ? 's' : ''} — matched "${matchedRow.city}", M&IE: $${matchedRow.mie}/day, Effective: ${matchedRow.effectiveDate}`;
           }
-          // Valid — store full row, update hidden inputs, rebuild rates, show meal grid
-          parsedRow = { country: cols[0], city: cols[1], seasonBegin: cols[2], seasonEnd: cols[3],
-                        lodging: cols[4], mie: cols[5], perDiem: cols[6], footnote: cols[7], effectiveDate: date };
-          verifySection._parsedRow = parsedRow;
-          document.getElementById('intl-mie-override').value  = mie;
-          document.getElementById('intl-effective-date').value = date;
-          buildIntlRows(mie);
+
+          // Store matched row (for calc) and all rows (for export table)
+          parsedRow = matchedRow;
+          verifySection._parsedRow = matchedRow;
+          verifySection._allRows   = allRows;
+          document.getElementById('intl-mie-override').value   = parseInt(matchedRow.mie, 10);
+          document.getElementById('intl-effective-date').value = matchedRow.effectiveDate;
+          buildIntlRows(parseInt(matchedRow.mie, 10));
           document.getElementById('meal-grid-section').hidden = false;
           document.getElementById('calc-section').hidden = false;
-          statusEl.style.color = 'var(--text)';
-          statusEl.textContent = `✓ Parsed — M&IE: $${mie}/day, Effective: ${date}`;
         };
 
         // Hide meal grid and calc until row is pasted and validated
@@ -2962,14 +2989,18 @@ var INTL_COUNTRIES = [
         const parsed = verifySection._parsedRow;
         const td = s => `<td style="padding:0.25rem 0.5rem; border-bottom:1px solid var(--border);">${s}</td>`;
 
-        // Full State Dept row required — calc button is gated on valid paste
+        // Show all pasted rows; bold the matched city row
+        const allRows = verifySection._allRows || [parsed];
         document.querySelector('#intl-source-table thead tr').innerHTML =
           ['Country Name','Post Name','Season Begin','Season End','Max Lodging Rate','M&amp;IE Rate','Max Per Diem Rate','Footnote','Effective Date']
             .map(h => `<th scope="col" style="text-align:left;padding:0.25rem 0.5rem;border-bottom:1px solid var(--border);">${h}</th>`).join('');
-        document.getElementById('intl-source-tbody').innerHTML =
-          `<tr>${[parsed.country, parsed.city, parsed.seasonBegin, parsed.seasonEnd,
-                  '$'+parsed.lodging, '$'+parsed.mie, '$'+parsed.perDiem,
-                  parsed.footnote, parsed.effectiveDate].map(td).join('')}</tr>`;
+        document.getElementById('intl-source-tbody').innerHTML = allRows.map(r => {
+          const isMatch = r.city.toLowerCase() === parsed.city.toLowerCase();
+          const rowStyle = isMatch ? ' style="font-weight:600;"' : '';
+          return `<tr${rowStyle}>${[r.country, r.city, r.seasonBegin, r.seasonEnd,
+                  '$'+r.lodging, '$'+r.mie, '$'+r.perDiem,
+                  r.footnote, r.effectiveDate].map(td).join('')}</tr>`;
+        }).join('');
         intlSourceBox.hidden = false;
       } else {
         intlSourceBox.hidden = true;

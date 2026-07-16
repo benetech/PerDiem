@@ -539,3 +539,19 @@ I selected Perth but picked Sydney for example
 Change: Require State Dept row paste before Calculate; remove embedded data fallback
 ---
 
+[Version 1.0.53] [2026-07-16 10:20:50]
+Prompt: Finance may want either just the row selected or the entire table for that country, we should allow the suer to select either and then you can match the city they previously selected and in the photo section either the single row or whatever they have selected.
+Change: Hide meal grid and calc until verified State Dept row is pasted; warn on city mismatch
+---
+
+[Version 1.0.54] [2026-07-16 10:24:03]
+Prompt: We also need to ensure the Country exactly matches. 
+I pasted
+RGENTINA	Buenos Aires	01/01	12/31	266	126	392	N/A	03/01/2023
+
+and it accepted it.  also verify they got a complete date at the end not just
+
+ARGENTINA	Buenos Aires	01/01	12/31	266	126	392	N/A	03/01/202
+Change: Support pasting single row or full country table; auto-match selected city; show all rows in export
+---
+
