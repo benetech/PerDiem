@@ -271,23 +271,23 @@
   <h2 id="rates-heading" tabindex="-1" hidden>Per Diem Overview</h2>
   <div id="intl-verify-section" hidden style="margin:1rem 0 1.25rem; padding:1rem; border:1px solid var(--border); border-radius:6px;">
     <h3 style="margin:0 0 0.5rem;">Verify Current International Rate</h3>
-    <p style="margin:0 0 0.75rem; font-size:0.9rem;">
+    <p style="margin:0 0 0.5rem; font-size:0.9rem;">
       International rates update monthly.
-      <a id="intl-state-dept-link" href="https://allowances.state.gov/web920/per_diem.asp" target="_blank" rel="noopener">Check the State Dept website</a>
-      — on that page, select <strong id="intl-verify-country"></strong> and find the M&amp;IE rate for <strong id="intl-verify-city"></strong>, then confirm or correct the values below.
+      <a id="intl-state-dept-link" href="https://allowances.state.gov/web920/per_diem.asp" target="_blank" rel="noopener">Open the State Dept website</a>,
+      select <strong id="intl-verify-country"></strong>, find the row for <strong id="intl-verify-city"></strong>,
+      then copy and paste that entire row below.
     </p>
-    <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-end;">
-      <div>
-        <label for="intl-mie-override" style="display:block; margin-bottom:0.25rem;">M&amp;IE Rate ($/day)</label>
-        <input type="number" id="intl-mie-override" min="1" max="999" step="1"
-               style="width:6rem; margin-bottom:0;" aria-describedby="intl-mie-hint">
-        <span id="intl-mie-hint" style="display:block; font-size:0.8rem; color:var(--text-muted); margin-top:0.2rem;">Pre-filled from embedded data</span>
-      </div>
-      <div>
-        <label for="intl-effective-date" style="display:block; margin-bottom:0.25rem;">Effective Date</label>
-        <input type="date" id="intl-effective-date" style="margin-bottom:0;">
-      </div>
-    </div>
+    <p style="margin:0 0 0.75rem; font-size:0.8rem; color:var(--text-muted);">
+      Example: <code>AUSTRALIA&nbsp;&nbsp;Perth&nbsp;&nbsp;01/01&nbsp;&nbsp;12/31&nbsp;&nbsp;205&nbsp;&nbsp;135&nbsp;&nbsp;340&nbsp;&nbsp;N/A&nbsp;&nbsp;03/01/2026</code>
+    </p>
+    <label for="intl-row-paste" style="display:block; margin-bottom:0.25rem; font-size:0.9rem;">Paste State Dept row here:</label>
+    <textarea id="intl-row-paste" rows="2"
+              style="width:100%; font-family:monospace; font-size:0.85rem; margin-bottom:0.5rem; resize:vertical;"
+              placeholder="Paste the table row copied from the State Dept website…"></textarea>
+    <p id="intl-parse-status" style="margin:0; font-size:0.875rem;" aria-live="polite"></p>
+    <!-- Hidden inputs used by the calculation and snapshot -->
+    <input type="hidden" id="intl-mie-override" value="">
+    <input type="hidden" id="intl-effective-date" value="">
   </div>
 
   <table id="rates-table" hidden>
@@ -2226,7 +2226,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.49';
+    const APP_VERSION = 'Version 1.0.51';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2569,22 +2569,60 @@ var INTL_COUNTRIES = [
         }
         buildIntlRows(match.mie);
 
-        // Show verify section pre-filled with embedded data
+        // Show verify section
         const verifySection = document.getElementById('intl-verify-section');
-        // Use ALL CAPS values so they match the State Dept page exactly
         document.getElementById('intl-verify-country').textContent = country;
         document.getElementById('intl-verify-city').textContent = city.toUpperCase();
-        const mieInput  = document.getElementById('intl-mie-override');
-        const dateInput = document.getElementById('intl-effective-date');
-        mieInput.value  = match.mie;
-        dateInput.value = INTL_RATES_UPDATED;
-        verifySection.hidden = false;
 
-        // Rebuild rates table live when user corrects the MIE rate
-        mieInput.oninput = () => {
-          const val = parseInt(mieInput.value, 10);
-          if (val > 0) buildIntlRows(val);
+        // Seed hidden inputs with embedded data as fallback
+        document.getElementById('intl-mie-override').value  = match.mie;
+        document.getElementById('intl-effective-date').value = INTL_RATES_UPDATED;
+
+        // Clear previous paste and status
+        const pasteEl  = document.getElementById('intl-row-paste');
+        const statusEl = document.getElementById('intl-parse-status');
+        pasteEl.value  = '';
+        statusEl.textContent = '';
+
+        // Store full parsed row for snapshot (null until user pastes)
+        let parsedRow = null;
+        // Expose on element so calculateSummary can read it
+        verifySection._parsedRow = null;
+
+        // Parse pasted State Dept row (tab- or multi-space-separated)
+        // Columns: Country | Post Name | Season Begin | Season End | Lodging | M&IE | Per Diem | Footnote | Effective Date
+        pasteEl.oninput = () => {
+          const raw  = pasteEl.value.trim();
+          if (!raw) { statusEl.textContent = ''; return; }
+          const cols = raw.split(/\t|  +/).map(s => s.trim()).filter(Boolean);
+          if (cols.length < 9) {
+            statusEl.style.color = 'var(--error)';
+            statusEl.textContent = `⚠ Expected 9 columns, got ${cols.length}. Make sure you copied the full row.`;
+            return;
+          }
+          const mie  = parseInt(cols[5], 10);
+          const date = cols[8];
+          if (isNaN(mie) || mie <= 0) {
+            statusEl.style.color = 'var(--error)';
+            statusEl.textContent = '⚠ Could not read M&IE value from column 6. Check the pasted row.';
+            return;
+          }
+          // Store full row and update hidden inputs + rates table
+          parsedRow = { country: cols[0], city: cols[1], seasonBegin: cols[2], seasonEnd: cols[3],
+                        lodging: cols[4], mie: cols[5], perDiem: cols[6], footnote: cols[7], effectiveDate: date };
+          verifySection._parsedRow = parsedRow;
+          document.getElementById('intl-mie-override').value  = mie;
+          document.getElementById('intl-effective-date').value = date;
+          buildIntlRows(mie);
+          statusEl.style.color = 'var(--text)';
+          // Show calc button only once a valid row is pasted
+          document.getElementById('calc-section').hidden = false;
+          statusEl.textContent = `✓ Parsed — M&IE: $${mie}/day, Effective: ${date}`;
         };
+
+        // Hide calc button until row is pasted — Finance requires verified rates
+        document.getElementById('calc-section').hidden = true;
+        verifySection.hidden = false;
 
         return;
       }
@@ -2899,18 +2937,18 @@ var INTL_COUNTRIES = [
       // Populate international source box (included in PNG snapshot)
       const intlSourceBox = document.getElementById('intl-source-box');
       if (!isUS) {
-        const verifiedMie  = document.getElementById('intl-mie-override').value || '—';
-        const verifiedDate = document.getElementById('intl-effective-date').value;
-        const displayDate  = verifiedDate
-          ? new Date(...verifiedDate.split('-').map((v,i) => i===1 ? v-1 : +v)).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' })
-          : '—';
+        const verifySection = document.getElementById('intl-verify-section');
+        const parsed = verifySection._parsedRow;
+        const td = s => `<td style="padding:0.25rem 0.5rem; border-bottom:1px solid var(--border);">${s}</td>`;
+
+        // Full State Dept row required — calc button is gated on valid paste
+        document.querySelector('#intl-source-table thead tr').innerHTML =
+          ['Country Name','Post Name','Season Begin','Season End','Max Lodging Rate','M&amp;IE Rate','Max Per Diem Rate','Footnote','Effective Date']
+            .map(h => `<th scope="col" style="text-align:left;padding:0.25rem 0.5rem;border-bottom:1px solid var(--border);">${h}</th>`).join('');
         document.getElementById('intl-source-tbody').innerHTML =
-          `<tr>
-            <td style="padding:0.25rem 0.5rem;">${locCountry}</td>
-            <td style="padding:0.25rem 0.5rem;">${locCity}</td>
-            <td style="padding:0.25rem 0.5rem;">$${verifiedMie}/day</td>
-            <td style="padding:0.25rem 0.5rem;">${displayDate}</td>
-          </tr>`;
+          `<tr>${[parsed.country, parsed.city, parsed.seasonBegin, parsed.seasonEnd,
+                  '$'+parsed.lodging, '$'+parsed.mie, '$'+parsed.perDiem,
+                  parsed.footnote, parsed.effectiveDate].map(td).join('')}</tr>`;
         intlSourceBox.hidden = false;
       } else {
         intlSourceBox.hidden = true;
