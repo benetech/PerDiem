@@ -2226,7 +2226,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.53';
+    const APP_VERSION = 'Version 1.0.54';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2596,6 +2596,8 @@ var INTL_COUNTRIES = [
           if (cols.length < 9) return null;
           const mie = parseInt(cols[5], 10);
           if (isNaN(mie) || mie <= 0) return null;
+          // Effective date must be a complete MM/DD/YYYY (10 chars)
+          if (!/^\d{2}\/\d{2}\/\d{4}$/.test(cols[8])) return null;
           return { country: cols[0], city: cols[1], seasonBegin: cols[2], seasonEnd: cols[3],
                    lodging: cols[4], mie: cols[5], perDiem: cols[6], footnote: cols[7], effectiveDate: cols[8] };
         }
@@ -2613,7 +2615,18 @@ var INTL_COUNTRIES = [
           const allRows = raw.split(/\r?\n/).map(parseStateRow).filter(Boolean);
           if (allRows.length === 0) {
             statusEl.style.color = 'var(--error)';
-            statusEl.textContent = '⚠ No valid rows found. Make sure you copied at least one complete row (9 columns).';
+            statusEl.textContent = '⚠ No valid rows found. Check that each row has 9 columns and a complete date (MM/DD/YYYY).';
+            document.getElementById('meal-grid-section').hidden = true;
+            document.getElementById('calc-section').hidden = true;
+            return;
+          }
+
+          // All rows must belong to the selected country (exact match, case-insensitive)
+          const selectedCountry = country.toUpperCase();
+          const wrongCountry = allRows.find(r => r.country.toUpperCase() !== selectedCountry);
+          if (wrongCountry) {
+            statusEl.style.color = 'var(--error)';
+            statusEl.textContent = `⚠ Country mismatch: you selected "${country}" but the pasted data contains "${wrongCountry.country}". Please paste the correct country's table.`;
             document.getElementById('meal-grid-section').hidden = true;
             document.getElementById('calc-section').hidden = true;
             return;
