@@ -631,3 +631,8 @@ Prompt: please check the GSA guidelines on this if you can
 Change: Fix travel day 75% meal breakdown: look up reduced M&IE in Appendix B table, not scale full amounts
 ---
 
+[Version 1.1.12] [2026-08-05 11:34:49]
+Prompt: I don't think that is correct there is no 55.5 value in the table they are all whole numbers.
+Change: Fix travel day 75% rounding: CONUS keeps half-dollar precision, international rounds to nearest whole dollar for Appendix B lookup
+---
+
