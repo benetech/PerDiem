@@ -590,3 +590,13 @@ there from an ME&I rate of $1 to $265 the exact dollar amount for breakfast, lun
 Change: Show city search automatically for OCONUS states (Hawaii, Alaska) with no GSA CONUS data
 ---
 
+[Version 1.1.5] [2026-08-05 10:55:56]
+Prompt: I want option B with the backup table and if the backup table is use add a warning and last date the table was updated this would appear initially up when selecting the country / city and then again in the summary so its part of the image created for finance.
+Change: Replace international meal % estimates with official FTR 301 Appendix B lookup table
+---
+
+[Version 1.1.6] [2026-08-05 10:56:58]
+Prompt: I want option B with the backup table and if the backup table is use add a warning and last date the table was updated this would appear initially up when selecting the country / city and then again in the summary so its part of the image created for finance.
+Change: Replace international meal % estimates with official FTR 301 Appendix B lookup table
+---
+

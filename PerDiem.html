@@ -260,6 +260,7 @@
         <button type="button" id="city-search-confirm-no"  style="font-size:0.875rem; padding:0.25rem 0.6rem;">No, cancel</button>
       </div>
     </div>
+    <div id="appendix-b-status" hidden style="margin-bottom:0.75rem; padding:0.5rem 0.75rem; border-radius:4px; font-size:0.875rem;"></div>
     <p style="margin:0 0 0.5rem; font-size:0.875rem;">
       <a id="rates-website-link"
          href="https://www.gsa.gov/travel/plan-book/per-diem-rates"
@@ -364,6 +365,7 @@
         <h3>M&amp;IE Values Used</h3>
         <p id="mie-location" style="margin:0.25rem 0 0;"></p>
         <p id="mie-last-updated" style="margin:0.25rem 0 0.75rem;"></p>
+        <div id="appendix-b-export-warning" hidden style="margin-bottom:0.75rem; padding:0.5rem 0.75rem; background:#fff3cd; color:#6b4400; border:1px solid #9a6700; border-radius:4px; font-size:0.875rem;"></div>
         <div id="rates-reprise"></div>
         <div id="intl-source-box" hidden style="margin-top:1rem; padding:0.75rem; border:1px solid var(--border); border-radius:6px; font-size:0.875rem;">
           <table id="intl-source-table" style="width:100%; border-collapse:collapse; margin-bottom:0.5rem;">
@@ -2229,7 +2231,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.1.4';
+    const APP_VERSION = 'Version 1.1.6';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2266,6 +2268,43 @@ var INTL_COUNTRIES = [
     // Source: https://allowances.state.gov/Bypass/AppendixB.asp
     // Index = M&IE total ($1–$265); values = [breakfast, lunch, dinner, incidentals].
     // For M&IE > $265 the note on that page prescribes 15%/25%/40%/remainder.
+    // APPENDIX_B_DATE = date this inlined table was last verified against the live page.
+    const APPENDIX_B_DATE = '2026-08-05';
+    let   appendixBRuntime = null; // populated from live fetch; null = use inlined fallback
+    let   appendixBFetchOk = null; // null=pending, true=live, false=fallback
+
+    async function fetchAppendixB() {
+      const statusEl = document.getElementById('appendix-b-status');
+      statusEl.hidden = false;
+      statusEl.style.background = 'var(--surface)';
+      statusEl.style.color      = 'var(--text-muted)';
+      statusEl.style.border     = '1px solid var(--border)';
+      statusEl.textContent      = 'Fetching current meal breakdown table from State Dept…';
+      try {
+        const res = await fetch('https://allowances.state.gov/Bypass/AppendixB.asp');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const plain = (await res.text()).replace(/<[^>]+>/g, ' ');
+        const table = [null];
+        for (const line of plain.split(/\n/)) {
+          const m = line.match(/\$(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/);
+          if (m) table[+m[1]] = [+m[2], +m[3], +m[4], +m[5]];
+        }
+        if (table.filter(Boolean).length >= 260) {
+          appendixBRuntime = table;
+          appendixBFetchOk = true;
+          statusEl.hidden = true;
+          return;
+        }
+        throw new Error('Parsed fewer than 260 rows');
+      } catch {
+        appendixBFetchOk = false;
+        statusEl.style.background = '#fff3cd';
+        statusEl.style.color      = '#6b4400';
+        statusEl.style.border     = '1px solid #9a6700';
+        statusEl.textContent = `⚠ Could not fetch the live meal breakdown table from State Dept. Using built-in table last verified ${APPENDIX_B_DATE}. Verify any amounts against https://allowances.state.gov/Bypass/AppendixB.asp`;
+      }
+    }
+
     const APPENDIX_B = [
       null, // index 0 unused
       // $1–$10
@@ -2328,9 +2367,10 @@ var INTL_COUNTRIES = [
       // CONUS: use GSA-specific lookup first
       const entry = MIE_TABLE[mie];
       if (entry) return entry;
-      // International $1–$265: use official FTR 301 Appendix B table
-      if (mie >= 1 && mie <= 265) {
-        const [breakfast, lunch, dinner, incidentals] = APPENDIX_B[mie];
+      // International $1–$265: prefer live-fetched table, fall back to inlined APPENDIX_B
+      const table = appendixBRuntime || APPENDIX_B;
+      if (mie >= 1 && mie <= 265 && table[mie]) {
+        const [breakfast, lunch, dinner, incidentals] = table[mie];
         return { breakfast, lunch, dinner, incidentals };
       }
       // International >$265: per Appendix B note — 15% breakfast, 25% lunch, 40% dinner, remainder incidentals
@@ -2540,8 +2580,9 @@ var INTL_COUNTRIES = [
       document.getElementById('summary-tbody').innerHTML   = '';
       document.getElementById('summary-tfoot').innerHTML   = '';
       document.getElementById('rates-reprise').innerHTML   = '';
-      document.getElementById('intl-source-box').hidden    = true;
-      document.getElementById('intl-source-tbody').innerHTML = '';
+      document.getElementById('intl-source-box').hidden       = true;
+      document.getElementById('intl-source-tbody').innerHTML  = '';
+      document.getElementById('appendix-b-export-warning').hidden = true;
       showError('');
     }
 
@@ -2564,6 +2605,17 @@ var INTL_COUNTRIES = [
       resetResults();
       updateRatesLink(countryEl.value);
       populateStates(countryEl.value);
+      const statusEl = document.getElementById('appendix-b-status');
+      if (countryEl.value && countryEl.value !== 'US') {
+        // Fetch live Appendix B once per session; re-show status if fallback was used
+        if (appendixBFetchOk === null) {
+          fetchAppendixB();
+        } else if (appendixBFetchOk === false) {
+          statusEl.hidden = false;
+        }
+      } else {
+        statusEl.hidden = true;
+      }
     });
     stateEl.addEventListener('change', () => {
       clearCityConfirm();
@@ -3062,6 +3114,15 @@ var INTL_COUNTRIES = [
         lastUpdEl.innerHTML = 'Last Updated: Real-time via GSA Per Diem API';
       } else {
         lastUpdEl.innerHTML = 'Last Updated: State Dept Per Diem (verified by user)';
+      }
+
+      // Appendix B source warning (included in PNG snapshot for international trips)
+      const exportWarnEl = document.getElementById('appendix-b-export-warning');
+      if (!isUS && appendixBFetchOk === false) {
+        exportWarnEl.textContent = `⚠ Meal breakdown (Breakfast/Lunch/Dinner/Misc) calculated using built-in FTR 301 Appendix B table last verified ${APPENDIX_B_DATE}. Verify against https://allowances.state.gov/Bypass/AppendixB.asp`;
+        exportWarnEl.hidden = false;
+      } else {
+        exportWarnEl.hidden = true;
       }
 
       // Populate international source box (included in PNG snapshot)
