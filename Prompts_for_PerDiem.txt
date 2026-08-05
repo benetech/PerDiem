@@ -555,3 +555,13 @@ ARGENTINA	Buenos Aires	01/01	12/31	266	126	392	N/A	03/01/202
 Change: Support pasting single row or full country table; auto-match selected city; show all rows in export
 ---
 
+[Version 1.0.55] [2026-08-05 06:54:18]
+Prompt: WHEN I EXPOrted the images the colors are wrong and I can't see the content I am in dark mode on my browswer
+Change: Validate country exact match and complete effective date (MM/DD/YYYY) on paste
+---
+
+[Version 1.1.1] [2026-08-05 06:56:22]
+Prompt: i always want you to tell me the new version number when done and lets for this bump it up to 1.1.0
+Change: Force light-mode colours in PNG export via html2canvas onclone callback
+---
+
