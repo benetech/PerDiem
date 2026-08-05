@@ -575,3 +575,18 @@ Prompt: why when I select Hawaii the city popup has no entries?
 Change: Clarify step 3 must be repeated for every day including travel days
 ---
 
+[Version 1.1.4] [2026-08-05 10:49:45]
+Prompt: For other countries outside the USA the exact breakdown for Breakfast, Lunch, Dinner and Misc. is not just a % of the total ME&I rate found in the table.
+
+There is another excel worksheet which changes periodically that we need to cross-reference.
+
+https://allowances.state.gov/content.asp
+on that webpage is the following excel spreadsheet
+
+* [FTR 301, Appendix B (Breakdown of Foreign Meals/Incidentals Portion)](https://allowances.state.gov/Bypass/AppendixB.asp)
+
+
+there from an ME&I rate of $1 to $265 the exact dollar amount for breakfast, lunch dinner and misc is broken down.  We need to use this table ideally this table can be referenced for each query otherwise we need to figure out when it gets updated and pull a new copy when needed.
+Change: Show city search automatically for OCONUS states (Hawaii, Alaska) with no GSA CONUS data
+---
+
