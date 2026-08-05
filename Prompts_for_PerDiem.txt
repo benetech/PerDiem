@@ -621,3 +621,8 @@ lets just leave it at a Meal breakdown uses the inlined FTR 301 Appendix B table
 Change: Remove live fetch; always show Appendix B verified date; add monthly GitHub Action to detect table changes
 ---
 
+[Version 1.1.10] [2026-08-05 11:26:50]
+Prompt: ok now the issue with the international 75% on travel days. its not correct. we need to get 75% of the MEI rate and then use that # to refer into the new table data finding that $ amount and using the values for breakfast, lunch and dinner, and misc not as 75% of each full day directly.
+Change: Simplify Appendix B status text
+---
+
