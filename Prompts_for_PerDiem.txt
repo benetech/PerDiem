@@ -565,3 +565,8 @@ Prompt: i always want you to tell me the new version number when done and lets f
 Change: Force light-mode colours in PNG export via html2canvas onclone callback
 ---
 
+[Version 1.1.2] [2026-08-05 07:32:58]
+Prompt: for the final instructions we need to stress they need to do step 3 for each day of the conference and the two travel days.
+Change: Bump version to 1.1.0
+---
+
