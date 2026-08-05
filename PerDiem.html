@@ -408,7 +408,7 @@
         </ul>
         Then click <strong>Create Report</strong>.
       </li>
-      <li>For <strong>each day listed above</strong>:
+      <li>Repeat the steps below <strong>for every day in the summary above</strong> — this includes both travel days and each full conference day:
         <ol style="margin-top:0.4rem; line-height:1.8;">
           <li>Click <strong>Add Expense</strong> then <strong>Manually create expense</strong></li>
           <li>In the dialog, select <strong>Meals &amp; IE Per Diem</strong> as the expense type</li>
@@ -422,6 +422,9 @@
             </ul>
           </li>
         </ol>
+        <p style="margin:0.5rem 0 0; padding:0.5rem 0.75rem; background:var(--surface); border-left:3px solid var(--border); font-size:0.95rem;">
+          ⚠ <strong>Important:</strong> you must create a separate expense entry for <em>each</em> day — do not combine them into one line item.
+        </p>
       </li>
       <li>Verify the <strong>Report Total</strong> in Concur matches the <strong>Grand Total</strong> in the summary above.</li>
       <li>Click <strong>Submit Report</strong> to send it for approval.</li>
@@ -2226,7 +2229,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.1.1';
+    const APP_VERSION = 'Version 1.1.3';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2379,6 +2382,17 @@ var INTL_COUNTRIES = [
       });
 
       const cities = Object.keys(cityCountyMap).sort();
+      if (cities.length === 0) {
+        // OCONUS states (Hawaii, Alaska) are not in the GSA CONUS database.
+        // Surface the city/ZIP search automatically so the user can still find their city.
+        cityEl.innerHTML = '<option value="">-- No cities in GSA database — use search below --</option>';
+        cityEl.disabled = true;
+        const searchRow = document.getElementById('city-search-row');
+        searchRow.style.display = '';
+        document.getElementById('city-search').focus();
+        showError('This state is not in the GSA CONUS per diem database. Use the city or ZIP search below to look up your city.');
+        return;
+      }
       cityEl.innerHTML = '<option value="">-- Select a city --</option>';
       for (const city of cities) {
         const opt = document.createElement('option');
