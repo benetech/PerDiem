@@ -2231,7 +2231,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.1.8';
+    const APP_VERSION = 'Version 1.1.12';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2362,15 +2362,18 @@ var INTL_COUNTRIES = [
     }
 
     function buildRow(type, mie, scale = 1) {
-      const b  = getMealBreakdown(mie);
+      // For travel-day rows: round 75% of M&IE to nearest whole dollar, then look
+      // that amount up in the Appendix B / MIE_TABLE to get the correct per-meal breakdown.
+      const effectiveMie = scale === 1 ? mie : Math.round(mie * scale);
+      const b = getMealBreakdown(effectiveMie);
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <th scope="row">${type}</th>
-        <td>${fmt(b.breakfast * scale)}</td>
-        <td>${fmt(b.lunch * scale)}</td>
-        <td>${fmt(b.dinner * scale)}</td>
-        <td>${fmt(b.incidentals * scale)}</td>
-        <td>${fmt(mie * scale)}</td>
+        <td>${fmt(b.breakfast)}</td>
+        <td>${fmt(b.lunch)}</td>
+        <td>${fmt(b.dinner)}</td>
+        <td>${fmt(b.incidentals)}</td>
+        <td>${fmt(effectiveMie)}</td>
       `;
       return tr;
     }
@@ -2576,7 +2579,7 @@ var INTL_COUNTRIES = [
         statusEl.style.background = 'var(--surface)';
         statusEl.style.color      = 'var(--text-muted)';
         statusEl.style.border     = '1px solid var(--border)';
-        statusEl.textContent      = `Meal breakdown uses the inlined FTR 301 Appendix B table (last verified ${APPENDIX_B_DATE}). A monthly automated check will open a PR if the table changes.`;
+        statusEl.textContent      = `Meal breakdown uses the inlined FTR 301 Appendix B table (last verified ${APPENDIX_B_DATE}). A monthly automated check will be performed monthly.`;
         statusEl.hidden = false;
       } else {
         statusEl.hidden = true;

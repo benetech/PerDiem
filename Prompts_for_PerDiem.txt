@@ -614,3 +614,25 @@ But how can we tell if we have stale data and that I may need to create and upda
 Change: Fetch live Appendix B at runtime; fall back to inlined table with warning if unavailable
 ---
 
+[Version 1.1.9] [2026-08-05 11:17:50]
+Prompt: For the text: Meal breakdown uses the inlined FTR 301 Appendix B table (last verified 2026-08-05). A monthly automated check will open a PR if the table changes.
+
+lets just leave it at a Meal breakdown uses the inlined FTR 301 Appendix B table (last verified 2026-08-05). A monthly automated check will be performed monthly.
+Change: Remove live fetch; always show Appendix B verified date; add monthly GitHub Action to detect table changes
+---
+
+[Version 1.1.10] [2026-08-05 11:26:50]
+Prompt: ok now the issue with the international 75% on travel days. its not correct. we need to get 75% of the MEI rate and then use that # to refer into the new table data finding that $ amount and using the values for breakfast, lunch and dinner, and misc not as 75% of each full day directly.
+Change: Simplify Appendix B status text
+---
+
+[Version 1.1.11] [2026-08-05 11:32:31]
+Prompt: please check the GSA guidelines on this if you can
+Change: Fix travel day 75% meal breakdown: look up reduced M&IE in Appendix B table, not scale full amounts
+---
+
+[Version 1.1.12] [2026-08-05 11:34:49]
+Prompt: I don't think that is correct there is no 55.5 value in the table they are all whole numbers.
+Change: Fix travel day 75% rounding: CONUS keeps half-dollar precision, international rounds to nearest whole dollar for Appendix B lookup
+---
+
