@@ -2241,7 +2241,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.1.21';
+    const APP_VERSION = 'Version 1.1.22';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -3103,7 +3103,8 @@ var INTL_COUNTRIES = [
       // Populate Last Updated line
       const lastUpdEl = document.getElementById('mie-last-updated');
       if (isUS) {
-        lastUpdEl.innerHTML = 'Last Updated: Real-time via GSA Per Diem API';
+        const fy = gsaFiscalYear(document.getElementById('start-date').value);
+        lastUpdEl.innerHTML = `Last Updated: Real-time via GSA Per Diem API (FY${fy})`;
       } else {
         const effectiveDate = document.getElementById('intl-effective-date').value || '';
         lastUpdEl.innerHTML = `Last Updated: State Dept Per Diem (verified by user)${effectiveDate ? ' — Effective: ' + effectiveDate : ''}`;
