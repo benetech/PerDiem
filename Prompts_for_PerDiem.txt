@@ -614,3 +614,10 @@ But how can we tell if we have stale data and that I may need to create and upda
 Change: Fetch live Appendix B at runtime; fall back to inlined table with warning if unavailable
 ---
 
+[Version 1.1.9] [2026-08-05 11:17:50]
+Prompt: For the text: Meal breakdown uses the inlined FTR 301 Appendix B table (last verified 2026-08-05). A monthly automated check will open a PR if the table changes.
+
+lets just leave it at a Meal breakdown uses the inlined FTR 301 Appendix B table (last verified 2026-08-05). A monthly automated check will be performed monthly.
+Change: Remove live fetch; always show Appendix B verified date; add monthly GitHub Action to detect table changes
+---
+

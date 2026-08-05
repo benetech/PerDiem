@@ -2231,7 +2231,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.1.8';
+    const APP_VERSION = 'Version 1.1.9';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2576,7 +2576,7 @@ var INTL_COUNTRIES = [
         statusEl.style.background = 'var(--surface)';
         statusEl.style.color      = 'var(--text-muted)';
         statusEl.style.border     = '1px solid var(--border)';
-        statusEl.textContent      = `Meal breakdown uses the inlined FTR 301 Appendix B table (last verified ${APPENDIX_B_DATE}). A monthly automated check will open a PR if the table changes.`;
+        statusEl.textContent      = `Meal breakdown uses the inlined FTR 301 Appendix B table (last verified ${APPENDIX_B_DATE}). A monthly automated check will be performed monthly.`;
         statusEl.hidden = false;
       } else {
         statusEl.hidden = true;
