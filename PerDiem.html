@@ -280,7 +280,7 @@
     </p>
     <p style="margin:0 0 0.5rem; font-size:0.9rem; padding:0.5rem 0.75rem; background:var(--surface); border-left:3px solid var(--border);">
       <strong>Important:</strong> on the State Dept website, make sure to select the <strong>Rates Date</strong> that covers your travel period.
-      If your trip was in a past month, use the <em>Previous Rates</em> dropdown and pick the date whose period included your travel.
+      If your trip was in a past month, use the <em>Previous Rates</em> dropdown above the table and pick <strong id="intl-verify-rates-date">MM/01/YYYY</strong>.
       Rates don't change every month — the effective date in the pasted row simply shows when that rate was last published.
     </p>
     <p style="margin:0 0 0.75rem; font-size:0.8rem; color:var(--text-muted);">
@@ -2236,7 +2236,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.1.15';
+    const APP_VERSION = 'Version 1.1.17';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2680,6 +2680,10 @@ var INTL_COUNTRIES = [
         const verifySection = document.getElementById('intl-verify-section');
         document.getElementById('intl-verify-country').textContent = country;
         document.getElementById('intl-verify-city').textContent = city.toUpperCase();
+        const _sd = document.getElementById('start-date').value;
+        document.getElementById('intl-verify-rates-date').textContent = _sd
+          ? (() => { const [y,m] = _sd.split('-'); return `${m}/01/${y}`; })()
+          : 'MM/01/YYYY';
 
         // Seed hidden inputs with embedded data as fallback
         document.getElementById('intl-mie-override').value  = match.mie;
