@@ -271,15 +271,20 @@
   <p id="error-msg" role="alert"></p>
   <h2 id="rates-heading" tabindex="-1" hidden>Per Diem Overview</h2>
   <div id="intl-verify-section" hidden style="margin:1rem 0 1.25rem; padding:1rem; border:1px solid var(--border); border-radius:6px;">
-    <h3 style="margin:0 0 0.5rem;">Verify Current International Rate</h3>
+    <h3 style="margin:0 0 0.5rem;">Verify International Rate for Your Travel Dates</h3>
     <p style="margin:0 0 0.5rem; font-size:0.9rem;">
       International rates update monthly.
       <a id="intl-state-dept-link" href="https://allowances.state.gov/web920/per_diem.asp" target="_blank" rel="noopener">Open the State Dept website</a>,
       select <strong id="intl-verify-country"></strong>, find the row for <strong id="intl-verify-city"></strong>,
       then copy and paste that entire row below.
     </p>
+    <p style="margin:0 0 0.5rem; font-size:0.9rem; padding:0.5rem 0.75rem; background:var(--surface); border-left:3px solid var(--border);">
+      <strong>Important:</strong> on the State Dept website, make sure to select the <strong>Rates Date</strong> that was in effect during your travel.
+      If your trip was in a past month, use the <em>Previous Rates</em> dropdown to find the rate that applied at that time.
+      The effective date in the pasted row (last column) should fall on or before your travel start date of <strong id="intl-verify-travel-date"></strong>.
+    </p>
     <p style="margin:0 0 0.75rem; font-size:0.8rem; color:var(--text-muted);">
-      Example: <code>AUSTRALIA&nbsp;&nbsp;Perth&nbsp;&nbsp;01/01&nbsp;&nbsp;12/31&nbsp;&nbsp;205&nbsp;&nbsp;135&nbsp;&nbsp;340&nbsp;&nbsp;N/A&nbsp;&nbsp;03/01/2026</code>
+      Example: <code>IRELAND&nbsp;&nbsp;Dublin&nbsp;&nbsp;01/01&nbsp;&nbsp;12/31&nbsp;&nbsp;244&nbsp;&nbsp;136&nbsp;&nbsp;380&nbsp;&nbsp;N/A&nbsp;&nbsp;10/01/2017</code>
     </p>
     <label for="intl-row-paste" style="display:block; margin-bottom:0.25rem; font-size:0.9rem;">Paste State Dept row here:</label>
     <textarea id="intl-row-paste" rows="2"
@@ -2231,7 +2236,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.1.12';
+    const APP_VERSION = 'Version 1.1.14';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2675,6 +2680,13 @@ var INTL_COUNTRIES = [
         const verifySection = document.getElementById('intl-verify-section');
         document.getElementById('intl-verify-country').textContent = country;
         document.getElementById('intl-verify-city').textContent = city.toUpperCase();
+        const startDateVal = document.getElementById('start-date').value;
+        if (startDateVal) {
+          const [sy, sm, sd] = startDateVal.split('-');
+          document.getElementById('intl-verify-travel-date').textContent = `${sm}/${sd}/${sy}`;
+        } else {
+          document.getElementById('intl-verify-travel-date').textContent = 'your trip';
+        }
 
         // Seed hidden inputs with embedded data as fallback
         document.getElementById('intl-mie-override').value  = match.mie;
