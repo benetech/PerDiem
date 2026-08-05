@@ -278,9 +278,14 @@
       select <strong id="intl-verify-country"></strong>, find the row for <strong id="intl-verify-city"></strong>,
       then copy and paste that entire row below.
     </p>
-    <p style="margin:0 0 0.5rem; font-size:0.9rem; padding:0.5rem 0.75rem; background:var(--surface); border-left:3px solid var(--border);">
+    <p style="margin:0 0 0.25rem; font-size:0.9rem;">
       <strong>Important:</strong> on the State Dept website, make sure to select the <strong>Rates Date</strong> that covers your travel period.
-      If your trip was in a past month, use the <em>Previous Rates</em> dropdown above the table and pick <strong id="intl-verify-rates-date">MM/01/YYYY</strong>.
+      Use the <em>Previous Rates</em> dropdown above the table and pick the correct date for your travel.
+    </p>
+    <p style="margin:0 0 0.25rem; font-size:0.9rem; padding:0.4rem 0.75rem; background:var(--surface); border-left:3px solid var(--border); font-family:monospace;">
+      Previous Rates: <strong id="intl-verify-rates-date">MM/01/YYYY</strong>
+    </p>
+    <p style="margin:0 0 0.5rem; font-size:0.85rem; color:var(--text-muted);">
       Rates don't change every month — the effective date in the pasted row simply shows when that rate was last published.
     </p>
     <p style="margin:0 0 0.75rem; font-size:0.8rem; color:var(--text-muted);">
@@ -370,7 +375,7 @@
         <h3>M&amp;IE Values Used</h3>
         <p id="mie-location" style="margin:0.25rem 0 0;"></p>
         <p id="mie-last-updated" style="margin:0.25rem 0 0.75rem;"></p>
-        <div id="appendix-b-export-warning" hidden style="margin-bottom:0.75rem; padding:0.5rem 0.75rem; background:#fff3cd; color:#6b4400; border:1px solid #9a6700; border-radius:4px; font-size:0.875rem;"></div>
+        <p id="appendix-b-export-warning" hidden style="margin:0.25rem 0 0;"></p>
         <div id="rates-reprise"></div>
         <div id="intl-source-box" hidden style="margin-top:1rem; padding:0.75rem; border:1px solid var(--border); border-radius:6px; font-size:0.875rem;">
           <table id="intl-source-table" style="width:100%; border-collapse:collapse; margin-bottom:0.5rem;">
@@ -2236,7 +2241,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.1.17';
+    const APP_VERSION = 'Version 1.1.18';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -3096,7 +3101,7 @@ var INTL_COUNTRIES = [
       // Appendix B note — always shown for international trips in the PNG snapshot
       const exportWarnEl = document.getElementById('appendix-b-export-warning');
       if (!isUS) {
-        exportWarnEl.textContent = `Meal breakdown (Breakfast/Lunch/Dinner/Misc) sourced from FTR 301 Appendix B table, last verified ${APPENDIX_B_DATE}. Reference: allowances.state.gov/Bypass/AppendixB.asp`;
+        exportWarnEl.innerHTML = `Last Updated Meal Breakdown: ${APPENDIX_B_DATE}<br><span style="font-size:0.8rem;color:var(--text-muted);">Source: FTR 301 Appendix B (allowances.state.gov/Bypass/AppendixB.asp)</span>`;
         exportWarnEl.hidden = false;
       } else {
         exportWarnEl.hidden = true;
