@@ -2241,7 +2241,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.1.19';
+    const APP_VERSION = 'Version 1.1.20';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2948,7 +2948,10 @@ var INTL_COUNTRIES = [
 
     startDateEl.addEventListener('change', () => {
       endDateEl.min = startDateEl.value;
-      if (endDateEl.value && endDateEl.value < startDateEl.value) {
+      if (!endDateEl.value) {
+        // Pre-fill end date to start date so the picker opens to the same month
+        endDateEl.value = startDateEl.value;
+      } else if (endDateEl.value < startDateEl.value) {
         endDateEl.value = startDateEl.value;
       }
       buildMealGrid();
