@@ -279,9 +279,9 @@
       then copy and paste that entire row below.
     </p>
     <p style="margin:0 0 0.5rem; font-size:0.9rem; padding:0.5rem 0.75rem; background:var(--surface); border-left:3px solid var(--border);">
-      <strong>Important:</strong> on the State Dept website, make sure to select the <strong>Rates Date</strong> that was in effect during your travel.
-      If your trip was in a past month, use the <em>Previous Rates</em> dropdown to find the rate that applied at that time.
-      The effective date in the pasted row (last column) should fall on or before your travel start date of <strong id="intl-verify-travel-date"></strong>.
+      <strong>Important:</strong> on the State Dept website, make sure to select the <strong>Rates Date</strong> that covers your travel period.
+      If your trip was in a past month, use the <em>Previous Rates</em> dropdown and pick the date whose period included your travel.
+      Rates don't change every month — the effective date in the pasted row simply shows when that rate was last published.
     </p>
     <p style="margin:0 0 0.75rem; font-size:0.8rem; color:var(--text-muted);">
       Example: <code>IRELAND&nbsp;&nbsp;Dublin&nbsp;&nbsp;01/01&nbsp;&nbsp;12/31&nbsp;&nbsp;244&nbsp;&nbsp;136&nbsp;&nbsp;380&nbsp;&nbsp;N/A&nbsp;&nbsp;10/01/2017</code>
@@ -2236,7 +2236,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.1.14';
+    const APP_VERSION = 'Version 1.1.15';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2680,13 +2680,6 @@ var INTL_COUNTRIES = [
         const verifySection = document.getElementById('intl-verify-section');
         document.getElementById('intl-verify-country').textContent = country;
         document.getElementById('intl-verify-city').textContent = city.toUpperCase();
-        const startDateVal = document.getElementById('start-date').value;
-        if (startDateVal) {
-          const [sy, sm, sd] = startDateVal.split('-');
-          document.getElementById('intl-verify-travel-date').textContent = `${sm}/${sd}/${sy}`;
-        } else {
-          document.getElementById('intl-verify-travel-date').textContent = 'your trip';
-        }
 
         // Seed hidden inputs with embedded data as fallback
         document.getElementById('intl-mie-override').value  = match.mie;
