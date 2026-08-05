@@ -2229,7 +2229,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.1.2';
+    const APP_VERSION = 'Version 1.1.3';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2382,6 +2382,17 @@ var INTL_COUNTRIES = [
       });
 
       const cities = Object.keys(cityCountyMap).sort();
+      if (cities.length === 0) {
+        // OCONUS states (Hawaii, Alaska) are not in the GSA CONUS database.
+        // Surface the city/ZIP search automatically so the user can still find their city.
+        cityEl.innerHTML = '<option value="">-- No cities in GSA database — use search below --</option>';
+        cityEl.disabled = true;
+        const searchRow = document.getElementById('city-search-row');
+        searchRow.style.display = '';
+        document.getElementById('city-search').focus();
+        showError('This state is not in the GSA CONUS per diem database. Use the city or ZIP search below to look up your city.');
+        return;
+      }
       cityEl.innerHTML = '<option value="">-- Select a city --</option>';
       for (const city of cities) {
         const opt = document.createElement('option');

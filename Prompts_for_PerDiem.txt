@@ -570,3 +570,8 @@ Prompt: for the final instructions we need to stress they need to do step 3 for 
 Change: Bump version to 1.1.0
 ---
 
+[Version 1.1.3] [2026-08-05 10:28:02]
+Prompt: why when I select Hawaii the city popup has no entries?
+Change: Clarify step 3 must be repeated for every day including travel days
+---
+
