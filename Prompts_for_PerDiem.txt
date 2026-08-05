@@ -600,3 +600,17 @@ Prompt: I want option B with the backup table and if the backup table is use add
 Change: Replace international meal % estimates with official FTR 301 Appendix B lookup table
 ---
 
+[Version 1.1.7] [2026-08-05 11:03:13]
+Prompt: ok right then this is not helpful. lets go to option A I guess.
+
+But how can we tell if we have stale data and that I may need to create and updated table?
+Change: Fetch live Appendix B at runtime; fall back to inlined table with warning if unavailable
+---
+
+[Version 1.1.8] [2026-08-05 11:04:20]
+Prompt: ok right then this is not helpful. lets go to option A I guess.
+
+But how can we tell if we have stale data and that I may need to create and updated table?
+Change: Fetch live Appendix B at runtime; fall back to inlined table with warning if unavailable
+---
+

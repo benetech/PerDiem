@@ -1,0 +1,149 @@
+name: Check FTR 301 Appendix B for changes
+
+on:
+  schedule:
+    - cron: '0 9 1 * *'   # 9 AM UTC on the 1st of every month
+  workflow_dispatch:        # allow manual runs
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch live Appendix B table
+        id: fetch
+        run: |
+          curl -sf "https://allowances.state.gov/Bypass/AppendixB.asp" -o appendix_b_live.html
+          # Extract rows: lines matching "$NNN  B  L  D  I" after stripping tags
+          sed 's/<[^>]*>//g' appendix_b_live.html \
+            | grep -oP '\$\d+\s+\d+\s+\d+\s+\d+\s+\d+' \
+            | sort -t'$' -k2 -n \
+            > appendix_b_live.txt
+          echo "rows=$(wc -l < appendix_b_live.txt)" >> $GITHUB_OUTPUT
+
+      - name: Extract inlined table from PerDiem.html
+        run: |
+          # Pull every [B,L,D,I] tuple from the APPENDIX_B array in order
+          grep -oP '\[\d+,\d+,\d+,\d+\]' PerDiem.html \
+            | head -265 \
+            > appendix_b_inline.txt
+
+      - name: Parse live HTML into comparable format
+        run: |
+          python3 - <<'EOF'
+          import re, sys
+
+          with open('appendix_b_live.html') as f:
+              text = re.sub(r'<[^>]+>', ' ', f.read())
+
+          tuples = []
+          for m in re.finditer(r'\$(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)', text):
+              idx = int(m.group(1))
+              if 1 <= idx <= 265:
+                  tuples.append((idx, int(m.group(2)), int(m.group(3)), int(m.group(4)), int(m.group(5))))
+
+          tuples.sort()
+          with open('appendix_b_live_parsed.txt', 'w') as f:
+              for row in tuples:
+                  f.write(f'[{row[1]},{row[2]},{row[3]},{row[4]}]\n')
+
+          print(f"Parsed {len(tuples)} rows from live page")
+          if len(tuples) < 260:
+              print("ERROR: fewer than 260 rows parsed — page structure may have changed")
+              sys.exit(1)
+          EOF
+
+      - name: Compare live vs inlined
+        id: compare
+        run: |
+          if diff -q appendix_b_live_parsed.txt appendix_b_inline.txt > /dev/null 2>&1; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "Tables match — no update needed"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Difference detected:"
+            diff appendix_b_live_parsed.txt appendix_b_inline.txt || true
+          fi
+
+      - name: Update APPENDIX_B in PerDiem.html
+        if: steps.compare.outputs.changed == 'true'
+        run: |
+          python3 - <<'EOF'
+          import re, datetime
+
+          with open('appendix_b_live.html') as f:
+              text = re.sub(r'<[^>]+>', ' ', f.read())
+
+          tuples = []
+          for m in re.finditer(r'\$(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)', text):
+              idx = int(m.group(1))
+              if 1 <= idx <= 265:
+                  tuples.append((idx, int(m.group(2)), int(m.group(3)), int(m.group(4)), int(m.group(5))))
+          tuples.sort()
+
+          # Build replacement array (10 entries per line, grouped in blocks of 10)
+          labels = [
+              '$1–$10','$11–$20','$21–$30','$31–$40','$41–$50',
+              '$51–$60','$61–$70','$71–$80','$81–$90','$91–$100',
+              '$101–$110','$111–$120','$121–$130','$131–$140','$141–$150',
+              '$151–$160','$161–$170','$171–$180','$181–$190','$191–$200',
+              '$201–$210','$211–$220','$221–$230','$231–$240','$241–$250',
+              '$251–$260','$261–$265',
+          ]
+          lines = ['      null, // index 0 unused']
+          i = 0
+          block = 0
+          while i < len(tuples):
+              chunk = tuples[i:i+10]
+              label = labels[block] if block < len(labels) else f'${chunk[0][0]}–${chunk[-1][0]}'
+              row = ','.join(f'[{t[1]},{t[2]},{t[3]},{t[4]}]' for t in chunk)
+              lines.append(f'      // {label}')
+              lines.append(f'      {row},')
+              i += 10
+              block += 1
+
+          new_array = '    const APPENDIX_B = [\n' + '\n'.join(lines) + '\n    ];'
+
+          today = datetime.date.today().isoformat()
+          new_date = f"    const APPENDIX_B_DATE = '{today}';"
+
+          with open('PerDiem.html') as f:
+              html = f.read()
+
+          # Replace the date constant
+          html = re.sub(r"const APPENDIX_B_DATE = '[^']+'", f"const APPENDIX_B_DATE = '{today}'", html)
+
+          # Replace the array
+          html = re.sub(
+              r'    const APPENDIX_B = \[.*?\];',
+              new_array,
+              html,
+              flags=re.DOTALL
+          )
+
+          with open('PerDiem.html', 'w') as f:
+              f.write(html)
+
+          print(f"Updated APPENDIX_B_DATE to {today} and rewrote {len(tuples)}-row array")
+          EOF
+
+      - name: Open PR if table changed
+        if: steps.compare.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TODAY=$(date +%Y-%m-%d)
+          BRANCH="auto/appendix-b-${TODAY}"
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add PerDiem.html
+          git commit -m "Update FTR 301 Appendix B meal breakdown table (${TODAY})"
+          git push origin "$BRANCH"
+          gh pr create \
+            --base add-perdiem-tool \
+            --title "Update FTR 301 Appendix B meal breakdown table (${TODAY})" \
+            --body "The monthly Appendix B check detected a difference between the live State Dept table and the inlined data in PerDiem.html. This PR updates APPENDIX_B and APPENDIX_B_DATE automatically.
+
+          Source: https://allowances.state.gov/Bypass/AppendixB.asp"
