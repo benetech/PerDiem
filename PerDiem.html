@@ -2231,7 +2231,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.1.10';
+    const APP_VERSION = 'Version 1.1.11';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2362,10 +2362,25 @@ var INTL_COUNTRIES = [
     }
 
     function buildRow(type, mie, scale = 1) {
-      // For travel-day rows, compute the reduced M&IE total first, then look THAT
-      // amount up in the Appendix B table to get the correct per-meal breakdown.
-      const effectiveMie = scale === 1 ? mie : Math.round(mie * scale);
-      const b  = getMealBreakdown(effectiveMie);
+      let b, effectiveMie;
+      if (scale === 1) {
+        effectiveMie = mie;
+        b = getMealBreakdown(mie);
+      } else if (MIE_TABLE[mie]) {
+        // CONUS travel day: GSA keeps half-dollar precision ($74 × 75% = $55.50).
+        // Scale each component directly; do not round to a whole dollar.
+        effectiveMie = mie * scale;
+        const full = getMealBreakdown(mie);
+        b = { breakfast:   full.breakfast   * scale,
+              lunch:       full.lunch       * scale,
+              dinner:      full.dinner      * scale,
+              incidentals: full.incidentals * scale };
+      } else {
+        // International travel day: round reduced M&IE to nearest whole dollar,
+        // then look that amount up in the Appendix B table.
+        effectiveMie = Math.round(mie * scale);
+        b = getMealBreakdown(effectiveMie);
+      }
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <th scope="row">${type}</th>

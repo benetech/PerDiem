@@ -626,3 +626,8 @@ Prompt: ok now the issue with the international 75% on travel days. its not corr
 Change: Simplify Appendix B status text
 ---
 
+[Version 1.1.11] [2026-08-05 11:32:31]
+Prompt: please check the GSA guidelines on this if you can
+Change: Fix travel day 75% meal breakdown: look up reduced M&IE in Appendix B table, not scale full amounts
+---
+
