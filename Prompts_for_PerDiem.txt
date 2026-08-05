@@ -560,3 +560,8 @@ Prompt: WHEN I EXPOrted the images the colors are wrong and I can't see the cont
 Change: Validate country exact match and complete effective date (MM/DD/YYYY) on paste
 ---
 
+[Version 1.1.1] [2026-08-05 06:56:22]
+Prompt: i always want you to tell me the new version number when done and lets for this bump it up to 1.1.0
+Change: Force light-mode colours in PNG export via html2canvas onclone callback
+---
+
