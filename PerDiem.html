@@ -2226,7 +2226,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.0.54';
+    const APP_VERSION = 'Version 1.0.55';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -3147,10 +3147,31 @@ var INTL_COUNTRIES = [
 
       try {
         const canvas = await html2canvas(target, {
-          backgroundColor: getComputedStyle(document.body).getPropertyValue('background-color') || '#ffffff',
+          backgroundColor: '#ffffff',
           scale: 2,          // retina quality
           useCORS: true,
-          logging: false
+          logging: false,
+          // Force light-mode colours in the cloned document so the PNG is always readable
+          onclone(clonedDoc) {
+            clonedDoc.documentElement.style.setProperty('--bg',        '#ffffff');
+            clonedDoc.documentElement.style.setProperty('--surface',   '#f5f5f5');
+            clonedDoc.documentElement.style.setProperty('--text',      '#1a1a1a');
+            clonedDoc.documentElement.style.setProperty('--text-muted','#595959');
+            clonedDoc.documentElement.style.setProperty('--border',    '#767676');
+            clonedDoc.documentElement.style.setProperty('--error',     '#b91c1c');
+            clonedDoc.documentElement.style.setProperty('--error-bg',  '#fef2f2');
+            clonedDoc.documentElement.style.setProperty('--focus',     '#1d4ed8');
+            clonedDoc.documentElement.style.setProperty('--btn-bg',    '#1d4ed8');
+            clonedDoc.documentElement.style.setProperty('--btn-text',  '#ffffff');
+            clonedDoc.documentElement.style.setProperty('color-scheme','light');
+            // Fix stale-banner which has hard-coded dark-mode defaults in its rule
+            const banner = clonedDoc.getElementById('stale-banner');
+            if (banner && banner.style.display !== 'none') {
+              banner.style.background   = '#fff3cd';
+              banner.style.color        = '#6b4400';
+              banner.style.borderColor  = '#9a6700';
+            }
+          }
         });
 
         if (exportControls) exportControls.style.visibility = '';
