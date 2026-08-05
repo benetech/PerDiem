@@ -2241,7 +2241,7 @@ var INTL_COUNTRIES = [
    */
 
     // ── App version — update this single variable when bumping the version ──────
-    const APP_VERSION = 'Version 1.1.20';
+    const APP_VERSION = 'Version 1.1.22';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -2490,6 +2490,13 @@ var INTL_COUNTRIES = [
       cityEl.disabled = false;
     }
 
+    /** Returns the GSA fiscal year for a given date string (YYYY-MM-DD).
+     *  GSA fiscal year runs Oct 1 – Sep 30, so Oct–Dec belong to the NEXT calendar year's FY. */
+    function gsaFiscalYear(dateStr) {
+      const d = dateStr ? new Date(dateStr + 'T00:00:00') : new Date();
+      return d.getMonth() >= 9 ? d.getFullYear() + 1 : d.getFullYear();
+    }
+
     /** Fetches cities for a US state from the GSA API and populates the City dropdown.
      *  Results are cached in stateRatesMap keyed by "STATE-YEAR" to avoid repeat calls.
      *  Handles 429 rate-limit errors with a Retry button. */
@@ -2499,7 +2506,7 @@ var INTL_COUNTRIES = [
       showError('');
 
       const startDate = document.getElementById('start-date').value;
-      const year      = startDate ? new Date(startDate).getFullYear() : new Date().getFullYear();
+      const year      = gsaFiscalYear(startDate);
       const cacheKey  = `${stateCode}-${year}`;
 
       // Return cached data immediately — no API call needed
@@ -2800,7 +2807,7 @@ var INTL_COUNTRIES = [
         // Use cached state data if available, otherwise fetch it now
         let data = stateRatesCache;
         if (!data) {
-          const year = new Date(startDate).getFullYear();
+          const year = gsaFiscalYear(startDate);
           const res  = await fetch(
             `https://api.gsa.gov/travel/perdiem/v2/rates/state/${encodeURIComponent(state)}/year/${year}?api_key=${GSA_API_KEY}`
           );
@@ -3096,7 +3103,8 @@ var INTL_COUNTRIES = [
       // Populate Last Updated line
       const lastUpdEl = document.getElementById('mie-last-updated');
       if (isUS) {
-        lastUpdEl.innerHTML = 'Last Updated: Real-time via GSA Per Diem API';
+        const fy = gsaFiscalYear(document.getElementById('start-date').value);
+        lastUpdEl.innerHTML = `Last Updated: Real-time via GSA Per Diem API (FY${fy})`;
       } else {
         const effectiveDate = document.getElementById('intl-effective-date').value || '';
         lastUpdEl.innerHTML = `Last Updated: State Dept Per Diem (verified by user)${effectiveDate ? ' — Effective: ' + effectiveDate : ''}`;
@@ -3370,9 +3378,7 @@ var INTL_COUNTRIES = [
       if (!typed) return;
 
       const state = stateEl.value;
-      const year  = document.getElementById('start-date').value
-                    ? new Date(document.getElementById('start-date').value).getFullYear()
-                    : new Date().getFullYear();
+      const year  = gsaFiscalYear(document.getElementById('start-date').value);
 
       const btn = document.getElementById('city-search-btn');
       btn.disabled = true;
