@@ -636,3 +636,119 @@ Prompt: I don't think that is correct there is no 55.5 value in the table they a
 Change: Fix travel day 75% rounding: CONUS keeps half-dollar precision, international rounds to nearest whole dollar for Appendix B lookup
 ---
 
+[Version 1.1.13] [2026-08-05 11:46:48]
+Prompt: we need to add to the instructions when they go to the website to copy the table that they must pick the correct Rates Date. so if for example their travel dates was in March they must pick 
+
+Previous Rates: 	
+04/01/2026
+
+from the previous rates. but doing that my update the Effective date accordingly.
+
+Eg. I picked 12/01/2017
+since my example I travelled in dec of 2017
+
+the table looks like
+
+IRELAND	Dublin	01/01	12/31	244	136	380	N/A	10/01/2017
+Change: Simplify travel day 75%: round to nearest whole dollar for all cases, look up in table
+---
+
+[Version 1.1.14] [2026-08-05 11:49:49]
+Prompt: we need to add to the instructions when they go to the website to copy the table that they must pick the correct Rates Date. so if for example their travel dates was in March they must pick 
+
+Previous Rates: 	
+04/01/2026
+
+from the previous rates. but doing that my update the Effective date accordingly.
+
+Eg. I picked 12/01/2017
+since my example I travelled in dec of 2017
+
+the table looks like
+
+IRELAND	Dublin	01/01	12/31	244	136	380	N/A	10/01/2017
+Change: Simplify travel day 75%: round to nearest whole dollar for all cases, look up in table
+---
+
+[Version 1.1.15] [2026-08-05 11:55:24]
+Prompt: this is incorrect these values don't always change 
+"The effective date in the pasted row (last column) should fall on or before your travel start date of <strong id="intl-..."
+
+Eg. 
+this is what I get picking 2 months ago.
+
+
+Previous Rates: 	
+06/01/2026
+
+Country Name	Post Name	Season Begin	Season End	Maximum Lodging Rate	M & IE Rate	Maximum Per Diem Rate	Footnote	Effective Date
+IRELAND	Cork	01/01	12/31	295	132	427	N/A	08/01/2025
+IRELAND	Dublin	01/01	12/31	356	155	511	N/A	08/01/2025
+IRELAND	Galway	01/01	12/31	290	124	414	N/A	08/01/2025
+IRELAND	Other	01/01	12/31	295	122	417	N/A	08/01/2025
+Change: Add rates-date guidance to international verify section
+---
+
+[Version 1.1.16] [2026-08-05 12:03:31]
+Prompt: in this information
+
+Important: on the State Dept website, make sure to select the Rates Date that covers your travel period. If your trip was in a past month, use the Previous Rates dropdown and pick the date whose period included your travel. Rates don't change every month ΓÇö the effective date in the pasted row simply shows when that rate was last published.
+
+include "Be sure to pick the date range "MM/01/YYY" from the previous rates dropdown above the table and you fill in MM & YYYY based on start date.
+Change: Fix rates-date guidance: rates don't change every month
+---
+
+[Version 1.1.17] [2026-08-05 12:08:22]
+Prompt: No:
+>MM/01/YYYY</strong> ΓÇö where MM and YYYY match your travel start month and year.
+
+i want you to fill that in for them you already have the start date filled in.
+Change: Show travel-month rates date (MM/01/YYYY) in intl verify instructions
+---
+
+[Version 1.1.18] [2026-08-05 12:19:45]
+Prompt: I want the Previous Rates dropdown above the table and pick 10/01/2025. instead to look like
+
+Previous Rates dropdown above the table and pick the correct date for your travel.
+<new line>
+Previous Rates: 10/01/2025
+Rates don't change every month ΓÇö the effective date in the pasted row simply shows when that rate was last published.
+
+Where Previous Rates: 10/01/2025 is in a highlighted box like was done for Meal breakdown in the summary.
+
+Also for 
+M&IE Values Used
+Location: Ireland ΓÇ║ Dublin
+
+Last Updated: State Dept Per Diem (verified by user)
+
+Meal breakdown (Breakfast/Lunch/Dinner/Misc) sourced from FTR 301 Appendix B table, last verified 2026-08-05. Reference: allowances.state.gov/Bypass/AppendixB.asp
+I would rather just have
+
+Last Updated Meal Breakdown: <date>
+ and  remove the highlighted box
+Under that can still have where it was sourced etc. but I want it to look similar to the 
+Last Updated: State Dept Per Diem (verified by user)
+Change: Remove redundant MM/YYYY explanation ΓÇö date is filled in dynamically
+---
+
+[Version 1.1.19] [2026-08-05 12:32:38]
+Prompt: keep both dates in the summary needed for Finance.
+Change: Reformat rates-date box and Appendix B warning styling
+---
+
+[Version 1.1.20] [2026-08-05 12:39:21]
+Prompt: when the start date is say 5 months previous when you bring up the end date can it show that same month/year please so you don't have to scroll back to pick a date in that same month
+Change: Show State Dept effective date alongside Appendix B date in summary
+---
+
+[Version 1.1.21] [2026-08-05 12:44:35]
+Prompt: for USA are we picking the correct for fiscal year when we pick the state / city to ensure that the correct rates are being selected?
+Change: Pre-fill end date to start date month so picker opens to correct month
+---
+
+[Version 1.1.22] [2026-08-05 12:47:05]
+Prompt: can we also put that in the summary which fiscal year the data was pulled from please for finance
+Change: Fix GSA API year to use fiscal year instead of calendar year
+---
+
