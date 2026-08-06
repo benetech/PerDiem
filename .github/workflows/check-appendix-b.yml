@@ -22,10 +22,10 @@ jobs:
             > appendix_b_live.txt
           echo "rows=$(wc -l < appendix_b_live.txt)" >> $GITHUB_OUTPUT
 
-      - name: Extract inlined table from PerDiem.html
+      - name: Extract inlined table from PerDiem-International.html
         run: |
           # Pull every [B,L,D,I] tuple from the APPENDIX_B array in order
-          grep -oP '\[\d+,\d+,\d+,\d+\]' PerDiem.html \
+          grep -oP '\[\d+,\d+,\d+,\d+\]' PerDiem-International.html \
             | head -265 \
             > appendix_b_inline.txt
 
@@ -108,7 +108,7 @@ jobs:
           today = datetime.date.today().isoformat()
           new_date = f"    const APPENDIX_B_DATE = '{today}';"
 
-          with open('PerDiem.html') as f:
+          with open('PerDiem-International.html') as f:
               html = f.read()
 
           # Replace the date constant
@@ -122,7 +122,7 @@ jobs:
               flags=re.DOTALL
           )
 
-          with open('PerDiem.html', 'w') as f:
+          with open('PerDiem-International.html', 'w') as f:
               f.write(html)
 
           print(f"Updated APPENDIX_B_DATE to {today} and rewrote {len(tuples)}-row array")
@@ -138,12 +138,12 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
-          git add PerDiem.html
+          git add PerDiem-International.html
           git commit -m "Update FTR 301 Appendix B meal breakdown table (${TODAY})"
           git push origin "$BRANCH"
           gh pr create \
             --base add-perdiem-tool \
             --title "Update FTR 301 Appendix B meal breakdown table (${TODAY})" \
-            --body "The monthly Appendix B check detected a difference between the live State Dept table and the inlined data in PerDiem.html. This PR updates APPENDIX_B and APPENDIX_B_DATE automatically.
+            --body "The monthly Appendix B check detected a difference between the live State Dept table and the inlined data in PerDiem-International.html. This PR updates APPENDIX_B and APPENDIX_B_DATE automatically.
 
           Source: https://allowances.state.gov/Bypass/AppendixB.asp"
