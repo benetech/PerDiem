@@ -33,3 +33,4 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         timeout-minutes: 15
+        continue-on-error: true
