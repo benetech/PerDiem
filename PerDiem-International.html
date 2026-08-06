@@ -363,7 +363,7 @@
             </thead>
             <tbody id="intl-source-tbody"></tbody>
           </table>
-          <p style="margin:0; color:var(--text-muted);">Source: <a href="https://allowances.state.gov/web920/per_diem_action.asp" target="_blank" rel="noopener">U.S. State Dept Foreign Per Diem Rates</a></p>
+          <p style="margin:0; color:var(--text-muted);">Source: <a href="https://allowances.state.gov/web920/per_diem.asp" target="_blank" rel="noopener">U.S. State Dept Foreign Per Diem Rates</a></p>
         </div>
       </div>
       <div style="margin-top:1.5rem;">
@@ -2215,7 +2215,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.0.7';
+    const APP_VERSION = 'Version 2.0.8';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -2424,7 +2424,7 @@ var INTL_COUNTRIES = [
         statusEl.style.background = 'var(--surface)';
         statusEl.style.color      = 'var(--text-muted)';
         statusEl.style.border     = '1px solid var(--border)';
-        statusEl.textContent      = `Meal breakdown uses the inlined FTR 301 Appendix B table (last verified ${APPENDIX_B_DATE}). A monthly automated check will be performed monthly.`;
+        statusEl.innerHTML        = `Meal breakdown uses the inlined <a href="https://allowances.state.gov/Bypass/AppendixB.asp" target="_blank" rel="noopener">FTR 301 Appendix B</a> table (last verified ${APPENDIX_B_DATE}).`;
         statusEl.hidden = false;
       } else {
         statusEl.hidden = true;
@@ -2885,7 +2885,7 @@ var INTL_COUNTRIES = [
         lastUpdEl.innerHTML = `Last Updated: State Dept Per Diem (verified by user)${effectiveDate ? ' \u2014 Effective: ' + effectiveDate : ''}`;
 
       // Appendix B note -- always shown for international trips
-        exportWarnEl.innerHTML = `Last Updated Meal Breakdown: ${APPENDIX_B_DATE}<br><span style="font-size:0.8rem;color:var(--text-muted);">Source: FTR 301 Appendix B (allowances.state.gov/Bypass/AppendixB.asp)</span>`;
+        exportWarnEl.innerHTML = `Last Updated Meal Breakdown: ${APPENDIX_B_DATE}<br><span style="font-size:0.8rem;color:var(--text-muted);">Source: <a href="https://allowances.state.gov/Bypass/AppendixB.asp" target="_blank" rel="noopener">FTR 301 Appendix B</a></span>`;
         exportWarnEl.hidden = false;
 
 
