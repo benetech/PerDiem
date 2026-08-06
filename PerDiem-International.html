@@ -221,15 +221,16 @@
     </div>
     <div>
       <label for="country">Country <span class="req-star" aria-label="required">*</span></label>
-      <select id="country" name="country" required>
+      <select id="country" name="country" required aria-describedby="err-country">
         <option value="">-- Select Country --</option>
       </select>
+      <span class="field-error" id="err-country" role="alert"></span>
       <p id="intl-stale-msg" role="alert" style="display:none; margin:0.25rem 0 0.5rem; font-size:0.875rem; color:var(--error);"></p>
     </div>
     <div id="city-row">
       <label for="city">City <span class="req-star" aria-label="required">*</span></label>
       <select id="city" name="city" disabled aria-describedby="err-city">
-        <option value="">-- Select a state first --</option>
+        <option value="">-- Select a country first --</option>
       </select>
       <span class="field-error" id="err-city" role="alert"></span>
     </div>
@@ -2214,7 +2215,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.0.6';
+    const APP_VERSION = 'Version 2.0.7';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -2453,6 +2454,7 @@ var INTL_COUNTRIES = [
         { id: 'project-code', errId: 'err-project-code', fail: !document.getElementById('project-code').value.trim() },
         { id: 'start-date',    errId: 'err-start-date',  fail: !startDate },
         { id: 'end-date',      errId: 'err-end-date',    fail: !endDate || endDate < startDate, msg: !endDate ? 'This field must be filled in.' : 'Return Travel Date cannot be before Begin Travel Date.' },
+        { id: 'country',       errId: 'err-country',     fail: !country },
         { id: 'city',          errId: 'err-city',        fail: !city },
       ];
 
@@ -2950,6 +2952,8 @@ var INTL_COUNTRIES = [
       ['project-code',  'err-project-code', 'input'],
       ['start-date',    'err-start-date', 'change'],
       ['end-date',      'err-end-date',   'change'],
+      ['country',       'err-country',    'change'],
+      ['city',          'err-city',       'change'],
     ].forEach(([id, errId, evt]) => {
       document.getElementById(id).addEventListener(evt, function () {
         if (this.value) {
