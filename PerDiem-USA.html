@@ -1061,20 +1061,15 @@
         `<p><strong>Name:</strong> ${name}</p><p><strong>Conference:</strong> ${conference}</p><p><strong>Project Code:</strong> ${projectCode}</p>`;
 
       // Populate location line
-      const locCountry = document.getElementById('country').options[document.getElementById('country').selectedIndex].text;
       const locCity    = cityEl.options[cityEl.selectedIndex]?.text || '';
       const locState   = stateEl.options[stateEl.selectedIndex]?.text || '';
-      const locParts   = [locCountry, locState, locCity].filter(Boolean);
+      const locParts   = ['United States', locState, locCity].filter(Boolean);
       document.getElementById('mie-location').textContent = `Location: ${locParts.join(' › ')}`;
 
       // Populate Last Updated line
       const lastUpdEl = document.getElementById('mie-last-updated');
       const fy = gsaFiscalYear(document.getElementById('start-date').value);
       lastUpdEl.innerHTML = `Last Updated: Real-time via GSA Per Diem API (FY${fy})`;
-
-      exportWarnEl.hidden = true;
-
-      intlSourceBox.hidden = true;
 
       // Duplicate the rates table below the grand total
       const repriseEl   = document.getElementById('rates-reprise');
