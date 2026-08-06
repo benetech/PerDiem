@@ -2214,7 +2214,7 @@ var INTL_COUNTRIES = [
    */
 
     // Ã¢â€â‚¬Ã¢â€â‚¬ App version Ã¢â‚¬â€ update this single variable when bumping the version Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
-    const APP_VERSION = 'Version 2.0.1';
+    const APP_VERSION = 'Version 2.0.2';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -2416,12 +2416,16 @@ var INTL_COUNTRIES = [
       resetResults();
       updateRatesLink(countryEl.value);
       populateStates(countryEl.value);
-      const statusEl = document.getElementById('appendix-b-status');`n      if (countryEl.value) {
+      const statusEl = document.getElementById('appendix-b-status');
+      if (countryEl.value) {
         statusEl.style.background = 'var(--surface)';
         statusEl.style.color      = 'var(--text-muted)';
         statusEl.style.border     = '1px solid var(--border)';
         statusEl.textContent      = `Meal breakdown uses the inlined FTR 301 Appendix B table (last verified ${APPENDIX_B_DATE}). A monthly automated check will be performed monthly.`;
-        statusEl.hidden = false;`n      } else {`n        statusEl.hidden = true;`n      }
+        statusEl.hidden = false;
+      } else {
+        statusEl.hidden = true;
+      }
     });
     cityEl.addEventListener('change', () => {
       resetResults();
@@ -2945,8 +2949,6 @@ var INTL_COUNTRIES = [
       ['project-code',  'err-project-code', 'input'],
       ['start-date',    'err-start-date', 'change'],
       ['end-date',      'err-end-date',   'change'],
-      ['city',          'err-city',       'change'],
-      ['state',         'err-state',      'change'],
     ].forEach(([id, errId, evt]) => {
       document.getElementById(id).addEventListener(evt, function () {
         if (this.value) {
