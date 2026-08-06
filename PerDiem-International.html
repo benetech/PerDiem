@@ -2214,7 +2214,7 @@ var INTL_COUNTRIES = [
    */
 
     // Ã¢â€â‚¬Ã¢â€â‚¬ App version Ã¢â‚¬â€ update this single variable when bumping the version Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
-    const APP_VERSION = 'Version 2.0.2';
+    const APP_VERSION = 'Version 2.0.6';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -2303,8 +2303,10 @@ var INTL_COUNTRIES = [
       return { breakfast, lunch, dinner, incidentals };
     }
 
-    const countryEl = document.getElementById('country');
-    const cityEl    = document.getElementById('city');
+    const countryEl    = document.getElementById('country');
+    const cityEl       = document.getElementById('city');
+    const exportWarnEl = document.getElementById('appendix-b-export-warning');
+    const intlSourceBox = document.getElementById('intl-source-box');
 
     let hasSubmitted = false;
 
@@ -2471,8 +2473,7 @@ var INTL_COUNTRIES = [
       });
 
       if (firstInvalid) {
-        // Brief delay lets the alert announcements fire before focus moves
-        setTimeout(() => firstInvalid.focus(), 100);
+        setTimeout(() => { firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' }); firstInvalid.focus(); }, 100);
         return;
       }
 
