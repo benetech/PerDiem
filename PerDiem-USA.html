@@ -409,14 +409,14 @@
       </div>
       <div style="margin-top:1.5rem;">
         <button type="button" id="save-image-btn">Export Summary as Image</button>
-        <p id="save-image-status" style="margin:0.4rem 0 0; font-size:0.875rem;" aria-live="polite"></p>
+        <p id="save-image-status" style="margin:0.4rem 0 0; font-size:0.875rem;" aria-hidden="true"></p>
       </div>
     </div>
   </section>
 
   <section id="next-steps-section" hidden style="margin-top:2rem;">
-    <hr style="border:none; border-top:2px solid var(--border); margin-bottom:1.5rem;">
-    <h2>Next Steps</h2>
+    <hr role="presentation" style="border:none; border-top:2px solid var(--border); margin-bottom:1.5rem;">
+    <h2 id="next-steps-heading">Next Steps</h2>
     <ol style="line-height:2;">
       <li>
         Log into Concur:<br>
@@ -533,7 +533,7 @@
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.20';
+    const APP_VERSION = 'Version 2.1.36';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -1255,20 +1255,16 @@
       document.getElementById('ns-report-name').textContent      = `Per Diem Food for ${conf}`;
       document.getElementById('ns-project-code').textContent     = proj;
       document.getElementById('ns-business-purpose').textContent = conf;
-      const nsSection = document.getElementById('next-steps-section');
-      nsSection.hidden = false;
-      nsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('next-steps-section').hidden = false;
     }
 
     // \u2500\u2500 Save to Photo Gallery \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
     document.getElementById('save-image-btn').addEventListener('click', async () => {
-      const statusEl = document.getElementById('save-image-status');
-      const target   = document.getElementById('summary-section');
+      const statusEl   = document.getElementById('save-image-status');
+      const announceEl = document.getElementById('save-announce');
+      const target     = document.getElementById('summary-section');
+      announceEl.textContent = '';
       statusEl.textContent = 'Generating image\u2026';
-
-      // Hide export controls so they don't appear in the image
-      const exportControls = document.querySelector('#summary-section > div:last-child');
-      if (exportControls) exportControls.style.visibility = 'hidden';
 
       try {
         const canvas = await html2canvas(target, {
@@ -1276,7 +1272,6 @@
           scale: 2,          // retina quality
           useCORS: true,
           logging: false,
-          // Force light-mode colours in the cloned document so the PNG is always readable
           onclone(clonedDoc) {
             clonedDoc.documentElement.style.setProperty('--bg',        '#ffffff');
             clonedDoc.documentElement.style.setProperty('--surface',   '#f5f5f5');
@@ -1289,6 +1284,9 @@
             clonedDoc.documentElement.style.setProperty('--btn-bg',    '#1d4ed8');
             clonedDoc.documentElement.style.setProperty('--btn-text',  '#ffffff');
             clonedDoc.documentElement.style.setProperty('color-scheme','light');
+            // Hide export controls in the clone so they don't appear in the image
+            const clonedExports = clonedDoc.querySelector('#summary-section > div:last-child');
+            if (clonedExports) clonedExports.style.display = 'none';
             // Fix stale-banner which has hard-coded dark-mode defaults in its rule
             const banner = clonedDoc.getElementById('stale-banner');
             if (banner && banner.style.display !== 'none') {
@@ -1298,32 +1296,11 @@
             }
           }
         });
-
-        if (exportControls) exportControls.style.visibility = '';
         canvas.toBlob(async blob => {
           const confRaw  = document.getElementById('conference').value.trim();
           const startRaw = document.getElementById('start-date').value; // YYYY-MM-DD
           const confSafe = confRaw.replace(/[\\/:*?"<>|]/g, '_') || 'Conference';
           const name     = `PerDiem_${confSafe}_${startRaw}.png`;
-
-          // Desktop: show native Save As dialog (Chrome/Edge)
-          if (window.showSaveFilePicker) {
-            try {
-              const fileHandle = await window.showSaveFilePicker({
-                suggestedName: name,
-                types: [{ description: 'PNG Image', accept: { 'image/png': ['.png'] } }]
-              });
-              const writable = await fileHandle.createWritable();
-              await writable.write(blob);
-              await writable.close();
-              statusEl.textContent = `Summary Saved to "${fileHandle.name}"`;
-              showNextSteps();
-              return;
-            } catch (e) {
-              if (e.name === 'AbortError') { statusEl.textContent = 'Save cancelled.'; return; }
-              // Fall through to download fallback if something else went wrong
-            }
-          }
 
           // Mobile (iOS/Android): use Web Share API to save to Photos
           const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -1343,18 +1320,18 @@
             }
           }
 
-          // Fallback: download to Downloads folder
+          // Download directly to Downloads folder — no Save As dialog
           const url = URL.createObjectURL(blob);
           const a   = document.createElement('a');
           a.href     = url;
           a.download = name;
           a.click();
           URL.revokeObjectURL(url);
-          statusEl.textContent = `Summary Saved to "${name}"`;
+          announceEl.textContent = `Saved to Downloads: ${name}`;
+          statusEl.textContent = `Saved to Downloads: ${name}`;
           showNextSteps();
         }, 'image/png');
       } catch (err) {
-        if (exportControls) exportControls.style.visibility = '';
         statusEl.textContent = `Could not generate image: ${err.message}`;
       }
     });
@@ -1549,5 +1526,6 @@
 
 </script>
 
+<span id="save-announce" aria-live="polite" aria-atomic="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;"></span>
 </body>
 </html>
