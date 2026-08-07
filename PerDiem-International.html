@@ -2282,7 +2282,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.32';
+    const APP_VERSION = 'Version 2.1.33';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -3114,15 +3114,7 @@ var INTL_COUNTRIES = [
       document.getElementById('ns-report-name').textContent      = `Per Diem Food for ${conf}`;
       document.getElementById('ns-project-code').textContent     = proj;
       document.getElementById('ns-business-purpose').textContent = conf;
-      const nsSection = document.getElementById('next-steps-section');
-      nsSection.hidden = false;
-      nsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      // NVDA/JAWS always follow programmatic focus to buttons (form elements).
-      // Reveal a notice button right after the save button, focus it so AT announces
-      // it immediately, then let the user press Enter to jump to the heading via a
-      // No JS focus needed here — the browser natively restores focus to the
-      // save button when the file picker closes (we pre-focused it before opening).
-      // NVDA/JAWS follow that OS-level event; AT users can arrow down to Next Steps.
+      document.getElementById('next-steps-section').hidden = false;
     }
 
     // \u2500\u2500 Save to Photo Gallery \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
@@ -3171,30 +3163,6 @@ var INTL_COUNTRIES = [
           const confSafe = confRaw.replace(/[\\/:*?"<>|]/g, '_') || 'Conference';
           const name     = `PerDiem_${confSafe}_${startRaw}.png`;
 
-          // Desktop: show native Save As dialog (Chrome/Edge)
-          if (window.showSaveFilePicker) {
-            try {
-              // Focus the button before the picker opens so the browser natively
-              // restores focus here when the dialog closes — NVDA follows that as
-              // a real OS focus event, placing AT cursor on the button so the user
-              // can arrow down to the Next Steps heading.
-              document.getElementById('save-image-btn').focus();
-              const fileHandle = await window.showSaveFilePicker({
-                suggestedName: name,
-                types: [{ description: 'PNG Image', accept: { 'image/png': ['.png'] } }]
-              });
-              const writable = await fileHandle.createWritable();
-              await writable.write(blob);
-              await writable.close();
-              statusEl.textContent = `Summary Saved to "${fileHandle.name}"`;
-              showNextSteps();
-              return;
-            } catch (e) {
-              if (e.name === 'AbortError') { statusEl.textContent = 'Save cancelled.'; return; }
-              // Fall through to download fallback if something else went wrong
-            }
-          }
-
           // Mobile (iOS/Android): use Web Share API to save to Photos
           const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
           if (isMobile) {
@@ -3213,14 +3181,14 @@ var INTL_COUNTRIES = [
             }
           }
 
-          // Fallback: download to Downloads folder
+          // Download directly to Downloads folder — no Save As dialog
           const url = URL.createObjectURL(blob);
           const a   = document.createElement('a');
           a.href     = url;
           a.download = name;
           a.click();
           URL.revokeObjectURL(url);
-          statusEl.textContent = `Summary Saved to "${name}"`;
+          statusEl.textContent = `Saved to Downloads: ${name}`;
           showNextSteps();
         }, 'image/png');
       } catch (err) {
