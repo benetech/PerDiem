@@ -2215,7 +2215,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.1';
+    const APP_VERSION = 'Version 2.1.2';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -2738,6 +2738,7 @@ var INTL_COUNTRIES = [
     startDateEl.addEventListener('change', () => {
       endDateEl.min = startDateEl.value;
       if (!endDateEl.value) {
+        // Pre-fill end date to start date so the picker opens to the same month
         endDateEl.value = startDateEl.value;
       } else if (endDateEl.value < startDateEl.value) {
         endDateEl.value = startDateEl.value;
