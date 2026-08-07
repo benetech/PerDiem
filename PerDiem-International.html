@@ -2292,7 +2292,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.11';
+    const APP_VERSION = 'Version 2.1.12';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -3242,7 +3242,21 @@ var INTL_COUNTRIES = [
 
       document.getElementById('feedback-btn').addEventListener('click', openModal);
       document.getElementById('fb-cancel-btn').addEventListener('click', closeModal);
-      document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal(); });
+
+      // Focus trap — keep keyboard focus inside the modal while it is open
+      const FOCUSABLE = '#fb-email, #fb-subject, #fb-message, #fb-email-btn, #fb-github-btn, #fb-cancel-btn';
+      document.addEventListener('keydown', e => {
+        if (!overlay.classList.contains('open')) return;
+        if (e.key === 'Escape') { closeModal(); return; }
+        if (e.key !== 'Tab') return;
+        const els = Array.from(document.getElementById('feedback-modal').querySelectorAll(FOCUSABLE));
+        const first = els[0], last = els[els.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+          if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
+        }
+      });
 
       messageEl.addEventListener('input', () => { if (messageEl.value.trim()) msgError.textContent = ''; });
 
