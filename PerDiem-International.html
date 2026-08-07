@@ -2282,7 +2282,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.37';
+    const APP_VERSION = 'Version 2.1.38';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -3125,17 +3125,12 @@ var INTL_COUNTRIES = [
       announceEl.textContent = '';
       statusEl.textContent = 'Generating image\u2026';
 
-      // Hide export controls so they don't appear in the image
-      const exportControls = document.querySelector('#summary-section > div:last-child');
-      if (exportControls) exportControls.style.visibility = 'hidden';
-
       try {
         const canvas = await html2canvas(target, {
           backgroundColor: '#ffffff',
           scale: 2,          // retina quality
           useCORS: true,
           logging: false,
-          // Force light-mode colours in the cloned document so the PNG is always readable
           onclone(clonedDoc) {
             clonedDoc.documentElement.style.setProperty('--bg',        '#ffffff');
             clonedDoc.documentElement.style.setProperty('--surface',   '#f5f5f5');
@@ -3148,6 +3143,9 @@ var INTL_COUNTRIES = [
             clonedDoc.documentElement.style.setProperty('--btn-bg',    '#1d4ed8');
             clonedDoc.documentElement.style.setProperty('--btn-text',  '#ffffff');
             clonedDoc.documentElement.style.setProperty('color-scheme','light');
+            // Hide export controls in the clone so they don't appear in the image
+            const clonedExports = clonedDoc.querySelector('#summary-section > div:last-child');
+            if (clonedExports) clonedExports.style.display = 'none';
             // Fix stale-banner which has hard-coded dark-mode defaults in its rule
             const banner = clonedDoc.getElementById('stale-banner');
             if (banner && banner.style.display !== 'none') {
@@ -3157,8 +3155,6 @@ var INTL_COUNTRIES = [
             }
           }
         });
-
-        if (exportControls) exportControls.style.visibility = '';
         canvas.toBlob(async blob => {
           const confRaw  = document.getElementById('conference').value.trim();
           const startRaw = document.getElementById('start-date').value; // YYYY-MM-DD
@@ -3195,7 +3191,6 @@ var INTL_COUNTRIES = [
           showNextSteps();
         }, 'image/png');
       } catch (err) {
-        if (exportControls) exportControls.style.visibility = '';
         statusEl.textContent = `Could not generate image: ${err.message}`;
       }
     });
