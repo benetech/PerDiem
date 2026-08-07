@@ -543,7 +543,7 @@
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.4';
+    const APP_VERSION = 'Version 2.1.5';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -1502,7 +1502,7 @@
         const subject = subjectEl.value.trim() || 'User Feedback';
         const email   = emailEl.value.trim();
         const msg     = messageEl.value.trim();
-        const meta    = ['Version: ' + APP_VERSION, 'File: ' + FILE_TYPE];
+        const meta    = [APP_VERSION, 'File: ' + FILE_TYPE];
         if (email) meta.push('From: ' + email);
         return { subject, body: meta.join('\n') + '\n\n' + msg };
       }

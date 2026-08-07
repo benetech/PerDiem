@@ -2292,7 +2292,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.7';
+    const APP_VERSION = 'Version 2.1.8';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -3261,7 +3261,7 @@ var INTL_COUNTRIES = [
         const subject = subjectEl.value.trim() || 'User Feedback';
         const email   = emailEl.value.trim();
         const msg     = messageEl.value.trim();
-        const meta    = ['Version: ' + APP_VERSION, 'File: ' + FILE_TYPE];
+        const meta    = [APP_VERSION, 'File: ' + FILE_TYPE];
         if (email) meta.push('From: ' + email);
         return { subject, body: meta.join('\n') + '\n\n' + msg };
       }
