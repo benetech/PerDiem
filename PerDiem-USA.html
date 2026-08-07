@@ -533,7 +533,7 @@
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.39';
+    const APP_VERSION = 'Version 2.1.42';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -558,13 +558,23 @@
     ];
 
     // CONUS M&IE breakdown table \u2014 source: gsa.gov/travel/plan-book/per-diem-rates/mie-breakdown
+    // Standard rates (5 CONUS tiers) + first/last day amounts (FTR 301 Appendix B breakdown)
     const MIE_TABLE = {
-       68: { breakfast: 16, lunch: 19, dinner: 28, incidentals: 5 },
-       74: { breakfast: 18, lunch: 20, dinner: 31, incidentals: 5 },
-       80: { breakfast: 20, lunch: 22, dinner: 33, incidentals: 5 },
-       86: { breakfast: 22, lunch: 23, dinner: 36, incidentals: 5 },
-       92: { breakfast: 23, lunch: 26, dinner: 38, incidentals: 5 },
+       68: { breakfast: 16, lunch: 19, dinner: 28, incidentals:  5 },
+       74: { breakfast: 18, lunch: 20, dinner: 31, incidentals:  5 },
+       80: { breakfast: 20, lunch: 22, dinner: 33, incidentals:  5 },
+       86: { breakfast: 22, lunch: 23, dinner: 36, incidentals:  5 },
+       92: { breakfast: 23, lunch: 26, dinner: 38, incidentals:  5 },
+       // First/last day official GSA amounts \u2192 Appendix B per-meal breakdown
+       51: { breakfast:  8, lunch: 13, dinner: 20, incidentals: 10 },
+       55: { breakfast:  8, lunch: 14, dinner: 22, incidentals: 11 },
+       60: { breakfast:  9, lunch: 15, dinner: 24, incidentals: 12 },
+       64: { breakfast: 10, lunch: 16, dinner: 25, incidentals: 13 },
+       69: { breakfast: 10, lunch: 17, dinner: 28, incidentals: 14 },
     };
+
+    // Official GSA first/last day amounts keyed by standard M&IE tier
+    const USA_TRAVEL_DAY = { 68: 51, 74: 55, 80: 60, 86: 64, 92: 69 };
 
 
     function getMealBreakdown(mie) {
@@ -593,10 +603,8 @@
       return '$' + Number(n).toFixed(2);
     }
 
-    function buildRow(type, mie, scale = 1) {
-      // For travel-day rows: round 75% of M&IE to nearest whole dollar, then look
-      // that amount up in the Appendix B / MIE_TABLE to get the correct per-meal breakdown.
-      const effectiveMie = scale === 1 ? mie : Math.floor(mie * scale);
+    function buildRow(type, mie, isTravelDay = false) {
+      const effectiveMie = isTravelDay ? (USA_TRAVEL_DAY[mie] ?? mie) : mie;
       const b = getMealBreakdown(effectiveMie);
       const tr = document.createElement('tr');
       tr.innerHTML = `
@@ -873,7 +881,7 @@
         const mie   = Number(match.meals);
         const tbody = document.querySelector('#rates-table tbody');
         tbody.appendChild(buildRow('Standard', mie));
-        tbody.appendChild(buildRow('Travel Days 75%', mie, 0.75));
+        tbody.appendChild(buildRow('First/Last Day of Travel', mie, true));
       } catch (err) {
         showError(`Failed to fetch rates: ${err.message}`);
       }
