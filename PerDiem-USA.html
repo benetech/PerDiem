@@ -533,7 +533,7 @@
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.36';
+    const APP_VERSION = 'Version 2.1.39';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -596,7 +596,7 @@
     function buildRow(type, mie, scale = 1) {
       // For travel-day rows: round 75% of M&IE to nearest whole dollar, then look
       // that amount up in the Appendix B / MIE_TABLE to get the correct per-meal breakdown.
-      const effectiveMie = scale === 1 ? mie : Math.round(mie * scale);
+      const effectiveMie = scale === 1 ? mie : Math.floor(mie * scale);
       const b = getMealBreakdown(effectiveMie);
       const tr = document.createElement('tr');
       tr.innerHTML = `
