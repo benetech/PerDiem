@@ -436,12 +436,6 @@
       <div style="margin-top:1.5rem;">
         <button type="button" id="save-image-btn">Export Summary as Image</button>
         <p id="save-image-status" style="margin:0.4rem 0 0; font-size:0.875rem;" aria-live="polite"></p>
-        <button type="button" id="ns-notice-btn" hidden
-                style="display:block; margin-top:0.5rem; background:var(--surface);
-                       color:var(--text); border:1px solid var(--border); border-radius:4px;
-                       padding:0.35rem 0.8rem; font-size:0.875rem; cursor:pointer; text-align:left;">
-          Image saved. Next Steps are shown below &mdash; press Enter to go there.
-        </button>
       </div>
     </div>
   </section>
@@ -2288,7 +2282,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.29';
+    const APP_VERSION = 'Version 2.1.30';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -3126,18 +3120,16 @@ var INTL_COUNTRIES = [
       // NVDA/JAWS always follow programmatic focus to buttons (form elements).
       // Reveal a notice button right after the save button, focus it so AT announces
       // it immediately, then let the user press Enter to jump to the heading via a
-      // user-initiated focus call (which AT always follows).
-      const nsBtn = document.getElementById('ns-notice-btn');
-      const heading = document.getElementById('next-steps-heading');
-      if (nsBtn && heading) {
-        nsBtn.hidden = false;
-        nsBtn.onclick = () => { nsBtn.hidden = true; heading.focus(); };
+      // Return focus to the save button — buttons are form elements NVDA/JAWS always
+      // follow. From there the AT user can arrow down to reach the Next Steps heading.
+      const saveBtn = document.getElementById('save-image-btn');
+      if (saveBtn) {
         let ticks = 0;
         const poll = setInterval(() => {
           ticks++;
           if (document.hasFocus() || ticks >= 20) {
             clearInterval(poll);
-            setTimeout(() => requestAnimationFrame(() => nsBtn.focus()), 300);
+            requestAnimationFrame(() => saveBtn.focus());
           }
         }, 100);
       }
