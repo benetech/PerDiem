@@ -293,6 +293,7 @@
         <option value="">-- Select a state --</option>
       </select>
       <span class="field-error" id="err-state" role="alert"></span>
+      <p id="conus-stale-msg" role="alert" style="display:none; margin:0.25rem 0 0.5rem; font-size:0.875rem; color:var(--error);"></p>
     </div>
     <div id="city-row">
       <label for="city">City <span class="req-star" aria-label="required">*</span></label>
@@ -321,6 +322,7 @@
         <button type="button" id="city-search-confirm-no"  style="font-size:0.875rem; padding:0.25rem 0.6rem;">No, cancel</button>
       </div>
     </div>
+    <div id="conus-table-status" hidden style="margin-bottom:0.75rem; padding:0.5rem 0.75rem; border-radius:4px; font-size:0.875rem;"></div>
     <p style="margin:0 0 0.5rem; font-size:0.875rem;">
       <a id="rates-website-link"
          href="https://www.gsa.gov/travel/plan-book/per-diem-rates"
@@ -410,6 +412,7 @@
       <div style="margin-top:1.5rem;">
         <button type="button" id="save-image-btn">Export Summary as Image</button>
         <p id="save-image-status" style="margin:0.4rem 0 0; font-size:0.875rem;" aria-hidden="true"></p>
+        <p id="conus-table-export-warning" hidden style="margin:0.25rem 0 0;"></p>
       </div>
     </div>
   </section>
@@ -533,7 +536,7 @@
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.36';
+    const APP_VERSION = 'Version 2.1.45';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -557,26 +560,62 @@
       ['WV','West Virginia'],['WI','Wisconsin'],['WY','Wyoming']
     ];
 
-    // CONUS M&IE breakdown table \u2014 source: gsa.gov/travel/plan-book/per-diem-rates/mie-breakdown
-    const MIE_TABLE = {
-       68: { breakfast: 16, lunch: 19, dinner: 28, incidentals: 5 },
-       74: { breakfast: 18, lunch: 20, dinner: 31, incidentals: 5 },
-       80: { breakfast: 20, lunch: 22, dinner: 33, incidentals: 5 },
-       86: { breakfast: 22, lunch: 23, dinner: 36, incidentals: 5 },
-       92: { breakfast: 23, lunch: 26, dinner: 38, incidentals: 5 },
+    // GSA CONUS M&IE Breakdown Table
+    // Source: https://www.gsa.gov/travel/plan-book/per-diem-rates/mie-breakdown
+    // Fiscal year: update annually when GSA publishes new rates (typically each October).
+    // Standard columns (breakfast\u2013incidentals) copied directly from the GSA CONUS M&IE page.
+    // firstLastDay: official first-and-last-day total from the same GSA page (right-most column).
+    // travelBreakfast/Lunch/Dinner/Incidentals: per-meal breakdown for the firstLastDay total,
+    //   sourced from FTR 301 Appendix B (https://allowances.state.gov/Bypass/AppendixB.asp).
+    // CONUS_TABLE_DATE = date this table was last verified against both source pages.
+    const CONUS_TABLE_DATE = '2026-08-07';
+
+    const CONUS_TABLE = {
+      68: { breakfast: 16, lunch: 19, dinner: 28, incidentals:  5, firstLastDay: 51, travelBreakfast:  8, travelLunch: 13, travelDinner: 20, travelIncidentals: 10 },
+      74: { breakfast: 18, lunch: 20, dinner: 31, incidentals:  5, firstLastDay: 55, travelBreakfast:  8, travelLunch: 14, travelDinner: 22, travelIncidentals: 11 },
+      80: { breakfast: 20, lunch: 22, dinner: 33, incidentals:  5, firstLastDay: 60, travelBreakfast:  9, travelLunch: 15, travelDinner: 24, travelIncidentals: 12 },
+      86: { breakfast: 22, lunch: 23, dinner: 36, incidentals:  5, firstLastDay: 64, travelBreakfast: 10, travelLunch: 16, travelDinner: 25, travelIncidentals: 13 },
+      92: { breakfast: 23, lunch: 26, dinner: 38, incidentals:  5, firstLastDay: 69, travelBreakfast: 10, travelLunch: 17, travelDinner: 28, travelIncidentals: 14 },
     };
+
+    // Staleness: warn when today is July 1+ and the table predates this calendar year's July 1.
+    // Gives a 3-month buffer before the Oct 1 fiscal-year rollover (same threshold as International).
+    const [_cy, _cm, _cd] = CONUS_TABLE_DATE.split('-').map(Number);
+    const _staleConusDt   = new Date(_cy, _cm - 1, _cd);
+    const _todayUs        = new Date();
+    const _conusIsStale   = _todayUs.getFullYear() > _staleConusDt.getFullYear() ||
+      (_todayUs >= new Date(_todayUs.getFullYear(), 6, 1) && _staleConusDt < new Date(_todayUs.getFullYear(), 6, 1));
 
 
     function getMealBreakdown(mie) {
-      // CONUS: use GSA-specific lookup first
-      const entry = MIE_TABLE[mie];
-      if (entry) return entry;
-      // Percentage fallback for M&IE not in MIE_TABLE
+      const entry = CONUS_TABLE[mie];
+      if (entry) return { breakfast: entry.breakfast, lunch: entry.lunch, dinner: entry.dinner, incidentals: entry.incidentals };
+      // Percentage fallback for non-standard CONUS rates (OCONUS, etc.)
       const breakfast   = Math.round(mie * 0.15);
       const lunch       = Math.round(mie * 0.25);
       const dinner      = Math.round(mie * 0.40);
       const incidentals = mie - breakfast - lunch - dinner;
       return { breakfast, lunch, dinner, incidentals };
+    }
+
+    function getTravelDayBreakdown(mie) {
+      const entry = CONUS_TABLE[mie];
+      if (entry?.firstLastDay != null) {
+        return {
+          total:       entry.firstLastDay,
+          breakfast:   entry.travelBreakfast,
+          lunch:       entry.travelLunch,
+          dinner:      entry.travelDinner,
+          incidentals: entry.travelIncidentals,
+        };
+      }
+      // Fallback for non-standard CONUS rates: 75% rule + percentage split
+      const total       = Math.floor(mie * 0.75);
+      const breakfast   = Math.round(total * 0.15);
+      const lunch       = Math.round(total * 0.25);
+      const dinner      = Math.round(total * 0.40);
+      const incidentals = total - breakfast - lunch - dinner;
+      return { total, breakfast, lunch, dinner, incidentals };
     }
 
     const countryEl = document.getElementById('country');
@@ -593,11 +632,16 @@
       return '$' + Number(n).toFixed(2);
     }
 
-    function buildRow(type, mie, scale = 1) {
-      // For travel-day rows: round 75% of M&IE to nearest whole dollar, then look
-      // that amount up in the Appendix B / MIE_TABLE to get the correct per-meal breakdown.
-      const effectiveMie = scale === 1 ? mie : Math.round(mie * scale);
-      const b = getMealBreakdown(effectiveMie);
+    function buildRow(type, mie, isTravelDay = false) {
+      let total, b;
+      if (isTravelDay) {
+        const td = getTravelDayBreakdown(mie);
+        total = td.total;
+        b     = { breakfast: td.breakfast, lunch: td.lunch, dinner: td.dinner, incidentals: td.incidentals };
+      } else {
+        total = mie;
+        b     = getMealBreakdown(mie);
+      }
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <th scope="row">${type}</th>
@@ -605,7 +649,7 @@
         <td>${fmt(b.lunch)}</td>
         <td>${fmt(b.dinner)}</td>
         <td>${fmt(b.incidentals)}</td>
-        <td>${fmt(effectiveMie)}</td>
+        <td>${fmt(total)}</td>
       `;
       return tr;
     }
@@ -750,8 +794,7 @@
       document.getElementById('summary-tbody').innerHTML   = '';
       document.getElementById('summary-tfoot').innerHTML   = '';
       document.getElementById('rates-reprise').innerHTML   = '';
-
-
+      document.getElementById('conus-table-export-warning').hidden = true;
 
       showError('');
     }
@@ -773,6 +816,25 @@
         clearCityConfirm();
         clearRetryBtn();
         resetResults();
+        const statusEl = document.getElementById('conus-table-status');
+        const staleMsgEl = document.getElementById('conus-stale-msg');
+        if (stateEl.value) {
+          statusEl.style.background = 'var(--surface)';
+          statusEl.style.color      = 'var(--text-muted)';
+          statusEl.style.border     = '1px solid var(--border)';
+          statusEl.innerHTML        = `Meal breakdown uses the inlined <a href="https://www.gsa.gov/travel/plan-book/per-diem-rates/mie-breakdown" target="_blank" rel="noopener">GSA CONUS M&amp;IE table</a> (last verified ${CONUS_TABLE_DATE}).`;
+          statusEl.hidden = false;
+          if (_conusIsStale) {
+            staleMsgEl.innerHTML = `⚠ CONUS M&amp;IE table was last updated on <strong>${CONUS_TABLE_DATE}</strong> and may be out of date.<br>
+              To refresh, ask Claude: <em>"Please refresh the CONUS M&amp;IE breakdown table in PerDiem-USA.html"</em>`;
+            staleMsgEl.style.display = 'block';
+          } else {
+            staleMsgEl.style.display = 'none'; staleMsgEl.textContent = '';
+          }
+        } else {
+          statusEl.hidden = true;
+          staleMsgEl.style.display = 'none'; staleMsgEl.textContent = '';
+        }
         if (stateEl.value) populateCities(stateEl.value);
       }, 400);
     });
@@ -873,7 +935,7 @@
         const mie   = Number(match.meals);
         const tbody = document.querySelector('#rates-table tbody');
         tbody.appendChild(buildRow('Standard', mie));
-        tbody.appendChild(buildRow('Travel Days 75%', mie, 0.75));
+        tbody.appendChild(buildRow('First/Last Day of Travel', mie, true));
       } catch (err) {
         showError(`Failed to fetch rates: ${err.message}`);
       }
@@ -1149,7 +1211,12 @@
       // Populate Last Updated line
       const lastUpdEl = document.getElementById('mie-last-updated');
       const fy = gsaFiscalYear(document.getElementById('start-date').value);
-      lastUpdEl.innerHTML = `Last Updated: Real-time via GSA Per Diem API (FY${fy})`;
+      lastUpdEl.innerHTML = `M&amp;IE Total: Real-time via GSA Per Diem API (FY${fy}) &mdash; Meal breakdown: inlined CONUS table (last verified ${CONUS_TABLE_DATE})`;
+
+      // Show CONUS table source note in the export area
+      const exportWarnEl = document.getElementById('conus-table-export-warning');
+      exportWarnEl.innerHTML = `Last Updated Meal Breakdown: ${CONUS_TABLE_DATE}<br><span style="font-size:0.8rem;color:var(--text-muted);">Source: <a href="https://www.gsa.gov/travel/plan-book/per-diem-rates/mie-breakdown" target="_blank" rel="noopener">GSA CONUS M&amp;IE Breakdown Table</a></span>`;
+      exportWarnEl.hidden = false;
 
       // Duplicate the rates table below the grand total
       const repriseEl   = document.getElementById('rates-reprise');
