@@ -533,7 +533,7 @@
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.31';
+    const APP_VERSION = 'Version 2.1.32';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -1260,8 +1260,9 @@
 
     // \u2500\u2500 Save to Photo Gallery \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
     document.getElementById('save-image-btn').addEventListener('click', async () => {
-      const statusEl = document.getElementById('save-image-status');
-      const target   = document.getElementById('summary-section');
+      const statusEl   = document.getElementById('save-image-status');
+      const target     = document.getElementById('summary-section');
+      const savedFocus = document.activeElement;
       statusEl.textContent = 'Generating image\u2026';
 
       // Hide export controls so they don't appear in the image
@@ -1329,6 +1330,7 @@
           a.download = name;
           a.click();
           URL.revokeObjectURL(url);
+          if (savedFocus) savedFocus.focus({ preventScroll: true });
           statusEl.textContent = `Saved to Downloads: ${name}`;
           showNextSteps();
         }, 'image/png');
