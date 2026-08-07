@@ -2282,7 +2282,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.24';
+    const APP_VERSION = 'Version 2.1.25';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -3117,11 +3117,21 @@ var INTL_COUNTRIES = [
       const nsSection = document.getElementById('next-steps-section');
       nsSection.hidden = false;
       nsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      // Wait for file-picker focus to return to page, then move to heading
-      setTimeout(() => {
-        const h = document.getElementById('next-steps-heading');
-        if (h) requestAnimationFrame(() => h.focus());
-      }, 1000);
+      // Focus Next Steps heading once the browser window regains focus from the OS file-picker.
+      // element.focus() silently fails when document doesn't have focus, so we must wait for
+      // the window 'focus' event rather than guessing a fixed timeout.
+      const heading = document.getElementById('next-steps-heading');
+      if (heading) {
+        const doFocus = () => requestAnimationFrame(() => heading.focus());
+        if (document.hasFocus()) {
+          doFocus();
+        } else {
+          let fired = false;
+          const handler = () => { if (fired) return; fired = true; clearTimeout(fb); doFocus(); };
+          window.addEventListener('focus', handler, { once: true });
+          const fb = setTimeout(handler, 3000);
+        }
+      }
     }
 
     // \u2500\u2500 Save to Photo Gallery \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
