@@ -2292,7 +2292,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.8';
+    const APP_VERSION = 'Version 2.1.9';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -3225,7 +3225,7 @@ var INTL_COUNTRIES = [
 
     // \u2500\u2500 Feedback modal \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
     (function () {
-      const FILE_TYPE = 'International Travel';
+      const FILE_TYPE = 'International Travel Per Diem page';
       const overlay   = document.getElementById('feedback-modal-overlay');
       const emailEl   = document.getElementById('fb-email');
       const subjectEl = document.getElementById('fb-subject');
@@ -3261,7 +3261,7 @@ var INTL_COUNTRIES = [
         const subject = subjectEl.value.trim() || 'User Feedback';
         const email   = emailEl.value.trim();
         const msg     = messageEl.value.trim();
-        const meta    = [APP_VERSION, 'File: ' + FILE_TYPE];
+        const meta    = [APP_VERSION, FILE_TYPE];
         if (email) meta.push('From: ' + email);
         return { subject, body: meta.join('\n') + '\n\n' + msg };
       }
