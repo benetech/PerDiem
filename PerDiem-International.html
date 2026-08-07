@@ -442,7 +442,7 @@
 
   <section id="next-steps-section" hidden style="margin-top:2rem;">
     <hr style="border:none; border-top:2px solid var(--border); margin-bottom:1.5rem;">
-    <h2>Next Steps</h2>
+    <h2 id="next-steps-heading" tabindex="-1">Next Steps</h2>
     <ol style="line-height:2;">
       <li>
         Log into Concur:<br>
@@ -2282,7 +2282,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.22';
+    const APP_VERSION = 'Version 2.1.24';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -3117,6 +3117,11 @@ var INTL_COUNTRIES = [
       const nsSection = document.getElementById('next-steps-section');
       nsSection.hidden = false;
       nsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Wait for file-picker focus to return to page, then move to heading
+      setTimeout(() => {
+        const h = document.getElementById('next-steps-heading');
+        if (h) requestAnimationFrame(() => h.focus());
+      }, 1000);
     }
 
     // \u2500\u2500 Save to Photo Gallery \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
