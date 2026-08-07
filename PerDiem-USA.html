@@ -543,7 +543,7 @@
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.10';
+    const APP_VERSION = 'Version 2.1.11';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -1488,12 +1488,15 @@
       triggerBtn.addEventListener('click', openModal);
       document.getElementById('fb-cancel-btn').addEventListener('click', closeModal);
 
-      // Focus trap — keep keyboard focus inside the modal while it is open
-      // Uses capture phase so Escape is caught before the browser clears the focused input
+      // Focus trap — listen on overlay (capture) so Escape intercepts before any input default handling
       const FOCUSABLE = '#fb-email, #fb-subject, #fb-message, #fb-email-btn, #fb-github-btn, #fb-cancel-btn';
-      document.addEventListener('keydown', e => {
-        if (!overlay.classList.contains('open')) return;
-        if (e.key === 'Escape') { e.preventDefault(); closeModal(); return; }
+      overlay.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          e.stopPropagation();
+          closeModal();
+          return;
+        }
         if (e.key !== 'Tab') return;
         const els = Array.from(document.getElementById('feedback-modal').querySelectorAll(FOCUSABLE));
         const first = els[0], last = els[els.length - 1];
