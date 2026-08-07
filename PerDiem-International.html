@@ -2282,7 +2282,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.25';
+    const APP_VERSION = 'Version 2.1.26';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -3117,12 +3117,12 @@ var INTL_COUNTRIES = [
       const nsSection = document.getElementById('next-steps-section');
       nsSection.hidden = false;
       nsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      // Focus Next Steps heading once the browser window regains focus from the OS file-picker.
-      // element.focus() silently fails when document doesn't have focus, so we must wait for
-      // the window 'focus' event rather than guessing a fixed timeout.
+      // AT virtual buffer refresh: NVDA/JAWS need time to scan newly-revealed content
+      // into their buffer before focus() is meaningful. We wait 800ms after the browser
+      // page regains focus — this covers both file-picker focus return and AT buffer scan.
       const heading = document.getElementById('next-steps-heading');
       if (heading) {
-        const doFocus = () => requestAnimationFrame(() => heading.focus());
+        const doFocus = () => setTimeout(() => requestAnimationFrame(() => heading.focus()), 800);
         if (document.hasFocus()) {
           doFocus();
         } else {
