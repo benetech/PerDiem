@@ -2282,7 +2282,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.31';
+    const APP_VERSION = 'Version 2.1.32';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -3120,19 +3120,9 @@ var INTL_COUNTRIES = [
       // NVDA/JAWS always follow programmatic focus to buttons (form elements).
       // Reveal a notice button right after the save button, focus it so AT announces
       // it immediately, then let the user press Enter to jump to the heading via a
-      // Return focus to the save button — buttons are form elements NVDA/JAWS always
-      // follow. From there the AT user can arrow down to reach the Next Steps heading.
-      const saveBtn = document.getElementById('save-image-btn');
-      if (saveBtn) {
-        let ticks = 0;
-        const poll = setInterval(() => {
-          ticks++;
-          if (document.hasFocus() || ticks >= 20) {
-            clearInterval(poll);
-            requestAnimationFrame(() => saveBtn.focus());
-          }
-        }, 100);
-      }
+      // No JS focus needed here — the browser natively restores focus to the
+      // save button when the file picker closes (we pre-focused it before opening).
+      // NVDA/JAWS follow that OS-level event; AT users can arrow down to Next Steps.
     }
 
     // \u2500\u2500 Save to Photo Gallery \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
@@ -3184,6 +3174,11 @@ var INTL_COUNTRIES = [
           // Desktop: show native Save As dialog (Chrome/Edge)
           if (window.showSaveFilePicker) {
             try {
+              // Focus the button before the picker opens so the browser natively
+              // restores focus here when the dialog closes — NVDA follows that as
+              // a real OS focus event, placing AT cursor on the button so the user
+              // can arrow down to the Next Steps heading.
+              document.getElementById('save-image-btn').focus();
               const fileHandle = await window.showSaveFilePicker({
                 suggestedName: name,
                 types: [{ description: 'PNG Image', accept: { 'image/png': ['.png'] } }]
