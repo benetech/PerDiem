@@ -2215,7 +2215,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.0';
+    const APP_VERSION = 'Version 2.1.2';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -2742,6 +2742,11 @@ var INTL_COUNTRIES = [
         endDateEl.value = startDateEl.value;
       } else if (endDateEl.value < startDateEl.value) {
         endDateEl.value = startDateEl.value;
+      }
+      if (endDateEl.value) {
+        const errEl = document.getElementById('err-end-date');
+        if (errEl) { errEl.textContent = ''; }
+        endDateEl.removeAttribute('aria-invalid');
       }
       buildMealGrid();
     });
