@@ -184,18 +184,9 @@
       font-weight: 700;
     }
     /* Feedback modal */
-    #feedback-modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.55);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-    }
-    #feedback-modal-overlay.open { display: flex; }
     #feedback-modal {
       background: var(--bg);
+      color: var(--text);
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 1.5rem;
@@ -203,6 +194,7 @@
       max-height: 90vh;
       overflow-y: auto;
     }
+    #feedback-modal::backdrop { background: rgba(0,0,0,0.55); }
     #feedback-modal h2 { margin: 0 0 1rem; font-size: 1.2rem; }
     #feedback-modal .fb-field { margin-bottom: 0.75rem; }
     #feedback-modal .fb-field label { display: block; margin-bottom: 0.25rem; font-weight: 600; }
@@ -237,34 +229,32 @@
   <p id="app-version" style="margin:0 0 0.4rem; font-size:0.9rem; color:var(--text-muted);"></p>
   <button type="button" id="feedback-btn">Submit an issue or suggestion</button>
 
-  <div id="feedback-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="fb-modal-title">
-    <div id="feedback-modal">
-      <h2 id="fb-modal-title">Submit an Issue or Suggestion</h2>
-      <div class="fb-field">
-        <label for="fb-email">Your email <span style="font-weight:normal;color:var(--text-muted)">(optional)</span></label>
-        <input type="email" id="fb-email" autocomplete="email" placeholder="you@benetech.org">
-      </div>
-      <div class="fb-field">
-        <label for="fb-subject">Subject <span style="font-weight:normal;color:var(--text-muted)">(optional &mdash; defaults to &ldquo;User Feedback&rdquo;)</span></label>
-        <input type="text" id="fb-subject" placeholder="User Feedback">
-      </div>
-      <div class="fb-field">
-        <label for="fb-message">Message <span class="req-star" aria-label="required">*</span></label>
-        <textarea id="fb-message" required placeholder="Describe your issue or suggestion..."></textarea>
-        <span class="field-error" id="fb-msg-error" role="alert"></span>
-      </div>
-      <div class="modal-note">
-        Choose how to submit: <strong>Send via Email</strong> opens Outlook with your feedback pre-filled,
-        or <strong>Open GitHub Issue</strong> opens the GitHub Issues page in a new tab (requires a GitHub account).
-        The version number and which Per Diem page you are using are included automatically.
-      </div>
-      <div class="modal-buttons">
-        <button type="button" id="fb-email-btn">Send via Email</button>
-        <button type="button" id="fb-github-btn">Open GitHub Issue</button>
-        <button type="button" id="fb-cancel-btn">Cancel</button>
-      </div>
+  <dialog id="feedback-modal" aria-labelledby="fb-modal-title">
+    <h2 id="fb-modal-title">Submit an Issue or Suggestion</h2>
+    <div class="fb-field">
+      <label for="fb-email">Your email <span style="font-weight:normal;color:var(--text-muted)">(optional)</span></label>
+      <input type="email" id="fb-email" autocomplete="off" placeholder="you@benetech.org">
     </div>
-  </div>
+    <div class="fb-field">
+      <label for="fb-subject">Subject <span style="font-weight:normal;color:var(--text-muted)">(optional &mdash; defaults to &ldquo;User Feedback&rdquo;)</span></label>
+      <input type="text" id="fb-subject" placeholder="User Feedback">
+    </div>
+    <div class="fb-field">
+      <label for="fb-message">Message <span class="req-star" aria-label="required">*</span></label>
+      <textarea id="fb-message" required placeholder="Describe your issue or suggestion..."></textarea>
+      <span class="field-error" id="fb-msg-error" role="alert"></span>
+    </div>
+    <div class="modal-note">
+      Choose how to submit: <strong>Send via Email</strong> opens Outlook with your feedback pre-filled,
+      or <strong>Open GitHub Issue</strong> opens the GitHub Issues page in a new tab (requires a GitHub account).
+      The version number and which Per Diem page you are using are included automatically.
+    </div>
+    <div class="modal-buttons">
+      <button type="button" id="fb-email-btn">Send via Email</button>
+      <button type="button" id="fb-github-btn">Open GitHub Issue</button>
+      <button type="button" id="fb-cancel-btn">Cancel</button>
+    </div>
+  </dialog>
 
   <p class="req-note"><span class="req-star" aria-hidden="true">*</span> Required field</p>
   <form novalidate>
@@ -543,7 +533,7 @@
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.11';
+    const APP_VERSION = 'Version 2.1.20';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -775,15 +765,23 @@
       document.getElementById('city-search').value = '';
     }
 
+    // Debounce DOM-modifying handlers so AT can announce the focused option before the page changes
+    let _stateTimer, _cityTimer;
     stateEl.addEventListener('change', () => {
-      clearCityConfirm();
-      clearRetryBtn();
-      resetResults();
-      if (stateEl.value) populateCities(stateEl.value);
+      clearTimeout(_stateTimer);
+      _stateTimer = setTimeout(() => {
+        clearCityConfirm();
+        clearRetryBtn();
+        resetResults();
+        if (stateEl.value) populateCities(stateEl.value);
+      }, 400);
     });
     cityEl.addEventListener('change', () => {
-      clearCityConfirm();
-      resetResults();
+      clearTimeout(_cityTimer);
+      _cityTimer = setTimeout(() => {
+        clearCityConfirm();
+        resetResults();
+      }, 400);
     });
 
     document.querySelector('form').addEventListener('submit', async (e) => {
@@ -1466,45 +1464,44 @@
 
     // \u2500\u2500 Feedback modal \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
     (function () {
-      const FILE_TYPE = 'Domestic Travel Per Diem page';
-      const overlay   = document.getElementById('feedback-modal-overlay');
-      const emailEl   = document.getElementById('fb-email');
-      const subjectEl = document.getElementById('fb-subject');
-      const messageEl = document.getElementById('fb-message');
-      const msgError  = document.getElementById('fb-msg-error');
+      const FILE_TYPE  = 'Domestic Travel Per Diem page';
+      const dialog     = document.getElementById('feedback-modal');
+      const triggerBtn = document.getElementById('feedback-btn');
+      const emailEl    = document.getElementById('fb-email');
+      const subjectEl  = document.getElementById('fb-subject');
+      const messageEl  = document.getElementById('fb-message');
+      const msgError   = document.getElementById('fb-msg-error');
 
       function openModal() {
         emailEl.value = ''; subjectEl.value = ''; messageEl.value = '';
         msgError.textContent = '';
-        overlay.classList.add('open');
-        setTimeout(() => emailEl.focus(), 50);
+        dialog.showModal();
+        setTimeout(() => { if (dialog.open) emailEl.focus(); }, 50);
       }
-      const triggerBtn = document.getElementById('feedback-btn');
       function closeModal() {
-        overlay.classList.remove('open');
-        triggerBtn.focus();
+        dialog.close();
       }
 
       triggerBtn.addEventListener('click', openModal);
       document.getElementById('fb-cancel-btn').addEventListener('click', closeModal);
+      // Restore focus to trigger after any close (Escape, Cancel, submit)
+      dialog.addEventListener('close', () => { triggerBtn.focus(); });
 
-      // Focus trap — listen on overlay (capture) so Escape intercepts before any input default handling
+      // Focus trap — Tab wraps within dialog
       const FOCUSABLE = '#fb-email, #fb-subject, #fb-message, #fb-email-btn, #fb-github-btn, #fb-cancel-btn';
-      overlay.addEventListener('keydown', e => {
-        if (e.key === 'Escape') {
-          e.preventDefault();
-          e.stopPropagation();
-          closeModal();
-          return;
-        }
+      dialog.addEventListener('keydown', e => {
         if (e.key !== 'Tab') return;
-        const els = Array.from(document.getElementById('feedback-modal').querySelectorAll(FOCUSABLE));
+        const els = Array.from(dialog.querySelectorAll(FOCUSABLE));
         const first = els[0], last = els[els.length - 1];
         if (e.shiftKey) {
           if (document.activeElement === first) { e.preventDefault(); last.focus(); }
         } else {
           if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
         }
+      }, true);
+      // Escape on keyup: Chrome swallows the keydown when autofill dismisses, but keyup always fires
+      dialog.addEventListener('keyup', e => {
+        if (e.key === 'Escape') closeModal();
       }, true);
 
       messageEl.addEventListener('input', () => { if (messageEl.value.trim()) msgError.textContent = ''; });
