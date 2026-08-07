@@ -2292,7 +2292,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.12';
+    const APP_VERSION = 'Version 2.1.13';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -3238,16 +3238,21 @@ var INTL_COUNTRIES = [
         overlay.classList.add('open');
         setTimeout(() => emailEl.focus(), 50);
       }
-      function closeModal() { overlay.classList.remove('open'); }
+      const triggerBtn = document.getElementById('feedback-btn');
+      function closeModal() {
+        overlay.classList.remove('open');
+        triggerBtn.focus();
+      }
 
-      document.getElementById('feedback-btn').addEventListener('click', openModal);
+      triggerBtn.addEventListener('click', openModal);
       document.getElementById('fb-cancel-btn').addEventListener('click', closeModal);
 
       // Focus trap — keep keyboard focus inside the modal while it is open
+      // Uses capture phase so Escape is caught before the browser clears the focused input
       const FOCUSABLE = '#fb-email, #fb-subject, #fb-message, #fb-email-btn, #fb-github-btn, #fb-cancel-btn';
       document.addEventListener('keydown', e => {
         if (!overlay.classList.contains('open')) return;
-        if (e.key === 'Escape') { closeModal(); return; }
+        if (e.key === 'Escape') { e.preventDefault(); closeModal(); return; }
         if (e.key !== 'Tab') return;
         const els = Array.from(document.getElementById('feedback-modal').querySelectorAll(FOCUSABLE));
         const first = els[0], last = els[els.length - 1];
@@ -3256,7 +3261,7 @@ var INTL_COUNTRIES = [
         } else {
           if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
         }
-      });
+      }, true);
 
       messageEl.addEventListener('input', () => { if (messageEl.value.trim()) msgError.textContent = ''; });
 
