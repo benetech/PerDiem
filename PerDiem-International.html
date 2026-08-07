@@ -442,7 +442,7 @@
 
   <section id="next-steps-section" hidden style="margin-top:2rem;">
     <hr style="border:none; border-top:2px solid var(--border); margin-bottom:1.5rem;">
-    <h2 id="next-steps-heading" tabindex="-1">Next Steps</h2>
+    <h2 id="next-steps-heading" tabindex="0">Next Steps</h2>
     <ol style="line-height:2;">
       <li>
         Log into Concur:<br>
@@ -2282,7 +2282,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.26';
+    const APP_VERSION = 'Version 2.1.27';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -3117,20 +3117,20 @@ var INTL_COUNTRIES = [
       const nsSection = document.getElementById('next-steps-section');
       nsSection.hidden = false;
       nsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      // AT virtual buffer refresh: NVDA/JAWS need time to scan newly-revealed content
-      // into their buffer before focus() is meaningful. We wait 800ms after the browser
-      // page regains focus — this covers both file-picker focus return and AT buffer scan.
+      // Poll until the browser page has focus (file-picker returns focus async),
+      // then wait 600ms for NVDA/JAWS to scan the newly-revealed content into
+      // their virtual buffer before calling focus(). tabindex="0" on the h2
+      // ensures NVDA/JAWS treat it as a real tab stop and follow the focus.
       const heading = document.getElementById('next-steps-heading');
       if (heading) {
-        const doFocus = () => setTimeout(() => requestAnimationFrame(() => heading.focus()), 800);
-        if (document.hasFocus()) {
-          doFocus();
-        } else {
-          let fired = false;
-          const handler = () => { if (fired) return; fired = true; clearTimeout(fb); doFocus(); };
-          window.addEventListener('focus', handler, { once: true });
-          const fb = setTimeout(handler, 3000);
-        }
+        let ticks = 0;
+        const poll = setInterval(() => {
+          ticks++;
+          if (document.hasFocus() || ticks >= 40) {
+            clearInterval(poll);
+            setTimeout(() => requestAnimationFrame(() => heading.focus()), 600);
+          }
+        }, 100);
       }
     }
 
