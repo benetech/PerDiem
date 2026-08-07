@@ -183,12 +183,89 @@
       background: var(--surface);
       font-weight: 700;
     }
+    /* Feedback modal */
+    #feedback-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    #feedback-modal-overlay.open { display: flex; }
+    #feedback-modal {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      width: min(500px, 92vw);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    #feedback-modal h2 { margin: 0 0 1rem; font-size: 1.2rem; }
+    #feedback-modal .fb-field { margin-bottom: 0.75rem; }
+    #feedback-modal .fb-field label { display: block; margin-bottom: 0.25rem; font-weight: 600; }
+    #feedback-modal .fb-field input,
+    #feedback-modal .fb-field textarea {
+      width: 100%; box-sizing: border-box;
+      padding: 0.4rem 0.6rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      font-family: inherit;
+    }
+    #feedback-modal .fb-field textarea { min-height: 110px; resize: vertical; }
+    #feedback-modal .modal-note {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0.75rem 0;
+      padding: 0.5rem 0.75rem;
+      border-left: 3px solid var(--border);
+      line-height: 1.5;
+    }
+    #feedback-modal .modal-buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
+    #feedback-modal .modal-buttons button { flex: 1; min-width: 130px; }
+    #feedback-btn { font-size: 0.85rem; padding: 0.3rem 0.9rem; margin-bottom: 1rem; }
   </style>
 </head>
 <body>
   <div id="stale-banner" role="alert"></div>
   <h1>Benetech Food Per Diem International Calculator</h1>
-  <p id="app-version" style="margin:0 0 1rem; font-size:0.9rem; color:var(--text-muted);"></p>
+  <p id="app-version" style="margin:0 0 0.4rem; font-size:0.9rem; color:var(--text-muted);"></p>
+  <button type="button" id="feedback-btn">Submit an issue or suggestion</button>
+
+  <div id="feedback-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="fb-modal-title">
+    <div id="feedback-modal">
+      <h2 id="fb-modal-title">Submit an Issue or Suggestion</h2>
+      <div class="fb-field">
+        <label for="fb-email">Your email <span style="font-weight:normal;color:var(--text-muted)">(optional)</span></label>
+        <input type="email" id="fb-email" autocomplete="email" placeholder="you@benetech.org">
+      </div>
+      <div class="fb-field">
+        <label for="fb-subject">Subject <span style="font-weight:normal;color:var(--text-muted)">(optional &mdash; defaults to &ldquo;User Feedback&rdquo;)</span></label>
+        <input type="text" id="fb-subject" placeholder="User Feedback">
+      </div>
+      <div class="fb-field">
+        <label for="fb-message">Message <span class="req-star" aria-label="required">*</span></label>
+        <textarea id="fb-message" required placeholder="Describe your issue or suggestion..."></textarea>
+        <span class="field-error" id="fb-msg-error" role="alert"></span>
+      </div>
+      <div class="modal-note">
+        Choose how to submit: <strong>Send via Email</strong> opens Outlook with your feedback pre-filled,
+        or <strong>Open GitHub Issue</strong> opens the GitHub Issues page in a new tab (requires a GitHub account).
+        The version number and file type are included automatically.
+      </div>
+      <div class="modal-buttons">
+        <button type="button" id="fb-email-btn">Send via Email</button>
+        <button type="button" id="fb-github-btn">Open GitHub Issue</button>
+        <button type="button" id="fb-cancel-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <p class="req-note"><span class="req-star" aria-hidden="true">*</span> Required field</p>
   <form novalidate>
     <div>
@@ -2215,7 +2292,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.3';
+    const APP_VERSION = 'Version 2.1.7';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -3146,6 +3223,72 @@ var INTL_COUNTRIES = [
     updateRatesLink(countryEl.value);
     populateStates(countryEl.value);
 
+    // \u2500\u2500 Feedback modal \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+    (function () {
+      const FILE_TYPE = 'International Travel';
+      const overlay   = document.getElementById('feedback-modal-overlay');
+      const emailEl   = document.getElementById('fb-email');
+      const subjectEl = document.getElementById('fb-subject');
+      const messageEl = document.getElementById('fb-message');
+      const msgError  = document.getElementById('fb-msg-error');
+
+      function openModal() {
+        emailEl.value = ''; subjectEl.value = ''; messageEl.value = '';
+        msgError.textContent = '';
+        overlay.classList.add('open');
+        setTimeout(() => emailEl.focus(), 50);
+      }
+      function closeModal() { overlay.classList.remove('open'); }
+
+      document.getElementById('feedback-btn').addEventListener('click', openModal);
+      document.getElementById('fb-cancel-btn').addEventListener('click', closeModal);
+      overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal(); });
+
+      messageEl.addEventListener('input', () => { if (messageEl.value.trim()) msgError.textContent = ''; });
+
+      function validate() {
+        if (!messageEl.value.trim()) {
+          msgError.textContent = 'Please enter a message.';
+          messageEl.focus();
+          return false;
+        }
+        msgError.textContent = '';
+        return true;
+      }
+
+      function buildParts() {
+        const subject = subjectEl.value.trim() || 'User Feedback';
+        const email   = emailEl.value.trim();
+        const msg     = messageEl.value.trim();
+        const meta    = ['Version: ' + APP_VERSION, 'File: ' + FILE_TYPE];
+        if (email) meta.push('From: ' + email);
+        return { subject, body: meta.join('\n') + '\n\n' + msg };
+      }
+
+      document.getElementById('fb-email-btn').addEventListener('click', () => {
+        if (!validate()) return;
+        const { subject, body } = buildParts();
+        window.location.href = 'mailto:charlesl@benetech.org?subject=' +
+          encodeURIComponent('PerDiem Feedback: ' + subject) +
+          '&body=' + encodeURIComponent(body);
+        closeModal();
+      });
+
+      document.getElementById('fb-github-btn').addEventListener('click', () => {
+        if (!validate()) return;
+        const { subject, body } = buildParts();
+        window.open(
+          'https://github.com/benetech/PerDiem/issues/new?title=' +
+          encodeURIComponent(subject) + '&body=' + encodeURIComponent(body) +
+          '&labels=user-feedback',
+          '_blank', 'noopener'
+        );
+        closeModal();
+      });
+    })();
+
 </script>
+
 </body>
 </html>
