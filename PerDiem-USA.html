@@ -541,7 +541,7 @@
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.49';
+    const APP_VERSION = 'Version 2.1.50';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -1331,6 +1331,7 @@
       document.getElementById('ns-project-code').textContent     = proj;
       document.getElementById('ns-business-purpose').textContent = conf;
       document.getElementById('next-steps-section').hidden = false;
+      document.getElementById('next-steps-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     // \u2500\u2500 Save to Photo Gallery \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
