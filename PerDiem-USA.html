@@ -541,7 +541,7 @@
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.47';
+    const APP_VERSION = 'Version 2.1.49';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -1155,10 +1155,10 @@
           bk = 0; lu = 0; di = 0;
           mi    = net;
           daily = net;
-          // Cell display: provided → "$0.00 (Provided)", not provided → "—" (included in cap)
-          bkCell = bkCb.checked ? `${fmtDollar(0)} (Provided)` : '&mdash;';
-          luCell = lCb.checked  ? `${fmtDollar(0)} (Provided)` : '&mdash;';
-          diCell = dCb.checked  ? `${fmtDollar(0)} (Provided)` : '&mdash;';
+          // Cell display: provided → "-$amount (Provided)" showing deduction, not provided → "—"
+          bkCell = bkCb.checked ? `-${fmtDollar(rates.standard.breakfast)} (Provided)` : '&mdash;';
+          luCell = lCb.checked  ? `-${fmtDollar(rates.standard.lunch)} (Provided)`     : '&mdash;';
+          diCell = dCb.checked  ? `-${fmtDollar(rates.standard.dinner)} (Provided)`    : '&mdash;';
         } else {
           bk = bkCb.checked ? 0 : base.breakfast;
           lu = lCb.checked  ? 0 : base.lunch;
