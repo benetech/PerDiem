@@ -346,6 +346,11 @@
     </thead>
     <tbody></tbody>
   </table>
+  <p id="travel-day-note" hidden style="font-size:0.85rem; color:var(--text-muted); margin:0.25rem 0 0.75rem;">
+    * First/Last Day of Travel: the M&amp;IE Total shown is the GSA-published cap (75% of standard).
+    Meal amounts shown are standard deduction rates — if a meal was provided on a travel day,
+    the full standard meal amount is deducted from the cap.
+  </p>
   <section id="meal-grid-section" hidden>
     <h2>Daily Meal Grid</h2>
     <fieldset style="border:1px solid var(--border); border-radius:4px; padding:0.75rem; margin:0 0 0.75rem;">
@@ -536,7 +541,7 @@
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.45';
+    const APP_VERSION = 'Version 2.1.47';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -563,19 +568,19 @@
     // GSA CONUS M&IE Breakdown Table
     // Source: https://www.gsa.gov/travel/plan-book/per-diem-rates/mie-breakdown
     // Fiscal year: update annually when GSA publishes new rates (typically each October).
-    // Standard columns (breakfast\u2013incidentals) copied directly from the GSA CONUS M&IE page.
-    // firstLastDay: official first-and-last-day total from the same GSA page (right-most column).
-    // travelBreakfast/Lunch/Dinner/Incidentals: per-meal breakdown for the firstLastDay total,
-    //   sourced from FTR 301 Appendix B (https://allowances.state.gov/Bypass/AppendixB.asp).
-    // CONUS_TABLE_DATE = date this table was last verified against both source pages.
+    // All columns copied directly from the GSA CONUS M&IE Breakdown page.
+    // firstLastDay: official First and Last Day of Travel total (right-most column on GSA page).
+    // FTR rule: on travel days, provided meals are deducted at the FULL STANDARD meal rate
+    //   from the firstLastDay cap. No separate travel-day per-meal breakdown is needed.
+    // CONUS_TABLE_DATE = date this table was last verified against the live GSA page.
     const CONUS_TABLE_DATE = '2026-08-07';
 
     const CONUS_TABLE = {
-      68: { breakfast: 16, lunch: 19, dinner: 28, incidentals:  5, firstLastDay: 51, travelBreakfast:  8, travelLunch: 13, travelDinner: 20, travelIncidentals: 10 },
-      74: { breakfast: 18, lunch: 20, dinner: 31, incidentals:  5, firstLastDay: 55, travelBreakfast:  8, travelLunch: 14, travelDinner: 22, travelIncidentals: 11 },
-      80: { breakfast: 20, lunch: 22, dinner: 33, incidentals:  5, firstLastDay: 60, travelBreakfast:  9, travelLunch: 15, travelDinner: 24, travelIncidentals: 12 },
-      86: { breakfast: 22, lunch: 23, dinner: 36, incidentals:  5, firstLastDay: 64, travelBreakfast: 10, travelLunch: 16, travelDinner: 25, travelIncidentals: 13 },
-      92: { breakfast: 23, lunch: 26, dinner: 38, incidentals:  5, firstLastDay: 69, travelBreakfast: 10, travelLunch: 17, travelDinner: 28, travelIncidentals: 14 },
+      68: { breakfast: 16, lunch: 19, dinner: 28, incidentals:  5, firstLastDay: 51.00 },
+      74: { breakfast: 18, lunch: 20, dinner: 31, incidentals:  5, firstLastDay: 55.50 },
+      80: { breakfast: 20, lunch: 22, dinner: 33, incidentals:  5, firstLastDay: 60.00 },
+      86: { breakfast: 22, lunch: 23, dinner: 36, incidentals:  5, firstLastDay: 64.50 },
+      92: { breakfast: 23, lunch: 26, dinner: 38, incidentals:  5, firstLastDay: 69.00 },
     };
 
     // Staleness: warn when today is July 1+ and the table predates this calendar year's July 1.
@@ -598,24 +603,11 @@
       return { breakfast, lunch, dinner, incidentals };
     }
 
-    function getTravelDayBreakdown(mie) {
+    function getTravelDayCap(mie) {
       const entry = CONUS_TABLE[mie];
-      if (entry?.firstLastDay != null) {
-        return {
-          total:       entry.firstLastDay,
-          breakfast:   entry.travelBreakfast,
-          lunch:       entry.travelLunch,
-          dinner:      entry.travelDinner,
-          incidentals: entry.travelIncidentals,
-        };
-      }
-      // Fallback for non-standard CONUS rates: 75% rule + percentage split
-      const total       = Math.floor(mie * 0.75);
-      const breakfast   = Math.round(total * 0.15);
-      const lunch       = Math.round(total * 0.25);
-      const dinner      = Math.round(total * 0.40);
-      const incidentals = total - breakfast - lunch - dinner;
-      return { total, breakfast, lunch, dinner, incidentals };
+      if (entry?.firstLastDay != null) return entry.firstLastDay;
+      // Fallback for non-standard CONUS rates: 75% rule (floor to cents)
+      return Math.floor(mie * 0.75 * 100) / 100;
     }
 
     const countryEl = document.getElementById('country');
@@ -633,15 +625,10 @@
     }
 
     function buildRow(type, mie, isTravelDay = false) {
-      let total, b;
-      if (isTravelDay) {
-        const td = getTravelDayBreakdown(mie);
-        total = td.total;
-        b     = { breakfast: td.breakfast, lunch: td.lunch, dinner: td.dinner, incidentals: td.incidentals };
-      } else {
-        total = mie;
-        b     = getMealBreakdown(mie);
-      }
+      // Travel day row: individual columns show STANDARD meal amounts (deduction rates per FTR);
+      // M&IE Total column shows the firstLastDay cap (75% of standard, as published by GSA).
+      const b     = getMealBreakdown(mie);
+      const total = isTravelDay ? getTravelDayCap(mie) : mie;
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <th scope="row">${type}</th>
@@ -782,6 +769,7 @@
       const ratesHeading = document.getElementById('rates-heading');
       if (ratesHeading) ratesHeading.hidden = true;
       document.getElementById('rates-table').hidden = true;
+      document.getElementById('travel-day-note').hidden = true;
       document.querySelector('#rates-table tbody').innerHTML = '';
       // Hide international verify section
 
@@ -936,6 +924,7 @@
         const tbody = document.querySelector('#rates-table tbody');
         tbody.appendChild(buildRow('Standard', mie));
         tbody.appendChild(buildRow('First/Last Day of Travel', mie, true));
+        document.getElementById('travel-day-note').hidden = false;
       } catch (err) {
         showError(`Failed to fetch rates: ${err.message}`);
       }
@@ -1153,11 +1142,33 @@
         const lCb  = row.querySelector('input[data-meal="lunch"]');
         const dCb  = row.querySelector('input[data-meal="dinner"]');
 
-        const bk   = bkCb.checked ? 0 : base.breakfast;
-        const lu   = lCb.checked  ? 0 : base.lunch;
-        const di   = dCb.checked  ? 0 : base.dinner;
-        const mi   = base.misc;
-        const daily = bk + lu + di + mi;
+        let bk, lu, di, mi, daily;
+        let bkCell, luCell, diCell;
+
+        if (isTravel) {
+          // FTR rule: cap = firstLastDay total; provided meals deducted at FULL STANDARD rate.
+          const cap      = rates.travel.mie;
+          const deductBk = bkCb.checked ? rates.standard.breakfast : 0;
+          const deductLu = lCb.checked  ? rates.standard.lunch     : 0;
+          const deductDi = dCb.checked  ? rates.standard.dinner    : 0;
+          const net      = Math.max(0, cap - deductBk - deductLu - deductDi);
+          bk = 0; lu = 0; di = 0;
+          mi    = net;
+          daily = net;
+          // Cell display: provided → "$0.00 (Provided)", not provided → "—" (included in cap)
+          bkCell = bkCb.checked ? `${fmtDollar(0)} (Provided)` : '&mdash;';
+          luCell = lCb.checked  ? `${fmtDollar(0)} (Provided)` : '&mdash;';
+          diCell = dCb.checked  ? `${fmtDollar(0)} (Provided)` : '&mdash;';
+        } else {
+          bk = bkCb.checked ? 0 : base.breakfast;
+          lu = lCb.checked  ? 0 : base.lunch;
+          di = dCb.checked  ? 0 : base.dinner;
+          mi    = base.misc;
+          daily = bk + lu + di + mi;
+          bkCell = bkCb.checked ? `${fmtDollar(0)} (Provided)` : fmtDollar(bk);
+          luCell = lCb.checked  ? `${fmtDollar(0)} (Provided)` : fmtDollar(lu);
+          diCell = dCb.checked  ? `${fmtDollar(0)} (Provided)` : fmtDollar(di);
+        }
 
         totals.breakfast += bk;
         totals.lunch     += lu;
@@ -1166,15 +1177,12 @@
         totals.daily     += daily;
         totals.mie       += base.mie;
 
-        const cell = (val, provided) =>
-          provided ? `${fmtDollar(0)} (Provided)` : fmtDollar(val);
-
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <th scope="row">${date}<br><small>${dayType}</small></th>
-          <td>${cell(base.breakfast, bkCb.checked)}</td>
-          <td>${cell(base.lunch,     lCb.checked)}</td>
-          <td>${cell(base.dinner,    dCb.checked)}</td>
+          <td>${bkCell}</td>
+          <td>${luCell}</td>
+          <td>${diCell}</td>
           <td>${fmtDollar(mi)}</td>
           <td>${fmtDollar(daily)}</td>
         `;
