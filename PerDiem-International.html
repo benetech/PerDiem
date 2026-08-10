@@ -2282,7 +2282,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.1.43';
+    const APP_VERSION = 'Version 2.1.44';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -2384,10 +2384,10 @@ var INTL_COUNTRIES = [
     }
 
     function buildRow(type, mie, scale = 1) {
-      // For travel-day rows: round 75% of M&IE to nearest whole dollar, then look
-      // that amount up in the Appendix B / MIE_TABLE to get the correct per-meal breakdown.
-      const effectiveMie = scale === 1 ? mie : Math.floor(mie * scale);
-      const b = getMealBreakdown(effectiveMie);
+      // Travel day row: individual columns show STANDARD meal amounts (deduction rates per FTR);
+      // M&IE Total column shows the exact 75% cap (no flooring — FTR says 75%, not nearest dollar).
+      const b     = getMealBreakdown(mie);
+      const total = scale === 1 ? mie : mie * scale;
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <th scope="row">${type}</th>
@@ -2395,7 +2395,7 @@ var INTL_COUNTRIES = [
         <td>${fmt(b.lunch)}</td>
         <td>${fmt(b.dinner)}</td>
         <td>${fmt(b.incidentals)}</td>
-        <td>${fmt(effectiveMie)}</td>
+        <td>${fmt(total)}</td>
       `;
       return tr;
     }
@@ -2871,7 +2871,9 @@ var INTL_COUNTRIES = [
 
     /** Reads the rates table (Standard / Travel Days 75%) and the meal grid checkboxes,
      *  then builds the Reimbursement Summary table.
-     *  Checked meals show $0.00 (Provided); unchecked use the rate table values.
+     *  Full days: provided meals show $0.00 (Provided); unchecked use standard rate values.
+     *  Travel days: provided meals show -$X.XX (Provided) deducted at FULL standard rate from
+     *  the 75% cap per FTR; net stored in Misc column.
      *  Also populates the M&IE Values Used section and the version line. */
     function calculateSummary() {
       const rates = getRates();
@@ -2894,37 +2896,54 @@ var INTL_COUNTRIES = [
       const totals = { breakfast: 0, lunch: 0, dinner: 0, misc: 0, daily: 0, mie: 0 };
 
       gridRows.forEach(row => {
-        const date    = row.cells[0].textContent;
-        const dayType = row.cells[1].textContent;
+        const date     = row.cells[0].textContent;
+        const dayType  = row.cells[1].textContent;
         const isTravel = dayType !== 'Full Day';
-        const base    = isTravel ? rates.travel : rates.standard;
 
         const bkCb = row.querySelector('input[data-meal="breakfast"]');
         const lCb  = row.querySelector('input[data-meal="lunch"]');
         const dCb  = row.querySelector('input[data-meal="dinner"]');
 
-        const bk   = bkCb.checked ? 0 : base.breakfast;
-        const lu   = lCb.checked  ? 0 : base.lunch;
-        const di   = dCb.checked  ? 0 : base.dinner;
-        const mi   = base.misc;
-        const daily = bk + lu + di + mi;
+        let bk, lu, di, mi, daily, bkCell, luCell, diCell;
+
+        if (isTravel) {
+          // FTR rule: cap = exact 75% of full M&IE; provided meals deducted at FULL STANDARD rate.
+          const cap      = rates.travel.mie;
+          const deductBk = bkCb.checked ? rates.standard.breakfast : 0;
+          const deductLu = lCb.checked  ? rates.standard.lunch     : 0;
+          const deductDi = dCb.checked  ? rates.standard.dinner    : 0;
+          const net      = Math.max(0, cap - deductBk - deductLu - deductDi);
+          bk = 0; lu = 0; di = 0;
+          mi    = net;
+          daily = net;
+          bkCell = bkCb.checked ? `-${fmtDollar(rates.standard.breakfast)} (Provided)` : '&mdash;';
+          luCell = lCb.checked  ? `-${fmtDollar(rates.standard.lunch)} (Provided)`     : '&mdash;';
+          diCell = dCb.checked  ? `-${fmtDollar(rates.standard.dinner)} (Provided)`    : '&mdash;';
+        } else {
+          const base = rates.standard;
+          bk = bkCb.checked ? 0 : base.breakfast;
+          lu = lCb.checked  ? 0 : base.lunch;
+          di = dCb.checked  ? 0 : base.dinner;
+          mi    = base.misc;
+          daily = bk + lu + di + mi;
+          bkCell = bkCb.checked ? `${fmtDollar(0)} (Provided)` : fmtDollar(bk);
+          luCell = lCb.checked  ? `${fmtDollar(0)} (Provided)` : fmtDollar(lu);
+          diCell = dCb.checked  ? `${fmtDollar(0)} (Provided)` : fmtDollar(di);
+        }
 
         totals.breakfast += bk;
         totals.lunch     += lu;
         totals.dinner    += di;
         totals.misc      += mi;
         totals.daily     += daily;
-        totals.mie       += base.mie;
-
-        const cell = (val, provided) =>
-          provided ? `${fmtDollar(0)} (Provided)` : fmtDollar(val);
+        totals.mie       += isTravel ? rates.travel.mie : rates.standard.mie;
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <th scope="row">${date}<br><small>${dayType}</small></th>
-          <td>${cell(base.breakfast, bkCb.checked)}</td>
-          <td>${cell(base.lunch,     lCb.checked)}</td>
-          <td>${cell(base.dinner,    dCb.checked)}</td>
+          <td>${bkCell}</td>
+          <td>${luCell}</td>
+          <td>${diCell}</td>
           <td>${fmtDollar(mi)}</td>
           <td>${fmtDollar(daily)}</td>
         `;
