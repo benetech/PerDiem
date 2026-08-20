@@ -2766,6 +2766,7 @@ var INTL_COUNTRIES = [
 
         const th = document.createElement('th');
         th.scope       = 'row';
+        th.id          = `day-${dateStr}`;
         th.textContent = display;
         tr.appendChild(th);
 
@@ -2781,7 +2782,9 @@ var INTL_COUNTRIES = [
           cb.type             = 'checkbox';
           cb.id               = `meal-${meal}-${dateStr}`;
           cb.dataset.meal     = meal;
-          cb.setAttribute('aria-labelledby', `col-${meal}`);
+          // Name each box with its own row date first, then the column header: without
+          // the date every "Breakfast Provided" box in the grid shares one name.
+          cb.setAttribute('aria-labelledby', `day-${dateStr} col-${meal}`);
           cb.addEventListener('change', updateSelectAllStates);
           td.appendChild(cb);
           tr.appendChild(td);
