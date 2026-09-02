@@ -541,7 +541,7 @@
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.2.3';
+    const APP_VERSION = 'Version 2.2.4';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -566,7 +566,7 @@
     ];
 
     // GSA CONUS M&IE Breakdown Table
-    // Source: https://www.gsa.gov/travel/plan-book/per-diem-rates/mie-breakdown
+    // Source: https://www.gsa.gov/travel/plan-a-trip/per-diem-rates/mie-breakdowns
     // Fiscal year: update annually when GSA publishes new rates (typically each October).
     // All columns copied directly from the GSA CONUS M&IE Breakdown page.
     // firstLastDay: official First and Last Day of Travel total (right-most column on GSA page).
@@ -810,7 +810,7 @@
           statusEl.style.background = 'var(--surface)';
           statusEl.style.color      = 'var(--text-muted)';
           statusEl.style.border     = '1px solid var(--border)';
-          statusEl.innerHTML        = `Meal breakdown uses the inlined <a href="https://www.gsa.gov/travel/plan-book/per-diem-rates/mie-breakdown" target="_blank" rel="noopener">GSA CONUS M&amp;IE table</a> (last verified ${CONUS_TABLE_DATE}).`;
+          statusEl.innerHTML        = `Meal breakdown uses the inlined <a href="https://www.gsa.gov/travel/plan-a-trip/per-diem-rates/mie-breakdowns" target="_blank" rel="noopener">GSA CONUS M&amp;IE table</a> (last verified ${CONUS_TABLE_DATE}).`;
           statusEl.hidden = false;
           if (_conusIsStale) {
             staleMsgEl.innerHTML = `⚠ CONUS M&amp;IE table was last updated on <strong>${CONUS_TABLE_DATE}</strong> and may be out of date.<br>
@@ -1226,7 +1226,7 @@
 
       // Show CONUS table source note in the export area
       const exportWarnEl = document.getElementById('conus-table-export-warning');
-      exportWarnEl.innerHTML = `Last Updated Meal Breakdown: ${CONUS_TABLE_DATE}<br><span style="font-size:0.8rem;color:var(--text-muted);">Source: <a href="https://www.gsa.gov/travel/plan-book/per-diem-rates/mie-breakdown" target="_blank" rel="noopener">GSA CONUS M&amp;IE Breakdown Table</a></span>`;
+      exportWarnEl.innerHTML = `Last Updated Meal Breakdown: ${CONUS_TABLE_DATE}<br><span style="font-size:0.8rem;color:var(--text-muted);">Source: <a href="https://www.gsa.gov/travel/plan-a-trip/per-diem-rates/mie-breakdowns" target="_blank" rel="noopener">GSA CONUS M&amp;IE Breakdown Table</a></span>`;
       exportWarnEl.hidden = false;
 
       // Duplicate the rates table below the grand total
