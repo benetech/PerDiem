@@ -11,31 +11,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch live Appendix B table
+      - name: Fetch and parse live Appendix B table
         id: fetch
         run: |
-          curl -sf "https://allowances.state.gov/Bypass/AppendixB.asp" -o appendix_b_live.html
-          # Extract rows: lines matching "$NNN  B  L  D  I" after stripping tags
-          sed 's/<[^>]*>//g' appendix_b_live.html \
-            | grep -oP '\$\d+\s+\d+\s+\d+\s+\d+\s+\d+' \
-            | sort -t'$' -k2 -n \
-            > appendix_b_live.txt
-          echo "rows=$(wc -l < appendix_b_live.txt)" >> $GITHUB_OUTPUT
-
-      - name: Extract inlined table from PerDiem-International.html
-        run: |
-          # Pull every [B,L,D,I] tuple from the APPENDIX_B array in order
-          grep -oP '\[\d+,\d+,\d+,\d+\]' PerDiem-International.html \
-            | head -265 \
-            > appendix_b_inline.txt
-
-      - name: Parse live HTML into comparable format
-        run: |
           python3 - <<'EOF'
-          import re, sys
+          # The site now requires the session cookie from /Bypass/AppendixB.asp to be
+          # forwarded to the redirect target (content.asp). Use a cookie-aware opener.
+          import re, sys, http.cookiejar, urllib.request
 
-          with open('appendix_b_live.html') as f:
-              text = re.sub(r'<[^>]+>', ' ', f.read())
+          jar = http.cookiejar.CookieJar()
+          opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
+          opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
+
+          r = opener.open('https://allowances.state.gov/Bypass/AppendixB.asp')
+          raw = r.read().decode('utf-8', errors='replace')
+          text = re.sub(r'<[^>]+>', ' ', raw)
 
           tuples = []
           for m in re.finditer(r'\$(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)', text):
@@ -50,9 +40,21 @@ jobs:
 
           print(f"Parsed {len(tuples)} rows from live page")
           if len(tuples) < 260:
-              print("ERROR: fewer than 260 rows parsed — page structure may have changed")
+              print("ERROR: fewer than 260 rows parsed — page may have moved or changed structure")
               sys.exit(1)
+
+          # Write row count to GITHUB_OUTPUT
+          import os
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write(f'rows={len(tuples)}\n')
           EOF
+
+      - name: Extract inlined table from PerDiem-International.html
+        run: |
+          # Pull every [B,L,D,I] tuple from the APPENDIX_B array in order
+          grep -oP '\[\d+,\d+,\d+,\d+\]' PerDiem-International.html \
+            | head -265 \
+            > appendix_b_inline.txt
 
       - name: Compare live vs inlined
         id: compare
@@ -72,14 +74,13 @@ jobs:
           python3 - <<'EOF'
           import re, datetime
 
-          with open('appendix_b_live.html') as f:
-              text = re.sub(r'<[^>]+>', ' ', f.read())
-
+          # Re-read the already-parsed tuples from the file written by the fetch step
           tuples = []
-          for m in re.finditer(r'\$(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)', text):
-              idx = int(m.group(1))
-              if 1 <= idx <= 265:
-                  tuples.append((idx, int(m.group(2)), int(m.group(3)), int(m.group(4)), int(m.group(5))))
+          with open('appendix_b_live_parsed.txt') as f:
+              for i, line in enumerate(f, 1):
+                  m = re.match(r'\[(\d+),(\d+),(\d+),(\d+)\]', line.strip())
+                  if m:
+                      tuples.append((i, int(m.group(1)), int(m.group(2)), int(m.group(3)), int(m.group(4))))
           tuples.sort()
 
           # Build replacement array (10 entries per line, grouped in blocks of 10)
