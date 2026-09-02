@@ -2,7 +2,9 @@
 
 A browser-based tool for Benetech employees to calculate food per diem reimbursements and generate expense summaries for submission in Concur.
 
-**Live tool:** https://benetech.github.io/PerDiem/
+**Live tools:**
+- **USA:** https://benetech.github.io/PerDiem/PerDiem-USA.html
+- **International:** https://benetech.github.io/PerDiem/PerDiem-International.html
 
 ---
 
@@ -35,8 +37,8 @@ A browser-based tool for Benetech employees to calculate food per diem reimburse
 
 | File | Description |
 |------|-------------|
-| `PerDiem.html` | The complete self-contained application (HTML + CSS + JavaScript) |
-| `index.html` | Redirect to `PerDiem.html` |
+| `PerDiem-USA.html` | USA calculator — rates fetched live from the GSA Per Diem API |
+| `PerDiem-International.html` | International calculator — rates embedded from the US State Dept |
 
 ---
 
