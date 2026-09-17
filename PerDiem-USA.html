@@ -545,7 +545,7 @@
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.2.7';
+    const APP_VERSION = 'Version 2.2.8';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -927,14 +927,19 @@
           return;
         }
 
-        const mie     = Number(match.meals);
-        const lodging = Number(match.lodging);
-        const tbody   = document.querySelector('#rates-table tbody');
+        const mie = Number(match.meals);
+        // Lodging varies by month — look up the rate for the travel month
+        const travelMonth = new Date(startDate + 'T00:00:00').getMonth() + 1;
+        const monthEntry  = (match.months?.month || []).find(m => m.number === travelMonth);
+        const lodging     = monthEntry ? Number(monthEntry.value) : null;
+        const tbody = document.querySelector('#rates-table tbody');
         tbody.appendChild(buildRow('Standard', mie));
         tbody.appendChild(buildRow('First/Last Day of Travel', mie, true));
         document.getElementById('travel-day-note').hidden = false;
-        document.getElementById('lodging-rate-value').textContent = fmt(lodging);
-        document.getElementById('lodging-rate-display').hidden = false;
+        if (lodging !== null) {
+          document.getElementById('lodging-rate-value').textContent = fmt(lodging);
+          document.getElementById('lodging-rate-display').hidden = false;
+        }
       } catch (err) {
         showError(`Failed to fetch rates: ${err.message}`);
       }
