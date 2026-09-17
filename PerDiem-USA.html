@@ -351,6 +351,9 @@
     Meal amounts shown are standard deduction rates — if a meal was provided on a travel day,
     the full standard meal amount is deducted from the cap.
   </p>
+  <p id="lodging-rate-display" hidden style="font-size:1rem; margin:0.25rem 0 1rem;">
+    <strong>Daily Lodging Rate:</strong> <span id="lodging-rate-value"></span>
+  </p>
   <section id="meal-grid-section" hidden>
     <h2>Daily Meal Grid</h2>
     <fieldset style="border:1px solid var(--border); border-radius:4px; padding:0.75rem; margin:0 0 0.75rem;">
@@ -411,7 +414,8 @@
       <div id="mie-used-section" style="margin-top:1.5rem;">
         <h3>M&amp;IE Values Used</h3>
         <p id="mie-location" style="margin:0.25rem 0 0;"></p>
-        <p id="mie-last-updated" style="margin:0.25rem 0 0.75rem;"></p>
+        <p id="mie-last-updated" style="margin:0.25rem 0 0;"></p>
+        <p id="lodging-rate-summary" style="margin:0.25rem 0 0.75rem;"></p>
         <div id="rates-reprise"></div>
       </div>
       <div style="margin-top:1.5rem;">
@@ -541,7 +545,7 @@
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.2.6';
+    const APP_VERSION = 'Version 2.2.7';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -770,6 +774,9 @@
       if (ratesHeading) ratesHeading.hidden = true;
       document.getElementById('rates-table').hidden = true;
       document.getElementById('travel-day-note').hidden = true;
+      document.getElementById('lodging-rate-display').hidden = true;
+      document.getElementById('lodging-rate-value').textContent = '';
+      document.getElementById('lodging-rate-summary').textContent = '';
       document.querySelector('#rates-table tbody').innerHTML = '';
       // Hide international verify section
 
@@ -920,11 +927,14 @@
           return;
         }
 
-        const mie   = Number(match.meals);
-        const tbody = document.querySelector('#rates-table tbody');
+        const mie     = Number(match.meals);
+        const lodging = Number(match.lodging);
+        const tbody   = document.querySelector('#rates-table tbody');
         tbody.appendChild(buildRow('Standard', mie));
         tbody.appendChild(buildRow('First/Last Day of Travel', mie, true));
         document.getElementById('travel-day-note').hidden = false;
+        document.getElementById('lodging-rate-value').textContent = fmt(lodging);
+        document.getElementById('lodging-rate-display').hidden = false;
       } catch (err) {
         showError(`Failed to fetch rates: ${err.message}`);
       }
@@ -1223,6 +1233,12 @@
       const lastUpdEl = document.getElementById('mie-last-updated');
       const fy = gsaFiscalYear(document.getElementById('start-date').value);
       lastUpdEl.innerHTML = `M&amp;IE Total: Real-time via GSA Per Diem API (FY${fy}) &mdash; Meal breakdown: inlined CONUS table (last verified ${CONUS_TABLE_DATE})`;
+
+      const lodgingValEl = document.getElementById('lodging-rate-value');
+      const lodgingSumEl = document.getElementById('lodging-rate-summary');
+      if (lodgingValEl.textContent) {
+        lodgingSumEl.textContent = `Daily Lodging Rate: ${lodgingValEl.textContent}`;
+      }
 
       // Show CONUS table source note in the export area
       const exportWarnEl = document.getElementById('conus-table-export-warning');

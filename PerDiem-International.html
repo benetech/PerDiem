@@ -355,6 +355,9 @@
     </thead>
     <tbody></tbody>
   </table>
+  <p id="lodging-rate-display" hidden style="font-size:1rem; margin:0.25rem 0 1rem;">
+    <strong>Daily Lodging Rate:</strong> <span id="lodging-rate-value"></span>
+  </p>
   <section id="meal-grid-section" hidden>
     <h2>Daily Meal Grid</h2>
     <fieldset style="border:1px solid var(--border); border-radius:4px; padding:0.75rem; margin:0 0 0.75rem;">
@@ -415,7 +418,8 @@
       <div id="mie-used-section" style="margin-top:1.5rem;">
         <h3>M&amp;IE Values Used</h3>
         <p id="mie-location" style="margin:0.25rem 0 0;"></p>
-        <p id="mie-last-updated" style="margin:0.25rem 0 0.75rem;"></p>
+        <p id="mie-last-updated" style="margin:0.25rem 0 0;"></p>
+        <p id="lodging-rate-summary" style="margin:0.25rem 0 0.75rem;"></p>
         <p id="appendix-b-export-warning" hidden style="margin:0.25rem 0 0;"></p>
         <div id="rates-reprise"></div>
         <div id="intl-source-box" hidden style="margin-top:1rem; padding:0.75rem; border:1px solid var(--border); border-radius:6px; font-size:0.875rem;">
@@ -2282,7 +2286,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.2.6';
+    const APP_VERSION = 'Version 2.2.7';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -2454,6 +2458,9 @@ var INTL_COUNTRIES = [
       const ratesHeading = document.getElementById('rates-heading');
       if (ratesHeading) ratesHeading.hidden = true;
       document.getElementById('rates-table').hidden = true;
+      document.getElementById('lodging-rate-display').hidden = true;
+      document.getElementById('lodging-rate-value').textContent = '';
+      document.getElementById('lodging-rate-summary').textContent = '';
       document.querySelector('#rates-table tbody').innerHTML = '';
       // Hide international verify section
       document.getElementById('intl-verify-section').hidden = true;
@@ -2580,6 +2587,10 @@ var INTL_COUNTRIES = [
           tbody.appendChild(buildRow('Travel Days 75%', mie, 0.75));
         }
         buildIntlRows(match.mie);
+
+        const fmtLodging = n => '$' + Number(n).toFixed(2);
+        document.getElementById('lodging-rate-value').textContent = fmtLodging(match.lodging);
+        document.getElementById('lodging-rate-display').hidden = false;
 
         // Show verify section
         const verifySection = document.getElementById('intl-verify-section');
@@ -2985,6 +2996,12 @@ var INTL_COUNTRIES = [
       const lastUpdEl = document.getElementById('mie-last-updated');
         const effectiveDate = document.getElementById('intl-effective-date').value || '';
         lastUpdEl.innerHTML = `Last Updated: State Dept Per Diem (verified by user)${effectiveDate ? ' \u2014 Effective: ' + effectiveDate : ''}`;
+
+      const lodgingValEl = document.getElementById('lodging-rate-value');
+      const lodgingSumEl = document.getElementById('lodging-rate-summary');
+      if (lodgingValEl.textContent) {
+        lodgingSumEl.textContent = `Daily Lodging Rate: ${lodgingValEl.textContent}`;
+      }
 
       // Appendix B note -- always shown for international trips
         exportWarnEl.innerHTML = `Last Updated Meal Breakdown: ${APPENDIX_B_DATE}<br><span style="font-size:0.8rem;color:var(--text-muted);">Source: <a href="https://allowances.state.gov/Bypass/AppendixB.asp" target="_blank" rel="noopener">FTR 301 Appendix B</a></span>`;
