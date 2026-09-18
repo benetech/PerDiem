@@ -554,7 +554,7 @@
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.2.19';
+    const APP_VERSION = 'Version 2.2.20';
     document.getElementById('app-version').textContent = APP_VERSION; // version display
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -1336,10 +1336,10 @@
 
       const fmtD = n => '$' + n.toFixed(2);
       const lodgingRow = lodgingTotal !== null
-        ? `<tr><td>Lodging (${nights} night${nights !== 1 ? 's' : ''} × ${fmtD(lodgingRate)} per diem rate)</td><td>${fmtD(lodgingTotal)}</td></tr>`
-        : `<tr><td>Lodging</td><td>___________</td></tr>`;
-      const mieRow = `<tr><td>Meals Per Diem (see calculation below)</td><td>${fmtD(totalMIE)}</td></tr>`;
-      const totalRow = `<tr style="font-weight:bold;border-top:2px solid #000;"><td>Total Amount Requested</td><td>${fmtD(grandTotal)}</td></tr>`;
+        ? `<tr><th scope="row">Lodging (${nights} night${nights !== 1 ? 's' : ''} × ${fmtD(lodgingRate)} per diem rate)</th><td>${fmtD(lodgingTotal)}</td></tr>`
+        : `<tr><th scope="row">Lodging</th><td>___________</td></tr>`;
+      const mieRow = `<tr><th scope="row">Meals Per Diem (see calculation below)</th><td>${fmtD(totalMIE)}</td></tr>`;
+      const totalRow = `<tr style="font-weight:bold;border-top:2px solid #000;"><th scope="row">Total Amount Requested</th><td>${fmtD(grandTotal)}</td></tr>`;
 
       const travelSubtotal  = travelDaysCount   ? `${travelDaysCount} × ${fmtD(travelRate)} = ${fmtD(travelDaysMIE)}`   : '—';
       const regularSubtotal = regularDaysCount  ? `${regularDaysCount} × ${fmtD(mieRate)} = ${fmtD(regularDaysMIE)}` : '—';
@@ -1362,10 +1362,11 @@
   table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
   th, td { border: 1px solid #000; padding: 0.35rem 0.5rem; }
   th { background: #f0f0f0; text-align: left; }
-  .section-head { font-weight: bold; margin: 1.2rem 0 0.4rem; font-size: 11pt; }
+  h2 { font-size: 12pt; margin: 1.2rem 0 0.4rem; }
+  tbody th { background: none; font-weight: normal; }
   .cert-box { border: 1px solid #000; padding: 0.75rem; margin-top: 1rem; font-size: 10pt; }
   .note-box { border: 1px solid #999; padding: 0.75rem; margin-top: 1rem; font-size: 9pt; background: #fafafa; }
-  .note-box strong { display: block; margin-bottom: 0.25rem; }
+  .cert-box h2, .note-box h2 { font-size: 11pt; margin: 0 0 0.4rem; }
   .sig-line { border-bottom: 1px solid #000; min-width: 250px; display: inline-block; margin-left: 0.5rem; }
 </style>
 </head>
@@ -1380,9 +1381,9 @@
 <div class="field-row"><label>Purpose of Travel:</label> <span class="field-line">${conference || ''}</span></div>
 <div class="field-row"><label>Project Code:</label> <span class="field-line">${document.getElementById('project-code').value.trim()}</span></div>
 
-<p class="section-head">Amount Requested</p>
+<h2>Amount Requested</h2>
 <table>
-  <thead><tr><th>Category</th><th>Amount</th></tr></thead>
+  <thead><tr><th scope="col">Category</th><th scope="col">Amount</th></tr></thead>
   <tbody>
     ${lodgingRow}
     ${mieRow}
@@ -1390,45 +1391,45 @@
   </tbody>
 </table>
 
-<p class="section-head">Meals Per Diem Calculation</p>
+<h2>Meals Per Diem Calculation</h2>
 <p style="font-size:10pt; margin:0 0 0.5rem;">GSA per diem rates for ${destination}. Travel days (first/last day of trip) are prorated to 75%.</p>
 <table>
   <thead>
     <tr>
-      <th>Day Type</th>
-      <th>Number of Days</th>
-      <th>Per Diem Rate (per day)</th>
-      <th>Subtotal</th>
+      <th scope="col">Day Type</th>
+      <th scope="col">Number of Days</th>
+      <th scope="col">Per Diem Rate (per day)</th>
+      <th scope="col">Subtotal</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>Travel Days (first &amp; last)</td>
+      <th scope="row">Travel Days (first &amp; last)</th>
       <td>${travelDaysCount || '—'}</td>
       <td>${travelDaysCount ? fmtD(travelRate) : '—'}</td>
       <td>${travelDaysCount ? fmtD(travelDaysMIE) : '—'}</td>
     </tr>
     <tr>
-      <td>Regular Days</td>
+      <th scope="row">Regular Days</th>
       <td>${regularDaysCount || '—'}</td>
       <td>${regularDaysCount ? fmtD(mieRate) : '—'}</td>
       <td>${regularDaysCount ? fmtD(regularDaysMIE) : '—'}</td>
     </tr>
     <tr style="font-weight:bold;">
-      <td colspan="3">Meals Per Diem Total</td>
+      <th scope="row" colspan="3">Meals Per Diem Total</th>
       <td>${fmtD(totalMIE)}</td>
     </tr>
   </tbody>
 </table>
 
 <div class="cert-box">
-  <strong>Employee Certification</strong><br>
+  <h2>Employee Certification</h2>
   I certify that the funds requested above are needed for authorized business travel expenses and will be reconciled against actual expenses submitted via an expense report in Concur upon completion of travel.<br><br>
   <label>Employee Signature:</label> <span class="sig-line">${name || ''}</span>
 </div>
 
 <div class="note-box">
-  <strong>Note</strong>
+  <h2>Notes</h2>
   <ul style="margin:0.25rem 0 0; padding-left:1.25rem; line-height:1.8;">
     <li>This form must be submitted at least two weeks in advance of the trip.</li>
     <li>The form must be submitted in Concur to go through the approval process.</li>
