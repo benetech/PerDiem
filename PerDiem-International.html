@@ -265,6 +265,10 @@
       <span class="field-error" id="err-name" role="alert"></span>
     </div>
     <div>
+      <label for="department">Department</label>
+      <input type="text" id="department" name="department" autocomplete="organization-title">
+    </div>
+    <div>
       <label for="conference">Conference <span class="req-star" aria-label="required">*</span></label>
       <input type="text" id="conference" name="conference" autocomplete="off" required aria-describedby="err-conference" list="conference-suggestions">
       <datalist id="conference-suggestions"></datalist>
@@ -2290,7 +2294,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.2.10';
+    const APP_VERSION = 'Version 2.2.11';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -3073,6 +3077,7 @@ var INTL_COUNTRIES = [
     // ── Travel Advance Request Form ──────────────────────────────────────────
     document.getElementById('advance-form-btn').addEventListener('click', () => {
       const name        = document.getElementById('traveler-name').value.trim();
+      const department  = document.getElementById('department').value.trim();
       const conference  = document.getElementById('conference').value.trim();
       const startDate   = document.getElementById('start-date').value;
       const endDate     = document.getElementById('end-date').value;
@@ -3107,7 +3112,7 @@ var INTL_COUNTRIES = [
 
       const fmtD = n => '$' + n.toFixed(2);
       const lodgingRow = lodgingTotal !== null
-        ? `<tr><td>Lodging (${nights} night${nights !== 1 ? 's' : ''} × ${fmtD(lodgingRate)})</td><td>${fmtD(lodgingTotal)}</td></tr>`
+        ? `<tr><td>Lodging (${nights} night${nights !== 1 ? 's' : ''} × ${fmtD(lodgingRate)} per diem rate)</td><td>${fmtD(lodgingTotal)}</td></tr>`
         : `<tr><td>Lodging</td><td>___________</td></tr>`;
       const mieRow = `<tr><td>Meals Per Diem (see calculation below)</td><td>${fmtD(totalMIE)}</td></tr>`;
       const totalRow = `<tr style="font-weight:bold;border-top:2px solid #000;"><td>Total Amount Requested</td><td>${fmtD(grandTotal)}</td></tr>`;
@@ -3153,7 +3158,7 @@ var INTL_COUNTRIES = [
 <h1>Travel Advance Request Form</h1>
 
 <div class="field-row"><label>Employee's Name:</label> <span class="field-line">${name || ''}</span></div>
-<div class="field-row"><label>Department:</label> <span class="field-line"></span></div>
+<div class="field-row"><label>Department:</label> <span class="field-line">${department || ''}</span></div>
 <div class="field-row"><label>Date of Request:</label> <span class="field-line">${new Date().toLocaleDateString('en-US')}</span></div>
 <div class="field-row"><label>Dates of Travel:</label> <span class="field-line">${datesOfTravel}</span></div>
 <div class="field-row"><label>Destination:</label> <span class="field-line">${destination}</span></div>
@@ -3203,7 +3208,7 @@ var INTL_COUNTRIES = [
 <div class="cert-box">
   <strong>Employee Certification</strong><br>
   I certify that the funds requested above are needed for authorized business travel expenses and will be reconciled against actual expenses submitted via an expense report in Concur upon completion of travel.<br><br>
-  <label>Employee Signature:</label> <span class="sig-line"></span>
+  <label>Employee Signature:</label> <span class="sig-line">${name || ''}</span>
 </div>
 
 <div class="note-box">
