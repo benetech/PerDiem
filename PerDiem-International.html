@@ -358,6 +358,10 @@
   <p id="lodging-rate-display" hidden style="font-size:1rem; margin:0.25rem 0 1rem;">
     <strong>Daily Lodging Rate:</strong> <span id="lodging-rate-value"></span>
   </p>
+  <div id="advance-form-area" hidden style="margin:1rem 0 1.5rem;">
+    <button type="button" id="advance-form-btn">Generate Travel Advance Request Form</button>
+    <p style="margin:0.4rem 0 0; font-size:0.875rem; color:var(--text-muted);">Opens a pre-filled form you can print and submit to Finance.</p>
+  </div>
   <section id="meal-grid-section" hidden>
     <h2>Daily Meal Grid</h2>
     <fieldset style="border:1px solid var(--border); border-radius:4px; padding:0.75rem; margin:0 0 0.75rem;">
@@ -440,10 +444,6 @@
       <div style="margin-top:1.5rem;">
         <button type="button" id="save-image-btn">Export Summary as Image</button>
         <p id="save-image-status" style="margin:0.4rem 0 0; font-size:0.875rem;" aria-hidden="true"></p>
-      </div>
-      <div style="margin-top:1rem;">
-        <button type="button" id="advance-form-btn">Generate Travel Advance Request Form</button>
-        <p style="margin:0.4rem 0 0; font-size:0.875rem; color:var(--text-muted);">Opens a pre-filled form you can print and submit to Finance.</p>
       </div>
     </div>
   </section>
@@ -2290,7 +2290,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.2.8';
+    const APP_VERSION = 'Version 2.2.10';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -2463,6 +2463,7 @@ var INTL_COUNTRIES = [
       if (ratesHeading) ratesHeading.hidden = true;
       document.getElementById('rates-table').hidden = true;
       document.getElementById('lodging-rate-display').hidden = true;
+      document.getElementById('advance-form-area').hidden = true;
       document.getElementById('lodging-rate-value').textContent = '';
       document.getElementById('lodging-rate-summary').textContent = '';
       document.querySelector('#rates-table tbody').innerHTML = '';
@@ -2595,6 +2596,7 @@ var INTL_COUNTRIES = [
         const fmtLodging = n => '$' + Number(n).toFixed(2);
         document.getElementById('lodging-rate-value').textContent = fmtLodging(match.lodging);
         document.getElementById('lodging-rate-display').hidden = false;
+        document.getElementById('advance-form-area').hidden = false;
 
         // Show verify section
         const verifySection = document.getElementById('intl-verify-section');
@@ -3081,25 +3083,24 @@ var INTL_COUNTRIES = [
       const fmt = d => { const [y,m,day] = d.split('-'); return `${m}/${day}/${y}`; };
       const datesOfTravel = `${fmt(startDate)} – ${fmt(endDate)}`;
 
-      // M&IE totals from summary table rows
-      let travelDaysMIE = 0, regularDaysMIE = 0, travelDaysCount = 0, regularDaysCount = 0;
-      let mieRate = 0, travelRate = 0;
+      // M&IE — calculate from rates + dates (works before or after meal grid)
       const rates = getRates();
+      let mieRate = 0, travelRate = 0;
       if (rates) { mieRate = rates.standard.mie; travelRate = rates.travel.mie; }
 
-      document.querySelectorAll('#summary-tbody tr').forEach(row => {
-        const dayType = row.querySelector('small')?.textContent || '';
-        const daily   = parseFloat(row.cells[row.cells.length - 1].textContent.replace(/[^0-9.]/g,'')) || 0;
-        if (dayType === 'Full Day') { regularDaysMIE += daily; regularDaysCount++; }
-        else                        { travelDaysMIE  += daily; travelDaysCount++;  }
-      });
-      const totalMIE = travelDaysMIE + regularDaysMIE;
+      const start = new Date(startDate + 'T00:00:00');
+      const end   = new Date(endDate   + 'T00:00:00');
+      const totalDays = Math.max(1, Math.round((end - start) / 86400000) + 1);
+      // First and last day are travel days (75%); everything in between is full days
+      const travelDaysCount   = totalDays <= 1 ? 1 : 2;
+      const regularDaysCount  = Math.max(0, totalDays - travelDaysCount);
+      const travelDaysMIE     = travelDaysCount  * travelRate;
+      const regularDaysMIE    = regularDaysCount * mieRate;
+      const totalMIE          = travelDaysMIE + regularDaysMIE;
 
       // Lodging
       const lodgingText = document.getElementById('lodging-rate-value').textContent;
       const lodgingRate = lodgingText ? parseFloat(lodgingText.replace(/[^0-9.]/g,'')) : null;
-      const start = new Date(startDate + 'T00:00:00');
-      const end   = new Date(endDate   + 'T00:00:00');
       const nights = lodgingRate !== null ? Math.max(0, Math.round((end - start) / 86400000)) : 0;
       const lodgingTotal = lodgingRate !== null ? lodgingRate * nights : null;
       const grandTotal = (lodgingTotal || 0) + totalMIE;
