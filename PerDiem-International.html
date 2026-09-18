@@ -2295,7 +2295,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.2.20';
+    const APP_VERSION = 'Version 2.2.21';
     document.getElementById('app-version').textContent = APP_VERSION; // version display
 
 
@@ -2599,7 +2599,7 @@ var INTL_COUNTRIES = [
         }
         buildIntlRows(match.mie);
 
-        const fmtLodging = n => '$' + Number(n).toFixed(2);
+        const fmtLodging = n => isNaN(Number(n)) ? 'N/A' : '$' + Number(n).toFixed(2);
         document.getElementById('lodging-rate-value').textContent = fmtLodging(match.lodging);
         document.getElementById('lodging-rate-display').hidden = false;
         document.getElementById('advance-form-area').hidden = false;
@@ -3107,7 +3107,8 @@ var INTL_COUNTRIES = [
 
       // Lodging
       const lodgingText = document.getElementById('lodging-rate-value').textContent;
-      const lodgingRate = lodgingText ? parseFloat(lodgingText.replace(/[^0-9.]/g,'')) : null;
+      const _parsedLodging = lodgingText ? parseFloat(lodgingText.replace(/[^0-9.]/g,'')) : NaN;
+      const lodgingRate = isFinite(_parsedLodging) ? _parsedLodging : null;
       const nights = lodgingRate !== null ? Math.max(0, Math.round((end - start) / 86400000)) : 0;
       const lodgingTotal = lodgingRate !== null ? lodgingRate * nights : null;
       const grandTotal = (lodgingTotal || 0) + totalMIE;
