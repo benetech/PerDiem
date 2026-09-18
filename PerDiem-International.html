@@ -2294,7 +2294,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.2.11';
+    const APP_VERSION = 'Version 2.2.12';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -3163,6 +3163,7 @@ var INTL_COUNTRIES = [
 <div class="field-row"><label>Dates of Travel:</label> <span class="field-line">${datesOfTravel}</span></div>
 <div class="field-row"><label>Destination:</label> <span class="field-line">${destination}</span></div>
 <div class="field-row"><label>Purpose of Travel:</label> <span class="field-line">${conference || ''}</span></div>
+<div class="field-row"><label>Project Code:</label> <span class="field-line">${document.getElementById('project-code').value.trim()}</span></div>
 
 <p class="section-head">Amount Requested</p>
 <table>
