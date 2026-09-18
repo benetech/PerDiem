@@ -423,6 +423,10 @@
         <p id="save-image-status" style="margin:0.4rem 0 0; font-size:0.875rem;" aria-hidden="true"></p>
         <p id="conus-table-export-warning" hidden style="margin:0.25rem 0 0;"></p>
       </div>
+      <div style="margin-top:1rem;">
+        <button type="button" id="advance-form-btn">Generate Travel Advance Request Form</button>
+        <p style="margin:0.4rem 0 0; font-size:0.875rem; color:var(--text-muted);">Opens a pre-filled form you can print and submit to Finance.</p>
+      </div>
     </div>
   </section>
 
@@ -545,7 +549,7 @@
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.2.8';
+    const APP_VERSION = 'Version 2.2.9';
     document.getElementById('app-version').textContent = APP_VERSION;
 
     const GSA_API_KEY = 'JSMkWK1B39w3scaAhO1ofDF3nuovlhW2FQXuswvd';
@@ -1284,6 +1288,167 @@
     }
 
     document.getElementById('calc-btn').addEventListener('click', calculateSummary);
+
+    // ── Travel Advance Request Form ──────────────────────────────────────────
+    document.getElementById('advance-form-btn').addEventListener('click', () => {
+      const name        = document.getElementById('traveler-name').value.trim();
+      const conference  = document.getElementById('conference').value.trim();
+      const startDate   = document.getElementById('start-date').value;
+      const endDate     = document.getElementById('end-date').value;
+      const locCity     = cityEl.options[cityEl.selectedIndex]?.text || '';
+      const locState    = stateEl.options[stateEl.selectedIndex]?.text || '';
+      const destination = [locCity, locState, 'United States'].filter(Boolean).join(', ');
+
+      // Dates of travel display
+      const fmt = d => { const [y,m,day] = d.split('-'); return `${m}/${day}/${y}`; };
+      const datesOfTravel = `${fmt(startDate)} – ${fmt(endDate)}`;
+
+      // M&IE totals from summary table rows
+      let travelDaysMIE = 0, regularDaysMIE = 0, travelDaysCount = 0, regularDaysCount = 0;
+      let mieRate = 0, travelRate = 0;
+      const rates = getRates();
+      if (rates) { mieRate = rates.standard.mie; travelRate = rates.travel.mie; }
+
+      document.querySelectorAll('#summary-tbody tr').forEach(row => {
+        const dayType = row.querySelector('small')?.textContent || '';
+        const daily   = parseFloat(row.cells[row.cells.length - 1].textContent.replace(/[^0-9.]/g,'')) || 0;
+        if (dayType === 'Full Day') { regularDaysMIE += daily; regularDaysCount++; }
+        else                        { travelDaysMIE  += daily; travelDaysCount++;  }
+      });
+      const totalMIE = travelDaysMIE + regularDaysMIE;
+
+      // Lodging
+      const lodgingText = document.getElementById('lodging-rate-value').textContent;
+      const lodgingRate = lodgingText ? parseFloat(lodgingText.replace(/[^0-9.]/g,'')) : null;
+      const start = new Date(startDate + 'T00:00:00');
+      const end   = new Date(endDate   + 'T00:00:00');
+      const nights = lodgingRate !== null ? Math.max(0, Math.round((end - start) / 86400000)) : 0;
+      const lodgingTotal = lodgingRate !== null ? lodgingRate * nights : null;
+      const grandTotal = (lodgingTotal || 0) + totalMIE;
+
+      const fmtD = n => '$' + n.toFixed(2);
+      const lodgingRow = lodgingTotal !== null
+        ? `<tr><td>Lodging (${nights} night${nights !== 1 ? 's' : ''} × ${fmtD(lodgingRate)})</td><td>${fmtD(lodgingTotal)}</td></tr>`
+        : `<tr><td>Lodging</td><td>___________</td></tr>`;
+      const mieRow = `<tr><td>Meals Per Diem (see calculation below)</td><td>${fmtD(totalMIE)}</td></tr>`;
+      const totalRow = `<tr style="font-weight:bold;border-top:2px solid #000;"><td>Total Amount Requested</td><td>${fmtD(grandTotal)}</td></tr>`;
+
+      const travelSubtotal  = travelDaysCount   ? `${travelDaysCount} × ${fmtD(travelRate)} = ${fmtD(travelDaysMIE)}`   : '—';
+      const regularSubtotal = regularDaysCount  ? `${regularDaysCount} × ${fmtD(mieRate)} = ${fmtD(regularDaysMIE)}` : '—';
+
+      const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Travel Advance Request Form</title>
+<style>
+  body { font-family: Arial, sans-serif; font-size: 11pt; margin: 1in; color: #000; }
+  h1 { text-align: center; font-size: 15pt; margin-bottom: 1.5rem; }
+  .print-notice { background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; padding: 0.75rem 1rem; margin-bottom: 1.5rem; font-size: 10pt; }
+  .print-notice strong { display: block; margin-bottom: 0.25rem; }
+  .field-row { margin-bottom: 0.6rem; }
+  .field-row label { font-weight: bold; }
+  .field-line { display: inline-block; min-width: 280px; border-bottom: 1px solid #000; margin-left: 0.5rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { border: 1px solid #000; padding: 0.35rem 0.5rem; }
+  th { background: #f0f0f0; text-align: left; }
+  .section-head { font-weight: bold; margin: 1.2rem 0 0.4rem; font-size: 11pt; }
+  .cert-box { border: 1px solid #000; padding: 0.75rem; margin-top: 1rem; font-size: 10pt; }
+  .note-box { border: 1px solid #999; padding: 0.75rem; margin-top: 1rem; font-size: 9pt; background: #fafafa; }
+  .note-box strong { display: block; margin-bottom: 0.25rem; }
+  .sig-line { border-bottom: 1px solid #000; min-width: 250px; display: inline-block; margin-left: 0.5rem; }
+  @media print {
+    .print-notice { display: none; }
+    body { margin: 0.75in; }
+  }
+</style>
+</head>
+<body>
+<div class="print-notice">
+  <strong>How to print this form:</strong>
+  Press <kbd>Ctrl+P</kbd> (Windows) or <kbd>⌘+P</kbd> (Mac) → choose your printer or "Save as PDF" → click Print.
+  The print instructions above will not appear on the printed copy.
+  <br><br>
+  <strong>Next steps after printing:</strong>
+  Fill in the blank fields (Name, Department, Purpose of Travel), sign the form, and submit it to Finance at least two weeks before your trip.
+  Concur submission instructions will be added here in a future update.
+</div>
+
+<h1>Travel Advance Request Form</h1>
+
+<div class="field-row"><label>Employee's Name:</label> <span class="field-line">${name || ''}</span></div>
+<div class="field-row"><label>Department:</label> <span class="field-line"></span></div>
+<div class="field-row"><label>Date of Request:</label> <span class="field-line">${new Date().toLocaleDateString('en-US')}</span></div>
+<div class="field-row"><label>Dates of Travel:</label> <span class="field-line">${datesOfTravel}</span></div>
+<div class="field-row"><label>Destination:</label> <span class="field-line">${destination}</span></div>
+<div class="field-row"><label>Purpose of Travel:</label> <span class="field-line">${conference || ''}</span></div>
+
+<p class="section-head">Amount Requested</p>
+<table>
+  <thead><tr><th>Category</th><th>Amount</th></tr></thead>
+  <tbody>
+    ${lodgingRow}
+    ${mieRow}
+    ${totalRow}
+  </tbody>
+</table>
+
+<p class="section-head">Meals Per Diem Calculation</p>
+<p style="font-size:10pt; margin:0 0 0.5rem;">GSA per diem rates for ${destination}. Travel days (first/last day of trip) are prorated to 75%.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Day Type</th>
+      <th>Number of Days</th>
+      <th>Per Diem Rate (per day)</th>
+      <th>Subtotal</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Travel Days (first &amp; last)</td>
+      <td>${travelDaysCount || '—'}</td>
+      <td>${travelDaysCount ? fmtD(travelRate) : '—'}</td>
+      <td>${travelDaysCount ? fmtD(travelDaysMIE) : '—'}</td>
+    </tr>
+    <tr>
+      <td>Regular Days</td>
+      <td>${regularDaysCount || '—'}</td>
+      <td>${regularDaysCount ? fmtD(mieRate) : '—'}</td>
+      <td>${regularDaysCount ? fmtD(regularDaysMIE) : '—'}</td>
+    </tr>
+    <tr style="font-weight:bold;">
+      <td colspan="3">Meals Per Diem Total</td>
+      <td>${fmtD(totalMIE)}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="cert-box">
+  <strong>Employee Certification</strong><br>
+  I certify that the funds requested above are needed for authorized business travel expenses and will be reconciled against actual expenses submitted via an expense report in Concur upon completion of travel.<br><br>
+  <label>Employee Signature:</label> <span class="sig-line"></span>
+</div>
+
+<div class="note-box">
+  <strong>Note</strong>
+  <ul style="margin:0.25rem 0 0; padding-left:1.25rem; line-height:1.8;">
+    <li>This form must be submitted at least two weeks in advance of the trip.</li>
+    <li>The form must be submitted in Concur to go through the approval process.</li>
+    <li>Once submitted via Concur, notify the Finance department that an advance has been submitted.</li>
+    <li>Travel advances must be reconciled with an expense report in Concur within 5 business days of returning from travel.</li>
+    <li>Unreconciled advances may be deducted from future payroll or reimbursements, per company policy.</li>
+  </ul>
+</div>
+
+<p style="font-size:8pt; color:#666; margin-top:1.5rem; text-align:right;">Generated by Benetech Food Per Diem USA Calculator &mdash; ${APP_VERSION}</p>
+</body>
+</html>`;
+
+      const win = window.open('', '_blank');
+      win.document.write(html);
+      win.document.close();
+    });
 
     // Clear inline errors as the user corrects each field
     [
