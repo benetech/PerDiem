@@ -266,7 +266,8 @@
     </div>
     <div>
       <label for="department">Department</label>
-      <input type="text" id="department" name="department" autocomplete="organization-title">
+      <input type="text" id="department" name="department" autocomplete="organization-title" list="department-suggestions">
+      <datalist id="department-suggestions"></datalist>
     </div>
     <div>
       <label for="conference">Conference <span class="req-star" aria-label="required">*</span></label>
@@ -2294,7 +2295,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.2.13';
+    const APP_VERSION = 'Version 2.2.14';
     document.getElementById('app-version').textContent = APP_VERSION;
 
 
@@ -2574,6 +2575,7 @@ var INTL_COUNTRIES = [
       saveNameSuggestion(name);
       saveSuggestion('perdiem_saved_confs',    'conference-suggestions',    conference);
       saveSuggestion('perdiem_saved_projects', 'project-code-suggestions',  document.getElementById('project-code').value.trim());
+      saveSuggestion('perdiem_saved_depts',    'department-suggestions',    document.getElementById('department').value.trim());
       hasSubmitted = true;
       const ratesHeading = document.getElementById('rates-heading');
       ratesHeading.hidden = false;
@@ -3255,6 +3257,7 @@ var INTL_COUNTRIES = [
     // \u2500\u2500 Autocomplete via localStorage (Name, Conference, Project Code) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
     const AC_FIELDS = [
       { key: 'perdiem_saved_names',    datalistId: 'name-suggestions' },
+      { key: 'perdiem_saved_depts',    datalistId: 'department-suggestions' },
       { key: 'perdiem_saved_confs',    datalistId: 'conference-suggestions' },
       { key: 'perdiem_saved_projects', datalistId: 'project-code-suggestions' },
     ];
