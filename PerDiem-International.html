@@ -2295,7 +2295,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.2.21';
+    const APP_VERSION = 'Version 2.2.22';
     document.getElementById('app-version').textContent = APP_VERSION; // version display
 
 
@@ -2702,6 +2702,7 @@ var INTL_COUNTRIES = [
           document.getElementById('intl-mie-override').value   = parseInt(matchedRow.mie, 10);
           document.getElementById('intl-effective-date').value = matchedRow.effectiveDate;
           buildIntlRows(parseInt(matchedRow.mie, 10));
+          document.getElementById('lodging-rate-value').textContent = fmtLodging(matchedRow.lodging);
           document.getElementById('meal-grid-section').hidden = false;
           document.getElementById('calc-section').hidden = false;
         };
