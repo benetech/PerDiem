@@ -2295,7 +2295,7 @@ var INTL_COUNTRIES = [
    */
 
     // \u2500\u2500 App version \u2014 update this single variable when bumping the version \u2500\u2500\u2500\u2500\u2500\u2500
-    const APP_VERSION = 'Version 2.2.22';
+    const APP_VERSION = 'Version 2.2.23';
     document.getElementById('app-version').textContent = APP_VERSION; // version display
 
 
@@ -2641,12 +2641,20 @@ var INTL_COUNTRIES = [
                    lodging: cols[4], mie: cols[5], perDiem: cols[6], footnote: cols[7], effectiveDate: cols[8] };
         }
 
+        function hidePostPaste() {
+          ['rates-table','lodging-rate-display','advance-form-area','meal-grid-section','calc-section']
+            .forEach(id => { document.getElementById(id).hidden = true; });
+        }
+        function showPostPaste() {
+          ['rates-table','lodging-rate-display','advance-form-area','meal-grid-section','calc-section']
+            .forEach(id => { document.getElementById(id).hidden = false; });
+        }
+
         pasteEl.oninput = () => {
           const raw  = pasteEl.value.trim();
           if (!raw) {
             statusEl.textContent = '';
-            document.getElementById('meal-grid-section').hidden = true;
-            document.getElementById('calc-section').hidden = true;
+            hidePostPaste();
             return;
           }
 
@@ -2655,8 +2663,7 @@ var INTL_COUNTRIES = [
           if (allRows.length === 0) {
             statusEl.style.color = 'var(--error)';
             statusEl.textContent = '\u26A0 No valid rows found. Check that each row has 9 columns and a complete date (MM/DD/YYYY).';
-            document.getElementById('meal-grid-section').hidden = true;
-            document.getElementById('calc-section').hidden = true;
+            hidePostPaste();
             return;
           }
 
@@ -2666,8 +2673,7 @@ var INTL_COUNTRIES = [
           if (wrongCountry) {
             statusEl.style.color = 'var(--error)';
             statusEl.textContent = `\u26A0 Country mismatch: you selected "${country}" but the pasted data contains "${wrongCountry.country}". Please paste the correct country's table.`;
-            document.getElementById('meal-grid-section').hidden = true;
-            document.getElementById('calc-section').hidden = true;
+            hidePostPaste();
             return;
           }
 
@@ -2686,8 +2692,7 @@ var INTL_COUNTRIES = [
           } else if (!matchedRow) {
             statusEl.style.color = 'var(--error)';
             statusEl.textContent = `\u26A0 No row found for "${city}" in the pasted table. Make sure the correct country table is pasted.`;
-            document.getElementById('meal-grid-section').hidden = true;
-            document.getElementById('calc-section').hidden = true;
+            hidePostPaste();
             return;
           } else {
             const rowCount = allRows.length;
@@ -2703,13 +2708,11 @@ var INTL_COUNTRIES = [
           document.getElementById('intl-effective-date').value = matchedRow.effectiveDate;
           buildIntlRows(parseInt(matchedRow.mie, 10));
           document.getElementById('lodging-rate-value').textContent = fmtLodging(matchedRow.lodging);
-          document.getElementById('meal-grid-section').hidden = false;
-          document.getElementById('calc-section').hidden = false;
+          showPostPaste();
         };
 
-        // Hide meal grid and calc until row is pasted and validated
-        document.getElementById('meal-grid-section').hidden = true;
-        document.getElementById('calc-section').hidden = true;
+        // Hide all post-paste sections until State Dept row is pasted and matched
+        hidePostPaste();
         verifySection.hidden = false;
 
         return;
